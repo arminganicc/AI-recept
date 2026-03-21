@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__Claude_Preview__preview_start",
+      "Bash(echo $PATH)",
+      "Read(//usr/bin/**)",
+      "Bash(ruby -e \"require ''webrick''; puts ''ok''\")",
+      "Bash(open:*)",
+      "Bash(npm --version)",
+      "Bash(npm install:*)",
+      "Bash(sudo npm:*)",
+      "Bash(vercel:*)",
+      "Read(//usr/local/bin/**)",
+      "Read(//Users/arminganic/.npm/bin/**)"
+    ]
+  }
+}

@@ -1,0 +1,1539 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vad ska vi laga? — Recepthjälpen</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,700;1,9..144,300&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #faf7f2;
+    --bark: #2c1f14;
+    --bark-light: #4a3525;
+    --spice: #b85a28;
+    --spice-hover: #cf6f3a;
+    --spice-glow: rgba(184,90,40,0.14);
+    --olive: #6b7c5f;
+    --olive-bg: #e5ecdf;
+    --sand: #e9dfd0;
+    --sand-light: #f4f0e8;
+    --clay: #7a5c45;
+    --clay-light: #9e7d60;
+    --red-bg: #fef0e8;
+    --red-border: #eec4a8;
+    --border: rgba(44,31,20,0.08);
+    --shadow-sm: 0 1px 4px rgba(44,31,20,0.06), 0 4px 16px rgba(44,31,20,0.07);
+    --shadow-md: 0 2px 8px rgba(44,31,20,0.07), 0 10px 32px rgba(44,31,20,0.11);
+    --shadow-lg: 0 4px 16px rgba(44,31,20,0.09), 0 20px 48px rgba(44,31,20,0.14);
+    --radius-sm: 10px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
+    --radius-pill: 100px;
+    --gradient-spice: linear-gradient(135deg, #c96230 0%, #b85a28 50%, #9e4a1e 100%);
+    --gradient-bark: linear-gradient(135deg, #3d2b1c 0%, #2c1f14 100%);
+    --font-display: 'Fraunces', serif;
+    --font-body: 'DM Sans', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--cream);
+    background-image:
+      radial-gradient(ellipse 80% 60% at 10% 0%, rgba(184,90,40,0.04) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 90% 100%, rgba(107,124,95,0.04) 0%, transparent 60%);
+    color: var(--bark);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ─── Header ─── */
+  header {
+    background: linear-gradient(160deg, #3a2518 0%, #2c1f14 40%, #231a10 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 70% 60% at 15% 110%, rgba(201,98,48,0.22) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 50% at 90% -10%, rgba(184,90,40,0.14) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 30% at 60% 80%, rgba(107,124,95,0.08) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201,98,48,0.6), transparent);
+  }
+
+  .header-inner {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 44px 24px 38px;
+    text-align: center;
+    position: relative;
+  }
+  .header-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .header-emblem {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    background: linear-gradient(135deg, rgba(201,98,48,0.2) 0%, rgba(255,255,255,0.04) 100%);
+    border: 1px solid rgba(201,98,48,0.25);
+    border-radius: 16px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 20px rgba(201,98,48,0.15);
+  }
+
+  header h1 {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    color: #faf7f2;
+    letter-spacing: -0.5px;
+    line-height: 1.1;
+    animation: fadeDown 0.55s ease-out;
+  }
+  header p {
+    color: rgba(250,247,242,0.42);
+    font-size: 0.875rem;
+    margin-top: 8px;
+    font-weight: 400;
+    animation: fadeDown 0.55s ease-out 0.1s both;
+  }
+  .settings-toggle {
+    position: absolute;
+    top: 20px; right: 20px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 10px;
+    width: 38px; height: 38px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(250,247,242,0.5);
+    transition: all 0.2s;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+  .settings-toggle:hover { background: rgba(255,255,255,0.13); color: rgba(250,247,242,0.85); border-color: rgba(255,255,255,0.2); }
+  .settings-toggle.has-key { color: var(--olive); background: rgba(107,124,95,0.18); border-color: rgba(107,124,95,0.3); }
+
+  /* ─── Animations ─── */
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(0.88); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to   { transform: translateY(0); }
+  }
+  @keyframes overlayIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  @keyframes shimmer {
+    0%   { background-position: -400px 0; }
+    100% { background-position: 400px 0; }
+  }
+
+  /* ─── Main ─── */
+  main {
+    max-width: 640px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 32px 16px 64px;
+    flex: 1;
+  }
+
+  /* ─── API Key Card ─── */
+  .api-card {
+    background: white;
+    border: 1.5px solid var(--border);
+    border-left: 3px solid var(--spice);
+    border-radius: var(--radius-md);
+    padding: 18px 20px;
+    margin-bottom: 16px;
+    animation: fadeUp 0.35s ease-out;
+    box-shadow: var(--shadow-sm);
+  }
+  .api-card.hidden { display: none; }
+  .api-card-title {
+    font-weight: 600;
+    font-size: 0.88rem;
+    color: var(--bark);
+    margin-bottom: 4px;
+  }
+  .api-card-desc {
+    font-size: 0.78rem;
+    color: var(--clay);
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
+  .api-card-desc a {
+    color: var(--spice);
+    text-decoration: none;
+  }
+  .api-card-desc a:hover { text-decoration: underline; }
+  .api-input-row {
+    display: flex;
+    gap: 8px;
+  }
+  .api-input {
+    flex: 1;
+    border: 1.5px solid var(--sand);
+    border-radius: var(--radius-sm);
+    padding: 9px 14px;
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    color: var(--bark);
+    background: var(--cream);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .api-input:focus { border-color: var(--spice); box-shadow: 0 0 0 3px var(--spice-glow); }
+  .api-save-btn {
+    background: var(--gradient-bark);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 9px 18px;
+    font-family: var(--font-body);
+    font-size: 0.83rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    white-space: nowrap;
+  }
+  .api-save-btn:hover { opacity: 0.88; }
+
+  /* ─── Card ─── */
+  .card {
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border);
+    margin-bottom: 20px;
+    animation: fadeUp 0.45s ease-out 0.15s both;
+  }
+
+  label {
+    display: block;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--bark);
+    margin-bottom: 14px;
+    letter-spacing: -0.2px;
+  }
+
+  .input-row { display: flex; gap: 10px; }
+
+  .ing-input {
+    flex: 1;
+    border: 1.5px solid var(--sand);
+    border-radius: var(--radius-md);
+    padding: 12px 18px;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    color: var(--bark);
+    background: var(--cream);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  }
+  .ing-input:focus {
+    border-color: var(--spice);
+    box-shadow: 0 0 0 4px var(--spice-glow);
+    background: white;
+  }
+  .ing-input::placeholder { color: var(--clay-light); }
+
+  .add-btn {
+    background: var(--gradient-spice);
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    width: 48px; height: 48px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+    flex-shrink: 0;
+    box-shadow: 0 2px 10px rgba(184,90,40,0.3);
+  }
+  .add-btn:hover  { opacity: 0.9; transform: scale(1.05); box-shadow: 0 4px 16px rgba(184,90,40,0.4); }
+  .add-btn:active { transform: scale(0.97); }
+
+  .hint {
+    font-size: 0.76rem;
+    color: var(--clay-light);
+    margin-top: 9px;
+    line-height: 1.5;
+  }
+
+  .divider { height: 1px; background: var(--sand); margin: 22px 0; }
+
+  /* ─── Quick picks ─── */
+  .quick-label {
+    font-size: 0.69rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.1px;
+    color: var(--clay-light);
+    margin-bottom: 10px;
+  }
+  .quick-picks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .quick-chip {
+    background: transparent;
+    border: 1.5px solid var(--sand);
+    border-radius: var(--radius-pill);
+    padding: 5px 13px;
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    color: var(--clay);
+    cursor: pointer;
+    transition: all 0.18s;
+    white-space: nowrap;
+  }
+  .quick-chip:hover {
+    border-color: var(--spice);
+    color: var(--spice);
+    background: var(--red-bg);
+    transform: translateY(-1px);
+  }
+  .quick-chip.used { opacity: 0.33; pointer-events: none; }
+
+  /* ─── Tags ─── */
+  .tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 18px; }
+  .tag {
+    background: linear-gradient(135deg, var(--sand-light), #f0ebe2);
+    border: 1.5px solid var(--sand);
+    border-radius: var(--radius-pill);
+    padding: 5px 8px 5px 13px;
+    font-size: 0.83rem;
+    color: var(--bark);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    animation: popIn 0.2s ease-out;
+  }
+  .tag button {
+    background: rgba(44,31,20,0.08);
+    border: none;
+    cursor: pointer;
+    color: var(--clay);
+    font-size: 0.75rem;
+    line-height: 1;
+    padding: 2px 4px;
+    border-radius: 50%;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .tag button:hover { background: var(--spice); color: white; }
+
+  /* ─── Preferences ─── */
+  .pref-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 0;
+  }
+  .pref-chip {
+    background: transparent;
+    border: 1.5px solid var(--sand);
+    border-radius: var(--radius-pill);
+    padding: 7px 14px;
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    color: var(--clay);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .pref-chip:hover {
+    border-color: var(--bark-light);
+    color: var(--bark);
+    transform: translateY(-1px);
+  }
+  .pref-chip.active {
+    background: var(--gradient-bark);
+    border-color: transparent;
+    color: white;
+    box-shadow: 0 2px 10px rgba(44,31,20,0.25);
+  }
+  .pref-chip svg { flex-shrink: 0; }
+
+  /* ─── Portions selector ─── */
+  .search-portions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 18px;
+    padding: 11px 16px;
+    background: var(--cream);
+    border: 1.5px solid var(--sand);
+    border-radius: var(--radius-md);
+  }
+  .search-portions-label {
+    font-size: 0.85rem;
+    color: var(--clay);
+    font-weight: 500;
+  }
+  .search-portions-ctrl {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .search-portions-ctrl button {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    border: 1px solid var(--sand);
+    background: white;
+    color: var(--bark);
+    font-size: 0.95rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    line-height: 1;
+  }
+  .search-portions-ctrl button:hover {
+    border-color: var(--spice);
+    color: var(--spice);
+  }
+  .search-portions-num {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--bark);
+    min-width: 18px;
+    text-align: center;
+  }
+
+  /* ─── Search button ─── */
+  .search-btn {
+    width: 100%;
+    background: var(--gradient-spice);
+    color: white;
+    border: none;
+    border-radius: var(--radius-pill);
+    padding: 15px 20px;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 18px;
+    transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+    letter-spacing: 0.3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 4px 20px rgba(184,90,40,0.28);
+  }
+  .search-btn:hover:not(:disabled) {
+    opacity: 0.92;
+    box-shadow: 0 6px 28px rgba(184,90,40,0.38);
+    transform: translateY(-2px);
+  }
+  .search-btn:active:not(:disabled) { transform: translateY(0); opacity: 1; }
+  .search-btn:disabled {
+    background: var(--sand);
+    color: var(--clay-light);
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+
+  /* ─── Error ─── */
+  .error {
+    background: var(--red-bg);
+    border: 1.5px solid var(--red-border);
+    border-radius: var(--radius-md);
+    padding: 13px 16px;
+    color: var(--spice);
+    font-size: 0.875rem;
+    margin-top: 12px;
+    animation: popIn 0.2s ease-out;
+  }
+
+  /* ─── Skeleton Loading ─── */
+  .skeleton-list { padding-top: 8px; }
+  .skeleton-card {
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: 22px 24px;
+    margin-bottom: 12px;
+    border: 1.5px solid var(--border);
+    animation: fadeUp 0.3s ease-out both;
+  }
+  .skeleton-card:nth-child(2) { animation-delay: 0.06s; }
+  .skeleton-card:nth-child(3) { animation-delay: 0.12s; }
+  .skel {
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--sand-light) 0%, var(--sand) 50%, var(--sand-light) 100%);
+    background-size: 800px 100%;
+    animation: shimmer 1.8s ease-in-out infinite;
+  }
+  .skel-title { height: 18px; width: 65%; margin-bottom: 12px; }
+  .skel-badges { display: flex; gap: 6px; margin-bottom: 12px; }
+  .skel-badge { height: 22px; width: 70px; border-radius: 4px; }
+  .skel-line { height: 12px; margin-bottom: 6px; }
+  .skel-line.w80 { width: 80%; }
+  .skel-line.w60 { width: 60%; }
+
+  .loading-label {
+    text-align: center;
+    color: var(--clay);
+    font-size: 0.85rem;
+    font-style: italic;
+    font-weight: 300;
+    margin-top: 16px;
+    animation: fadeUp 0.3s ease-out 0.2s both;
+  }
+
+  /* ─── Recipe list ─── */
+  .recipes-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 14px;
+    padding: 0 2px;
+  }
+  .recipes-title {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    color: var(--bark);
+    letter-spacing: -0.2px;
+  }
+  .recipes-subtitle {
+    font-size: 0.76rem;
+    color: var(--clay-light);
+  }
+
+  .recipe-card {
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: 22px 24px;
+    margin-bottom: 12px;
+    border: 1.5px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    cursor: pointer;
+    transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s, background 0.25s;
+    animation: fadeUp 0.4s ease-out both;
+  }
+  .recipe-card:nth-child(2) { animation-delay: 0.07s; }
+  .recipe-card:nth-child(3) { animation-delay: 0.14s; }
+  .recipe-card:nth-child(4) { animation-delay: 0.21s; }
+  .recipe-card:nth-child(5) { animation-delay: 0.28s; }
+  .recipe-card:hover {
+    border-color: rgba(184,90,40,0.18);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+    background: linear-gradient(135deg, #ffffff 0%, #fffcfa 100%);
+  }
+
+  .recipe-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+  .recipe-name {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    color: var(--bark);
+    line-height: 1.3;
+    padding-right: 8px;
+    letter-spacing: -0.1px;
+  }
+  .fav-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 3px 4px;
+    transition: transform 0.2s;
+    flex-shrink: 0;
+    color: var(--sand);
+    display: flex;
+    align-items: center;
+  }
+  .fav-btn:hover    { transform: scale(1.2); }
+  .fav-btn.active   { color: var(--spice); }
+
+  .badges { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--sand-light);
+    border: 1.5px solid var(--sand);
+    border-radius: var(--radius-pill);
+    padding: 3px 10px;
+    font-size: 0.73rem;
+    color: var(--clay);
+    font-weight: 500;
+    letter-spacing: 0.1px;
+  }
+  .badge.green {
+    background: var(--olive-bg);
+    color: var(--olive);
+    border-color: rgba(107,124,95,0.2);
+  }
+
+  .recipe-desc {
+    font-size: 0.86rem;
+    color: var(--clay);
+    line-height: 1.65;
+    margin-bottom: 12px;
+  }
+  .see-more {
+    font-size: 0.81rem;
+    color: var(--spice);
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: gap 0.2s;
+  }
+  .recipe-card:hover .see-more { gap: 8px; }
+
+  /* ─── Favorites Section ─── */
+  .fav-section {
+    margin-top: 4px;
+    padding-top: 22px;
+    border-top: 1px solid var(--sand);
+  }
+  .fav-section-title {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    color: var(--bark);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .fav-section-title svg { color: var(--spice); flex-shrink: 0; }
+
+  .fav-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--cream);
+    border: 1.5px solid var(--sand);
+    padding: 11px 14px;
+    border-radius: var(--radius-md);
+    margin-bottom: 6px;
+    font-size: 0.875rem;
+    color: var(--bark);
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, transform 0.2s;
+  }
+  .fav-item:hover { background: var(--sand-light); border-color: rgba(184,90,40,0.2); transform: translateX(2px); }
+  .fav-remove {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--clay-light);
+    font-size: 0.9rem;
+    padding: 0 4px;
+    line-height: 1;
+    transition: color 0.15s;
+  }
+  .fav-remove:hover { color: var(--spice); }
+
+  /* ─── Modal / Overlay ─── */
+  .overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(18,10,4,0.62);
+    z-index: 100;
+    align-items: flex-end;
+    justify-content: center;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+  .overlay.open {
+    display: flex;
+    animation: overlayIn 0.2s ease-out;
+  }
+  .modal {
+    background: white;
+    border-radius: 28px 28px 0 0;
+    width: 100%;
+    max-width: 640px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 12px 28px 56px;
+    animation: slideUp 0.32s cubic-bezier(0.16,1,0.3,1);
+    border-top: 1.5px solid var(--border);
+    box-shadow: 0 -8px 40px rgba(44,31,20,0.15);
+  }
+  .modal::before {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 4px;
+    background: var(--sand);
+    border-radius: var(--radius-pill);
+    margin: 0 auto 24px;
+  }
+  .modal-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+  }
+  .modal-title {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    color: var(--bark);
+    padding-right: 16px;
+    line-height: 1.25;
+    letter-spacing: -0.3px;
+  }
+  .modal-actions {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+  .modal-action-btn {
+    background: var(--sand-light);
+    border: 1.5px solid var(--border);
+    border-radius: 50%;
+    width: 38px; height: 38px;
+    cursor: pointer;
+    color: var(--clay);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  }
+  .modal-action-btn:hover { background: var(--gradient-bark); color: white; border-color: transparent; box-shadow: 0 2px 10px rgba(44,31,20,0.2); }
+  .close-btn:hover { transform: rotate(90deg); }
+  .copy-toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(60px);
+    background: var(--gradient-bark);
+    color: white;
+    padding: 11px 22px;
+    border-radius: var(--radius-pill);
+    font-size: 0.85rem;
+    font-weight: 500;
+    z-index: 200;
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+    pointer-events: none;
+    box-shadow: 0 4px 20px rgba(44,31,20,0.3);
+  }
+  .copy-toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .modal-badges { margin: 10px 0 6px; }
+
+  .section-lbl {
+    font-size: 0.67rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.4px;
+    color: var(--clay-light);
+    margin: 24px 0 10px;
+  }
+
+  .ing-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.875rem;
+    color: var(--bark);
+    padding: 9px 16px;
+    background: var(--cream);
+    border: 1.5px solid var(--sand);
+    border-radius: var(--radius-md);
+    margin-bottom: 4px;
+    transition: border-color 0.15s;
+  }
+  .ing-item:hover { border-color: rgba(184,90,40,0.15); }
+  .dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--spice);
+    flex-shrink: 0;
+  }
+
+  .step-row {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    margin-bottom: 14px;
+  }
+  .step-num {
+    background: var(--gradient-spice);
+    color: white;
+    border-radius: 50%;
+    width: 28px; height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.74rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 3px;
+    box-shadow: 0 2px 8px rgba(184,90,40,0.28);
+  }
+  .step-text {
+    font-size: 0.9rem;
+    line-height: 1.65;
+    color: var(--bark);
+    padding-top: 3px;
+  }
+
+  .portions-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 16px 0 6px;
+    padding: 12px 18px;
+    background: var(--cream);
+    border: 1.5px solid var(--sand);
+    border-radius: var(--radius-md);
+  }
+  .portions-label {
+    font-size: 0.85rem;
+    color: var(--clay);
+    font-weight: 500;
+  }
+  .portions-ctrl {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-left: auto;
+  }
+  .portions-ctrl button {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    border: 1px solid var(--sand);
+    background: white;
+    color: var(--bark);
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    line-height: 1;
+  }
+  .portions-ctrl button:hover {
+    border-color: var(--spice);
+    color: var(--spice);
+    background: var(--red-bg);
+  }
+  .portions-num {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--bark);
+    min-width: 20px;
+    text-align: center;
+  }
+
+  /* ─── Footer ─── */
+  footer { border-top: 1px solid var(--sand); }
+  .footer-inner {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 18px 20px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+  .footer-brand {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 0.875rem;
+    color: var(--clay);
+  }
+  .footer-note {
+    font-size: 0.73rem;
+    color: var(--clay-light);
+    text-align: right;
+    max-width: 280px;
+    line-height: 1.5;
+  }
+
+  /* ─── Responsive ─── */
+  @media (max-width: 480px) {
+    header h1 { font-size: 1.75rem; }
+    .card { padding: 20px; }
+    .modal { padding: 24px 20px 44px; }
+    .footer-inner { flex-direction: column; gap: 6px; text-align: center; }
+    .footer-note { text-align: center; max-width: none; }
+    .settings-toggle { top: 14px; right: 14px; }
+  }
+
+  /* ─── World Cuisine ─── */
+  .world-section {
+    margin-top: 8px;
+    animation: fadeUp 0.45s ease-out 0.25s both;
+  }
+  .world-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 14px;
+    padding: 0 2px;
+  }
+  .world-title {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    color: var(--bark);
+    letter-spacing: -0.2px;
+  }
+  .world-subtitle {
+    font-size: 0.76rem;
+    color: var(--clay-light);
+  }
+  .world-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  @media (max-width: 400px) {
+    .world-grid { grid-template-columns: 1fr; }
+  }
+  .world-card {
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 18px 20px;
+    box-shadow: var(--shadow-sm);
+    transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+  }
+  .world-card:hover {
+    border-color: rgba(184,90,40,0.16);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+  }
+  .world-card-top {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .world-flag {
+    font-size: 1.3rem;
+    line-height: 1;
+  }
+  .world-country {
+    font-family: var(--font-display);
+    font-size: 0.92rem;
+    color: var(--bark);
+    font-weight: 700;
+    letter-spacing: -0.1px;
+  }
+  .world-dishes {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .world-dish {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--cream);
+    border: 1.5px solid var(--sand);
+    border-radius: var(--radius-pill);
+    padding: 7px 13px;
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    color: var(--clay);
+    cursor: pointer;
+    transition: all 0.18s;
+    text-align: left;
+    width: 100%;
+  }
+  .world-dish:hover {
+    border-color: var(--spice);
+    color: var(--spice);
+    background: var(--red-bg);
+    transform: translateX(2px);
+  }
+  .world-dish svg { flex-shrink: 0; opacity: 0; transition: opacity 0.18s; }
+  .world-dish:hover svg { opacity: 1; }
+
+  /* ─── Print ─── */
+  @media print {
+    header, footer, .search-btn, .add-btn, .fav-btn, .modal-action-btn,
+    .quick-picks, .tags, .overlay, .api-card, .settings-toggle,
+    .hint, .divider, .pref-chips, .search-portions, .world-section { display: none !important; }
+    body { background: white; }
+    .card { box-shadow: none; border: none; }
+    main { padding: 0; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-emblem">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(250,247,242,0.7)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 2v6a4 4 0 0 0 8 0V2"/>
+        <path d="M10 12v10"/>
+        <path d="M18 2a2 2 0 0 1 2 2v1a6 6 0 0 1-6 6h0v7"/>
+      </svg>
+    </div>
+    <h1>Vad ska vi laga?</h1>
+    <p>Skriv in vad du har hemma — vi hittar recepten</p>
+    <button class="settings-toggle" id="settingsToggle" aria-label="Inställningar">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+      </svg>
+    </button>
+  </div>
+</header>
+
+<main>
+
+  <!-- Search Card -->
+  <div class="card">
+    <label for="ingInput">Vad har du i kylskåpet?</label>
+    <div class="input-row">
+      <input class="ing-input" id="ingInput" type="text" placeholder="t.ex. kyckling, lök, grädde…" autocomplete="off">
+      <button class="add-btn" id="addBtn" aria-label="Lägg till ingrediens">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
+          <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+      </button>
+    </div>
+    <p class="hint">Tryck Enter eller + för att lägga till &middot; Komma separerar flera</p>
+
+    <div class="divider"></div>
+
+    <div class="quick-label">Vanliga ingredienser</div>
+    <div class="quick-picks" id="quickPicks"></div>
+
+    <div class="tags" id="tags"></div>
+
+    <div class="divider"></div>
+
+    <div class="quick-label">Preferenser</div>
+    <div class="pref-chips" id="prefChips">
+      <button class="pref-chip" data-pref="vegetariskt">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2a10 10 0 0 1 0 20c-4-2-7-7-7-10C5 7 8 2 12 2z"/></svg>
+        Vegetariskt
+      </button>
+      <button class="pref-chip" data-pref="veganskt">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 22c1-6 6-11 12-13"/><path d="M22 2s-4 0-8 4-5 10-5 10"/></svg>
+        Veganskt
+      </button>
+      <button class="pref-chip" data-pref="glutenfritt">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="4" y1="4" x2="20" y2="20"/></svg>
+        Glutenfritt
+      </button>
+      <button class="pref-chip" data-pref="snabbt">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Under 30 min
+      </button>
+    </div>
+
+    <div class="search-portions">
+      <span class="search-portions-label">Antal portioner</span>
+      <div class="search-portions-ctrl">
+        <button id="spMinus" aria-label="Färre portioner">-</button>
+        <span class="search-portions-num" id="spNum">4</span>
+        <button id="spPlus" aria-label="Fler portioner">+</button>
+      </div>
+    </div>
+
+    <button class="search-btn" id="searchBtn" disabled>
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      Hitta recept
+    </button>
+    <div class="error" id="errBox" style="display:none"></div>
+  </div>
+
+  <div id="loadingEl" style="display:none"></div>
+  <div id="recipeList"></div>
+  <div id="favSection"></div>
+
+  <!-- World Cuisine Inspiration -->
+  <div class="world-section" id="worldSection">
+    <div class="world-header">
+      <div class="world-title">Inspiration från världens kök</div>
+      <div class="world-subtitle">Klicka för att fylla i ingredienser</div>
+    </div>
+    <div class="world-grid" id="worldGrid"></div>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <span class="footer-brand">Vad ska vi laga?</span>
+    <span class="footer-note">Recepten genereras av AI och kan behöva anpassas efter smak.</span>
+  </div>
+</footer>
+
+<!-- Modal -->
+<div class="overlay" id="overlay">
+  <div class="modal" id="modal"></div>
+</div>
+
+<!-- Copy toast -->
+<div class="copy-toast" id="copyToast">Recept kopierat</div>
+
+<script>
+(() => {
+  // ─── Icons ───
+  const iconHeart = (filled) => filled
+    ? `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`
+    : `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`;
+
+  const iconClock = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`;
+
+  // ─── State ───
+  let ingredients = [];
+  let recipes = [];
+  let favorites = JSON.parse(localStorage.getItem('fav_recipes') || '[]');
+  let portions = 4;
+  let searchPortions = 4;
+  let prefs = new Set();
+
+  const quickItems = [
+    'kyckling', 'lax', 'pasta', 'ris', 'lök',
+    'vitlök', 'grädde', 'tomat', 'potatis', 'ägg',
+    'ost', 'bacon', 'paprika', 'morötter', 'spenat'
+  ];
+
+  // ─── DOM refs ───
+  const ingInput   = document.getElementById('ingInput');
+  const addBtn     = document.getElementById('addBtn');
+  const tagsEl     = document.getElementById('tags');
+  const searchBtn  = document.getElementById('searchBtn');
+  const errBox     = document.getElementById('errBox');
+  const loadingEl  = document.getElementById('loadingEl');
+  const recipeList = document.getElementById('recipeList');
+  const favSection = document.getElementById('favSection');
+  const quickPicks = document.getElementById('quickPicks');
+  const overlay    = document.getElementById('overlay');
+  const modal      = document.getElementById('modal');
+  const settingsToggle = document.getElementById('settingsToggle');
+  const prefChips  = document.getElementById('prefChips');
+  const copyToast  = document.getElementById('copyToast');
+  const worldGrid  = document.getElementById('worldGrid');
+
+  // ─── Helpers ───
+  function esc(str) {
+    const d = document.createElement('div');
+    d.textContent = str;
+    return d.innerHTML;
+  }
+  function saveFavorites() { localStorage.setItem('fav_recipes', JSON.stringify(favorites)); }
+  function isFav(name) { return favorites.some(f => f.name === name); }
+
+  function showToast(msg) {
+    copyToast.textContent = msg;
+    copyToast.classList.add('show');
+    setTimeout(() => copyToast.classList.remove('show'), 2000);
+  }
+
+
+  // ─── Preferences ───
+  prefChips.addEventListener('click', e => {
+    const chip = e.target.closest('.pref-chip');
+    if (!chip) return;
+    const pref = chip.dataset.pref;
+    if (prefs.has(pref)) { prefs.delete(pref); chip.classList.remove('active'); }
+    else { prefs.add(pref); chip.classList.add('active'); }
+  });
+
+  // ─── Search Portions ───
+  document.getElementById('spMinus').addEventListener('click', () => {
+    if (searchPortions > 1) { searchPortions--; document.getElementById('spNum').textContent = searchPortions; }
+  });
+  document.getElementById('spPlus').addEventListener('click', () => {
+    if (searchPortions < 20) { searchPortions++; document.getElementById('spNum').textContent = searchPortions; }
+  });
+
+  // ─── Quick picks ───
+  function renderQuickPicks() {
+    quickPicks.innerHTML = quickItems.map(item => {
+      const used = ingredients.includes(item) ? ' used' : '';
+      return `<button class="quick-chip${used}" data-ing="${esc(item)}">${esc(item)}</button>`;
+    }).join('');
+  }
+  quickPicks.addEventListener('click', e => {
+    const chip = e.target.closest('.quick-chip');
+    if (!chip || chip.classList.contains('used')) return;
+    const ing = chip.dataset.ing;
+    if (!ingredients.includes(ing)) { ingredients.push(ing); render(); }
+  });
+
+  // ─── Ingredients ───
+  function addIng() {
+    const val = ingInput.value.trim();
+    if (!val) return;
+    val.split(',').map(s => s.trim().toLowerCase()).filter(Boolean).forEach(p => {
+      if (!ingredients.includes(p)) ingredients.push(p);
+    });
+    ingInput.value = '';
+    render();
+    ingInput.focus();
+  }
+  function removeIng(idx) { ingredients.splice(idx, 1); render(); }
+
+  function render() {
+    tagsEl.innerHTML = ingredients.map((ing, i) =>
+      `<span class="tag">${esc(ing)}<button aria-label="Ta bort ${esc(ing)}" data-idx="${i}">×</button></span>`
+    ).join('');
+    searchBtn.disabled = ingredients.length === 0;
+    renderQuickPicks();
+    renderFavorites();
+  }
+
+  tagsEl.addEventListener('click', e => {
+    const btn = e.target.closest('.tag button');
+    if (btn) removeIng(Number(btn.dataset.idx));
+  });
+  ingInput.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); addIng(); } });
+  addBtn.addEventListener('click', addIng);
+
+  // ─── Find Recipes ───
+  async function findRecipes() {
+    if (!ingredients.length) return;
+
+    // Show skeleton loading
+    loadingEl.style.display = 'block';
+    loadingEl.innerHTML = `
+      <div class="skeleton-list">
+        ${[1,2,3].map(() => `
+          <div class="skeleton-card">
+            <div class="skel skel-title"></div>
+            <div class="skel-badges"><div class="skel skel-badge"></div><div class="skel skel-badge"></div></div>
+            <div class="skel skel-line w80"></div>
+            <div class="skel skel-line w60"></div>
+          </div>
+        `).join('')}
+      </div>
+      <div class="loading-label">Kokar ihop förslag…</div>
+    `;
+    recipeList.innerHTML = '';
+    errBox.style.display = 'none';
+    searchBtn.disabled = true;
+
+    let prefText = '';
+    if (prefs.size > 0) {
+      const labels = [];
+      if (prefs.has('vegetariskt')) labels.push('vegetariska');
+      if (prefs.has('veganskt'))    labels.push('veganska');
+      if (prefs.has('glutenfritt')) labels.push('glutenfria');
+      if (prefs.has('snabbt'))      labels.push('snabba (under 30 minuter)');
+      prefText = `\nRecepten ska vara ${labels.join(' och ')}.`;
+    }
+
+    const prompt = `Du är en vänlig svensk kock. Användaren har dessa ingredienser hemma: ${ingredients.join(', ')}.
+Föreslå 4 rätter som kan lagas med dessa ingredienser (okej med basvaror som salt, olja, mjölk etc).
+Ge varierade förslag — gärna en blandning av snabbt och mer avancerat.
+Recepten ska vara anpassade för ${searchPortions} portioner.${prefText}
+Svara ENBART med JSON, inga kodblock, inga backticks:
+{"recipes":[{"name":"Namn","time":"30 min","difficulty":"Lätt","servings":${searchPortions},"description":"En kort mening.","ingredients":["200g kyckling","1 lök"],"steps":["Steg 1","Steg 2"]}]}`;
+
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt })
+      });
+
+      if (!res.ok) throw new Error(`API-fel (${res.status}). Försök igen.`);
+
+      const data = await res.json();
+      if (data.error) throw new Error(data.error.message || 'API error');
+      const text = (data.content || []).map(b => b.text || '').join('');
+      const clean = text.replace(/```json|```/g, '').trim();
+      const parsed = JSON.parse(clean);
+      recipes = parsed.recipes || [];
+      renderRecipes();
+
+      // Smooth scroll to results
+      setTimeout(() => {
+        recipeList.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    } catch(e) {
+      errBox.textContent = e.message || 'Något gick fel — kontrollera anslutningen och försök igen.';
+      errBox.style.display = 'block';
+      console.error('Recipe fetch error:', e);
+    }
+    loadingEl.style.display = 'none';
+    searchBtn.disabled = false;
+  }
+  searchBtn.addEventListener('click', findRecipes);
+
+  // ─── Render recipes ───
+  function renderRecipes() {
+    if (!recipes.length) { recipeList.innerHTML = ''; return; }
+    recipeList.innerHTML = `
+      <div class="recipes-header">
+        <div class="recipes-title">Här är ${recipes.length} förslag</div>
+        <div class="recipes-subtitle">Klicka för att se recept</div>
+      </div>
+    ` + recipes.map((r, i) => `
+      <div class="recipe-card" data-idx="${i}">
+        <div class="recipe-top">
+          <div class="recipe-name">${esc(r.name)}</div>
+          <button class="fav-btn${isFav(r.name) ? ' active' : ''}" data-fav="${i}" aria-label="Spara favorit">${iconHeart(isFav(r.name))}</button>
+        </div>
+        <div class="badges">
+          <span class="badge">${iconClock} ${esc(r.time)}</span>
+          <span class="badge green">${esc(r.difficulty)}</span>
+          <span class="badge">${(r.ingredients||[]).length} ingredienser</span>
+        </div>
+        <div class="recipe-desc">${esc(r.description)}</div>
+        <div class="see-more">Se recept &rarr;</div>
+      </div>
+    `).join('');
+  }
+
+  recipeList.addEventListener('click', e => {
+    const favBtn = e.target.closest('.fav-btn');
+    if (favBtn) {
+      e.stopPropagation();
+      toggleFavorite(recipes[Number(favBtn.dataset.fav)]);
+      renderRecipes(); renderFavorites(); return;
+    }
+    const card = e.target.closest('.recipe-card');
+    if (card) openRecipe(Number(card.dataset.idx));
+  });
+
+  // ─── Favorites ───
+  function toggleFavorite(recipe) {
+    const idx = favorites.findIndex(f => f.name === recipe.name);
+    if (idx > -1) favorites.splice(idx, 1); else favorites.push(recipe);
+    saveFavorites();
+  }
+  function renderFavorites() {
+    if (!favorites.length) { favSection.innerHTML = ''; return; }
+    favSection.innerHTML = `
+      <div class="card fav-section">
+        <div class="fav-section-title">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          Sparade favoriter
+        </div>
+        ${favorites.map((f, i) => `
+          <div class="fav-item" data-fav-open="${i}">
+            <span>${esc(f.name)}</span>
+            <button class="fav-remove" data-fav-rm="${i}" aria-label="Ta bort favorit">×</button>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  }
+  favSection.addEventListener('click', e => {
+    const rmBtn = e.target.closest('.fav-remove');
+    if (rmBtn) {
+      e.stopPropagation();
+      favorites.splice(Number(rmBtn.dataset.favRm), 1);
+      saveFavorites(); renderFavorites(); renderRecipes(); return;
+    }
+    const item = e.target.closest('.fav-item');
+    if (item) { recipes = [...favorites]; openRecipe(Number(item.dataset.favOpen)); }
+  });
+
+  // ─── Modal ───
+  function openRecipe(idx) {
+    const r = recipes[idx];
+    if (!r) return;
+    portions = r.servings || 4;
+
+    const buildModal = () => {
+      modal.innerHTML = `
+        <div class="modal-top">
+          <div class="modal-title">${esc(r.name)}</div>
+          <div class="modal-actions">
+            <button class="modal-action-btn" id="copyBtn" aria-label="Kopiera recept" title="Kopiera">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+              </svg>
+            </button>
+            <button class="modal-action-btn" id="printBtn" aria-label="Skriv ut recept" title="Skriv ut">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/>
+              </svg>
+            </button>
+            <button class="modal-action-btn close-btn" id="closeBtn" aria-label="Stäng">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="badges modal-badges">
+          <span class="badge">${iconClock} ${esc(r.time)}</span>
+          <span class="badge green">${esc(r.difficulty)}</span>
+        </div>
+        <div class="recipe-desc">${esc(r.description)}</div>
+        <div class="portions-row">
+          <span class="portions-label">Portioner</span>
+          <div class="portions-ctrl">
+            <button id="portMinus" aria-label="Färre portioner">-</button>
+            <span class="portions-num" id="portNum">${portions}</span>
+            <button id="portPlus" aria-label="Fler portioner">+</button>
+          </div>
+        </div>
+        <div class="section-lbl">Ingredienser</div>
+        ${(r.ingredients||[]).map(ing => `<div class="ing-item"><span class="dot"></span>${esc(ing)}</div>`).join('')}
+        <div class="section-lbl">Gör så här</div>
+        ${(r.steps||[]).map((s, i) => `
+          <div class="step-row">
+            <div class="step-num">${i+1}</div>
+            <div class="step-text">${esc(s)}</div>
+          </div>
+        `).join('')}
+      `;
+
+      document.getElementById('closeBtn').addEventListener('click', closeModal);
+      document.getElementById('portMinus').addEventListener('click', () => {
+        if (portions > 1) { portions--; document.getElementById('portNum').textContent = portions; }
+      });
+      document.getElementById('portPlus').addEventListener('click', () => {
+        if (portions < 20) { portions++; document.getElementById('portNum').textContent = portions; }
+      });
+
+      // Copy recipe
+      document.getElementById('copyBtn').addEventListener('click', () => {
+        const ingText = (r.ingredients||[]).map(x => `  - ${x}`).join('\n');
+        const stepText = (r.steps||[]).map((s, i) => `  ${i+1}. ${s}`).join('\n');
+        const text = `${r.name}\n${r.time} | ${r.difficulty} | ${r.servings || 4} portioner\n\n${r.description}\n\nIngredienser:\n${ingText}\n\nGör så här:\n${stepText}`;
+        navigator.clipboard.writeText(text).then(() => showToast('Recept kopierat'));
+      });
+
+      // Print recipe
+      document.getElementById('printBtn').addEventListener('click', () => {
+        window.print();
+      });
+    };
+
+    buildModal();
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+  // ─── World Cuisine ───
+  const worldCuisines = [
+    { flag: '🇮🇹', country: 'Italien', dishes: [
+      { name: 'Pasta carbonara', ings: ['pasta', 'ägg', 'bacon', 'ost', 'vitlök'] },
+      { name: 'Risotto ai funghi', ings: ['ris', 'svamp', 'lök', 'vitlök', 'ost'] },
+      { name: 'Caprese-sallad', ings: ['tomat', 'mozzarella', 'basilika'] },
+    ]},
+    { flag: '🇹🇭', country: 'Thailand', dishes: [
+      { name: 'Pad thai', ings: ['risnudlar', 'ägg', 'tofu', 'lime', 'jordnötter'] },
+      { name: 'Grön curry', ings: ['kyckling', 'kokosmjölk', 'curry', 'paprika', 'ris'] },
+      { name: 'Tom kha gai', ings: ['kyckling', 'kokosmjölk', 'ingefära', 'lime'] },
+    ]},
+    { flag: '🇲🇽', country: 'Mexiko', dishes: [
+      { name: 'Tacos', ings: ['tortilla', 'kyckling', 'lök', 'lime', 'koriander'] },
+      { name: 'Burrito bowl', ings: ['ris', 'bönor', 'avokado', 'tomat', 'ost'] },
+      { name: 'Guacamole', ings: ['avokado', 'lime', 'lök', 'tomat', 'koriander'] },
+    ]},
+    { flag: '🇯🇵', country: 'Japan', dishes: [
+      { name: 'Ramen', ings: ['nudlar', 'ägg', 'soja', 'vitlök', 'ingefära'] },
+      { name: 'Teriyaki-lax', ings: ['lax', 'soja', 'ris', 'sesam', 'ingefära'] },
+      { name: 'Gyoza', ings: ['köttfärs', 'kål', 'vitlök', 'ingefära', 'soja'] },
+    ]},
+    { flag: '🇮🇳', country: 'Indien', dishes: [
+      { name: 'Butter chicken', ings: ['kyckling', 'tomat', 'grädde', 'vitlök', 'ris'] },
+      { name: 'Dal', ings: ['linser', 'tomat', 'lök', 'vitlök', 'ingefära'] },
+      { name: 'Palak paneer', ings: ['spenat', 'ost', 'lök', 'vitlök', 'grädde'] },
+    ]},
+    { flag: '🇲🇦', country: 'Marocko', dishes: [
+      { name: 'Kycklingtagine', ings: ['kyckling', 'morötter', 'lök', 'citron', 'oliver'] },
+      { name: 'Couscous med grönsaker', ings: ['couscous', 'morötter', 'paprika', 'lök', 'kikärtor'] },
+      { name: 'Harira-soppa', ings: ['linser', 'tomat', 'lök', 'koriander', 'kikärtor'] },
+    ]},
+  ];
+
+  const arrowIcon = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>`;
+
+  function renderWorldCuisines() {
+    worldGrid.innerHTML = worldCuisines.map(c => `
+      <div class="world-card">
+        <div class="world-card-top">
+          <span class="world-flag">${c.flag}</span>
+          <span class="world-country">${esc(c.country)}</span>
+        </div>
+        <div class="world-dishes">
+          ${c.dishes.map(d => `
+            <button class="world-dish" data-ings='${JSON.stringify(d.ings)}'>${arrowIcon} ${esc(d.name)}</button>
+          `).join('')}
+        </div>
+      </div>
+    `).join('');
+  }
+
+  worldGrid.addEventListener('click', e => {
+    const dish = e.target.closest('.world-dish');
+    if (!dish) return;
+    const ings = JSON.parse(dish.dataset.ings);
+    ingredients = [];
+    ings.forEach(ing => { if (!ingredients.includes(ing)) ingredients.push(ing); });
+    render();
+    ingInput.focus();
+    document.querySelector('.card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  // ─── Init ───
+  renderQuickPicks();
+  renderFavorites();
+  renderWorldCuisines();
+  ingInput.focus();
+})();
+</script>
+</body>
+</html>
