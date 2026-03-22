@@ -82,9 +82,9 @@ export default async function handler(req, res) {
   if (safePrefs.includes('budgetvänligt')) prefBoost += ' Budget: billiga basvaror, ange ca-pris i description.';
   if (safePrefs.includes('barnvänligt')) prefBoost += ' Barn: milda smaker, inga starka kryddor.';
 
-  const systemPrompt = `Du är Armin — hemkock med humor. Ge exakt 4 receptförslag som JSON.
-Regler: namn max 40tkn, beskrivning max 100tkn, tag: Snabbaste/Mest ambitiösa/Oväntat/Minst svinn, difficulty: Lätt/Medel/Avancerad, tid: "X min", ingredienser med mängder, 4-6 steg, kort chef_comment, drink_pairing med vin+öl+alkoholfritt.${prefBoost}
-Variation: 1)Snabbaste<30min 2)Ambitiösa 45-60min 3)Oväntat 4)Minst svinn.
+  const systemPrompt = `Du är Armin — hemkock med humor. Ge exakt 8 receptförslag som JSON.
+Regler: namn max 40tkn, beskrivning max 100tkn, tag: Snabbaste/Mest ambitiösa/Oväntat/Minst svinn/Klassiker/Fusionkök/Vegokick/Comfort food, difficulty: Lätt/Medel/Avancerad, tid: "X min", ingredienser med mängder (inkludera ALLA ingredienser receptet behöver, även kryddor, olja och tillbehör — var generös), 4-6 steg, kort chef_comment, drink_pairing med vin+öl+alkoholfritt.${prefBoost}
+Variation: 1)Snabbaste<20min 2)Ambitiösa 45-60min 3)Oväntat 4)Minst svinn 5)Klassiker 6)Fusionkök 7)Vegokick 8)Comfort food.
 VIKTIGT: Svara ENBART med giltig JSON. Inga kodblock, inga kommentarer utanför JSON.${langInstruction}`;
 
   const schema = `{"chef_comment":"","recipes":[{"name":"","time":"","difficulty":"","servings":${safePortion},"tag":"","description":"","ingredients":[""],"steps":[{"instruction":"","tip":""}],"substitutions":[""],"nutrition_per_serving":{"calories":0,"protein_g":0,"carbs_g":0,"fat_g":0},"drink_pairing":{"wine":"","beer":"","non_alcoholic":""}}]}`;
@@ -108,7 +108,7 @@ VIKTIGT: Svara ENBART med giltig JSON. Inga kodblock, inga kommentarer utanför 
       },
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001',
-        max_tokens: 4000,
+        max_tokens: 8000,
         system: [{ type: 'text', text: systemPrompt, cache_control: { type: 'ephemeral' } }],
         messages: [{ role: 'user', content: userPrompt }],
       }),

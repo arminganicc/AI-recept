@@ -1,7 +1,7 @@
 {
   "name": "Vad ska vi laga?",
   "short_name": "Recepthjälpen",
-  "description": "AI-driven recepthjälp baserad på dina ingredienser. Fota kylskåpet eller skriv in vad du har — få 4 recept direkt.",
+  "description": "AI-driven recepthjälp baserad på dina ingredienser. Fota kylskåpet eller skriv in vad du har — få 8 recept direkt.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#F7F4EF",
