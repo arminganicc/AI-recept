@@ -1458,7 +1458,7 @@
 
     modal.innerHTML = `
       <div class="modal-top" style="position:sticky;top:0;background:var(--bg-surface);z-index:2;padding-top:8px;">
-        <div class="modal-title">🆕 ${t('changelogTitle')}</div>
+        <div class="modal-title">🆕 Nyheter</div>
         <div class="modal-actions">
           <button class="modal-action-btn close-btn" id="closeBtn" aria-label="${t('ariaClose')}">${iconClose}</button>
         </div>
@@ -1477,7 +1477,7 @@
           </div>
         `).join('')}
       </div>
-      <button class="changelog-close-bottom" id="closeChangelogBtn">${t('changelogClose')}</button>
+      <button class="changelog-close-bottom" id="closeChangelogBtn">Uppfattat!</button>
     `;
 
     overlay.classList.add('open');
