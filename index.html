@@ -100,7 +100,7 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
         </div>
       </div>
       <div class="hero-logo" id="heroLogo"></div>
-      <div class="hero-eyebrow" data-i18n="heroEyebrow">Kvällens eviga dilemma</div>
+      <div class="hero-eyebrow" id="heroEyebrow" data-i18n="heroEyebrow">Kvällens eviga dilemma</div>
       <h1 class="hero-title" data-i18n="heroTitle">Vad ska vi laga?</h1>
       <p class="hero-sub">Släng in vad du har. Amko löser middagen.</p>
       <div class="social-proof" id="socialProof">
@@ -127,28 +127,28 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
     <div class="onboarding-overlay" id="onboardingOverlay" hidden role="dialog" aria-modal="true" aria-label="Välkomstguide">
       <div class="onboarding-modal">
         <div class="onboarding-logo" id="onboardingLogo"></div>
-        <h2 class="onboarding-title">Välkommen! Middagsstressen slutar här.</h2>
-        <p class="onboarding-subtitle">Tre steg. Ingen kokskola krävs. Så här funkar det:</p>
+        <h2 class="onboarding-title">Välkommen! Ditt kylskåp vet inte vad som väntar.</h2>
+        <p class="onboarding-subtitle">Tre steg. Noll kokskola. Minimalt med stress. Så funkar det:</p>
         <div class="onboarding-steps">
           <div class="onboarding-step">
             <div class="onboarding-step-num">1</div>
             <div class="onboarding-step-text">
               <strong>Berätta vad du har hemma</strong>
-              <span>Skriv in dina ingredienser eller fota kylskåpet — vi identifierar råvarorna. Ja, även den där ensamma paprikans i bakre hörnet.</span>
+              <span>Skriv in dina ingredienser eller fota kylskåpet — vi identifierar råvarorna. Ja, även den där ensamma paprikan i bakre hörnet som har sett bättre dagar.</span>
             </div>
           </div>
           <div class="onboarding-step">
             <div class="onboarding-step-num">2</div>
             <div class="onboarding-step-text">
               <strong>Få 8 recept direkt</strong>
-              <span>Amko föreslår allt från "klart på 15 min" till "imponera på middagsgästerna". Du väljer ambitionsnivå.</span>
+              <span>Amko föreslår allt från "klart snabbare än att beställa pizza" till "imponera på middagsgästerna och låtsas att det var svårt".</span>
             </div>
           </div>
           <div class="onboarding-step">
             <div class="onboarding-step-num">3</div>
             <div class="onboarding-step-text">
               <strong>Laga, spara, handla</strong>
-              <span>Följ receptet steg-för-steg i kokläge, spara favoriter, och skicka inköpslistan till dig själv. Resten sköter du.</span>
+              <span>Följ receptet steg-för-steg i kokläge, spara favoriter, och skicka inköpslistan. Vi gör allt utom disken.</span>
             </div>
           </div>
         </div>
@@ -167,7 +167,7 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
           </div>
         </div>
         <button class="onboarding-cta" id="onboardingClose">Okej, jag är hungrig — kör!</button>
-        <p class="onboarding-hint">Gratis att börja. Inget konto krävs. Över 2 400 recept skapade av matlagare som du.</p>
+        <p class="onboarding-hint">Gratis. Inget konto krävs. Inga konstigheter. Bara mat (och lite humor).</p>
       </div>
     </div>
 
@@ -277,6 +277,18 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
       <div class="armin-picks" id="arminPicks"></div>
     </div>
 
+    <!-- Trending denna vecka -->
+    <div class="trending-section" id="trendingSection">
+      <div class="trending-header">
+        <span class="trending-icon">🔥</span>
+        <div>
+          <div class="trending-title">Trending denna vecka</div>
+          <div class="trending-subtitle">Vad alla lagar just nu</div>
+        </div>
+      </div>
+      <div class="trending-list" id="trendingList"></div>
+    </div>
+
     <div class="section-divider">
       <span>Världens kök</span>
     </div>
@@ -324,12 +336,14 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
   </div>
   <div class="view-content">
     <div class="shopping-manual-add">
-      <div class="input-row">
+      <div id="shopQuickChips" class="shop-quick-chips" aria-label="Senaste varor"></div>
+      <div class="input-row" style="position:relative;">
         <label for="manualListInput" class="visually-hidden">Lägg till vara i inköpslistan</label>
         <input class="ing-input" id="manualListInput" type="text" placeholder="Lägg till vara..." autocomplete="off">
         <button class="add-btn" id="manualListAddBtn" aria-label="Lägg till">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         </button>
+        <ul id="shopAutocomplete" class="shop-autocomplete" role="listbox" aria-label="Förslag"></ul>
       </div>
     </div>
     <div id="listEmpty" class="empty-state">
@@ -341,6 +355,14 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
       <button class="empty-cta" onclick="window.__switchView && window.__switchView('search')">Hitta recept och bygg din lista &rarr;</button>
     </div>
     <div id="shoppingListContent"></div>
+    <div id="shopPriceEstimate" class="shop-price-estimate" style="display:none;"></div>
+  </div>
+  <div id="duplicateToast" class="duplicate-toast" style="display:none;">
+    <p id="duplicateToastMsg"></p>
+    <div class="duplicate-toast-actions">
+      <button id="dupAddSeparate" class="dup-btn">Lägg till separat</button>
+      <button id="dupIncreaseQty" class="dup-btn primary">Öka kvantitet</button>
+    </div>
   </div>
 </section>
 
@@ -551,9 +573,9 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
     </div>
 
     <div class="footer-links">
-      <span class="footer-link">🍝 Drivs av panik kl 17:00</span>
+      <span class="footer-link" id="footerLink1">🍝 Drivs av panik kl 17:00</span>
       <span class="footer-divider">·</span>
-      <span class="footer-link">🤖 AI som faktiskt lagar mat (nåja)</span>
+      <span class="footer-link" id="footerLink2">🤖 AI som faktiskt lagar mat (nåja)</span>
     </div>
     <p class="footer-tagline">Gjord med kärlek, kaos och alldeles för mycket vitlök.</p>
     <p class="footer-tagline footer-irony">Ingen mat skadades under utvecklingen. Samma sak kan inte sägas om utvecklaren.</p>

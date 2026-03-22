@@ -109,22 +109,22 @@
       onboardingCta: 'Okej, jag är hungrig — kör!',
       onboardingHint: 'Gratis att börja. Inget konto krävs. Över 2 400 recept skapade av matlagare som du.',
       // Toast
-      toastCopied: 'Kopierat! Dela på hälsa.',
+      toastCopied: 'Kopierat! Sprid receptkärleken.',
       toastListSent: 'Inköpslistan flyger iväg till din mejl ✈️',
-      toastListAdded: 'Lagt till! Dags att handla snart.',
-      toastEmptyList: 'Listan är tom — inget att skicka!',
-      toastLoggedIn: 'Välkommen tillbaka!',
-      toastLoggedOut: 'Du är nu utloggad',
-      toastMagicSent: 'Kolla din mejl — vi har skickat en länk',
-      toastError: 'Något gick snett — försök igen om en stund',
-      toastListCleared: 'Inköpslistan rensad',
-      toastAlreadyInList: 'Ingredienserna finns redan i listan',
-      toastCantShare: 'Kunde inte dela',
-      toastCantCopy: 'Kunde inte kopiera',
-      toastShareNA: 'Dela ej tillgängligt',
-      toastNoIngs: 'Hittade inga ingredienser',
-      toastBonAppetit: 'Smaklig måltid! 🍽️',
-      toastFromCache: 'Hämtat från tidigare sökning',
+      toastListAdded: 'In i korgen! Dags att handla snart.',
+      toastEmptyList: 'Listan är tom — inget att skicka! Tomt som ditt kylskåp.',
+      toastLoggedIn: 'Välkommen tillbaka, mästerkock!',
+      toastLoggedOut: 'Hej då! Kylskåpet väntar på dig.',
+      toastMagicSent: 'Kolla din mejl — vi har skickat en magisk länk',
+      toastError: 'Oops! Något gick snett — men din hunger är fortfarande giltig.',
+      toastListCleared: 'Inköpslistan rensad. Tabula rasa!',
+      toastAlreadyInList: 'Den varan sitter redan i korgen!',
+      toastCantShare: 'Delning strulade — berätta muntligt istället?',
+      toastCantCopy: 'Kopiering misslyckades — gammal hederlig penna kanske?',
+      toastShareNA: 'Dela funkar inte här — men kärleken till mat kan du sprida ändå',
+      toastNoIngs: 'Hittade inga ingredienser — fotografera lite närmare?',
+      toastBonAppetit: 'Smaklig måltid! Du har förtjänat det. 🍽️',
+      toastFromCache: 'Amko mindes! Hämtat från senast.',
       toastAuthEmail: 'Ange e-post och lösenord',
       toastAuthShort: 'Lösenordet måste vara minst 6 tecken',
       toastAuthWrong: 'Fel e-post eller lösenord',
@@ -177,16 +177,16 @@
       removeItem: 'Ta bort',
       clearAllIngs: 'Rensa alla',
       // Error messages
-      errorTimeout: 'Sökningen tog för lång tid — försök igen.',
+      errorTimeout: 'Amko somnade visst till — peta på hen och försök igen.',
       retryBtn: 'Försök igen',
-      errorNewVersion: 'Ny version tillgänglig — ladda om för uppdatering',
-      errorParseError: 'AI:n gav ett ofullständigt svar — försök igen.',
-      errorServer: 'Servern svarar inte just nu — försök igen om en stund.',
-      errorRateLimit: 'Lite för många sökningar — vänta en minut och försök igen.',
-      errorNoRecipes: 'Inga recept returnerades — försök med andra ingredienser.',
-      errorNetwork: 'Nätverksfel — kontrollera din anslutning och försök igen.',
-      errorReload: 'Något gick snett — försök ladda om sidan.',
-      errorApiError: 'API-fel inträffade.',
+      errorNewVersion: 'Ny version! Vi har blivit ännu bättre (tror vi) — ladda om sidan.',
+      errorParseError: 'Amko tappade tråden mitt i receptet — ge hen en chans till.',
+      errorServer: 'Servern tar en fika — försök igen om en liten stund.',
+      errorRateLimit: 'Lugna dig, mästerkock! Vänta en minut så hinner Amko ifatt.',
+      errorNoRecipes: 'Amko kliade sig i huvudet och hittade inget — prova andra ingredienser?',
+      errorNetwork: 'Inget internet? Prova att öppna kylskåpet och improvisera.',
+      errorReload: 'Något krånglade — ladda om sidan så fixar vi det.',
+      errorApiError: 'Tekniskt strul — men din hunger är fortfarande giltig.',
       searchingText: 'Söker...',
       retryingText: 'Försöker igen ({attempt}/{total})',
       historyCleared: 'Sökhistorik rensad',
@@ -873,9 +873,15 @@
     if (cmTimer) cmTimer.textContent = t('cookModeTimer');
     // Re-render quick picks with translated labels
     renderQuickPicks();
-    // Rotate hero subtitle and footer in correct language
+    // Rotate hero subtitle and footer in correct language (respects late-night easter egg)
     const heroSubEl = document.querySelector('.hero-sub');
-    if (heroSubEl) heroSubEl.textContent = pick(heroSubtitles[currentLang] || heroSubtitles.sv);
+    const h = new Date().getHours();
+    if (h >= 23 || h < 5) {
+      const lns = ['Midnattshunger? Vi dömer inte.', 'Klockan är mycket. Men hungern sover aldrig.', 'Sen middag > ingen middag.'];
+      if (heroSubEl) heroSubEl.textContent = pick(lns);
+    } else {
+      if (heroSubEl) heroSubEl.textContent = pick(heroSubtitles[currentLang] || heroSubtitles.sv);
+    }
     const ftTagline = document.querySelector('.footer-tagline:not(.footer-irony)');
     const ftIrony = document.querySelector('.footer-irony');
     if (ftTagline) ftTagline.textContent = pick(footerTaglines[currentLang] || footerTaglines.sv);
@@ -1129,11 +1135,11 @@
 
   const heroSubtitles = {
     sv: [
-      'Släng in vad du har. Amko fixar resten.',
+      'Släng in vad du har. Amko fixar resten. (Nästan alltid.)',
       'Du har grejer hemma. Du vet bara inte vad du ska göra med dem.',
       'Från "vi har ju ingenting" till middag på 30 min.',
       'Kylskåpskaos → Middagsmagi.',
-      'Amko dömer inte ditt kylskåp. (Nåja, lite.)',
+      'Amko dömer inte ditt kylskåp. (Okej, lite.)',
       'Billigt, snabbt, gott. Välj alla tre.',
       'Din mamma hade godkänt det här. Typ.',
       'CSN-middag med Michelin-vibbar.',
@@ -1149,6 +1155,19 @@
       'Dina ingredienser har potential. Du också, förmodligen.',
       'För alla som står i köket och tänker "varför gjorde jag inte detta enklare".',
       'Laga mat som om ingen tittar. För det gör ingen.',
+      'Din kylskåpsterapeut sedan 2024.',
+      'Räknar kalorier... skoja, det gör vi aldrig.',
+      'Det du kallar "tomma skåp" kallar vi en utmaning.',
+      'Foodora har semester. Vi har inte det.',
+      'Halvt förvuxen zucchini? Vi har recept för det.',
+      'Vi dömer inte dina ingredienser. Okej, vi dömer lite.',
+      'Panik + pasta = perfektion.',
+      'Du förtjänar bättre än fryspizza. (Men ibland är fryspizza okej.)',
+      'Tre ingredienser och lite tur — mer behövs inte.',
+      'Matlagningstips: börja med att inte panika.',
+      'Bättre matlagning genom lägre ambitioner.',
+      'Amko ersätter inte din farmor. Men vi försöker.',
+      'Ketchup är ingen ingrediens. (Eller?)',
     ],
     en: [
       'Throw in what you have. Amko handles dinner.',
@@ -1186,21 +1205,21 @@
   };
 
   const footerTaglines = {
-    sv: ['Lagad med kärlek, kaos och alldeles för mycket vitlök.', 'Inga kockar skadades. Några ägg, dock.', 'Kodad med kaffe. Testad med hunger.', 'Byggt av någon som googlar "hur kokar man ris" ibland.', 'Made in Sweden. Drivs av panik och pasta.', 'Funkar bäst typ kl 17 när stressen slår till.', 'Testad av studenter. Godkänd av mammor. Ifrågasatt av mormödrar.', 'Vi ersätter inte din farmor. Men vi försöker.', 'Amko gör grovjobbet. Du tar åt dig äran.', 'Om det smakar konstigt så följde du inte receptet. Bara så du vet.', 'Gjord av en människa som äter frukost till middag ibland.', 'Inget nyhetsbrev. Ingen premium-version. Bara mat.', 'Du googlade "enkel middag". Vi tog det personligt.'],
+    sv: ['Lagad med kärlek, kaos och alldeles för mycket vitlök.', 'Inga kockar skadades. Några ägg, dock.', 'Kodad med kaffe. Testad med hunger.', 'Byggt av någon som googlar "hur kokar man ris" ibland.', 'Made in Sweden. Drivs av panik och pasta.', 'Funkar bäst typ kl 17 när stressen slår till.', 'Testad av studenter. Godkänd av mammor. Ifrågasatt av mormödrar.', 'Vi ersätter inte din farmor. Men vi försöker.', 'Amko gör grovjobbet. Du tar åt dig äran.', 'Om det smakar konstigt så följde du inte receptet. Bara så du vet.', 'Gjord av en människa som äter frukost till middag ibland.', 'Inget nyhetsbrev. Ingen premium-version. Bara mat.', 'Du googlade "enkel middag". Vi tog det personligt.', 'Appen som gör att du slipper svara "vet inte" på frågan "vad vill du äta?"', 'Drivs av panik kl 17:00 och koffein kl 08:00.', 'Vi lovar ingenting. Förutom att det blir ätbart. Förmodligen.', 'Sponsrad av alla ensamma morötter i världens kylskåp.', 'Ingen mat skadades. Utvecklarens stolthet, däremot.', 'Gjord av en utvecklare som äter nudlar oftare än hen borde.'],
     en: ['Made with love, chaos, and way too much garlic.', 'No chefs were harmed. A few eggs, though.', 'Coded with coffee. Tested with hunger.', 'Built by someone who googles "how to boil rice" sometimes.', 'Works best at 4:55 PM when panic kicks in.', 'We don\'t replace your grandma. But we try.', 'Like Tinder for food. And you always match.', 'Amko does the heavy lifting. You take the credit.'],
     es: ['Hecho con amor, caos y demasiado ajo.', 'Ningún chef fue lastimado. Algunos huevos sí.', 'Programado con café. Probado con hambre.', 'Funciona mejor a las 16:55 cuando entra el pánico.', 'No reemplazamos a tu abuela. Pero lo intentamos.', 'Como Tinder para comida. Y siempre haces match.'],
     bs: ['Napravljeno s ljubavlju, haosom i previše bijelog luka.', 'Nijedan kuhar nije povrijeđen. Nekoliko jaja jeste.', 'Kodirano uz kafu. Testirano glađu.', 'Najbolje radi u 16:55 kad udari panika.', 'Ne zamjenjujemo tvoju nanu. Ali pokušavamo.', 'Kao Tinder za hranu. I uvijek se matchaš.'],
   };
 
   const footerIronies = {
-    sv: ['Ingen mat skadades. Utvecklaren däremot — den vet vi inte.', 'Om appen krånglar — skylla på vitlöken.', 'Vi tar noll ansvar för matlagningsambitioner kl 23.', 'Den här appen fixar inte disken. Men maten, det kan vi.', 'Ditt kylskåp dömer dig inte. Det gör vi inte heller.', 'Bättre än att googla "vad ska jag laga" för 45:e gången.', 'Disclaimer: Vi tar inget ansvar om du blir bra på att laga mat.', 'Fungerar bäst med låga förväntningar och hög hunger.', 'Ja, du kan frysa in rester. Nej, du kommer inte äta dem.', 'Det är okej att laga samma rätt tre gånger i veckan. Vi berättar inte.', 'Ingen AI ersätter känslan av att bränna vitlöken och börja om.', 'Innehåller spår av ambition och orealistiska portionsberäkningar.', 'Du kommer säga "nästa gång gör jag det från scratch". Du kommer inte göra det.'],
+    sv: ['Ingen mat skadades. Utvecklaren däremot — den vet vi inte.', 'Om appen krånglar — skylla på vitlöken.', 'Vi tar noll ansvar för matlagningsambitioner kl 23.', 'Den här appen fixar inte disken. Men maten, det kan vi.', 'Ditt kylskåp dömer dig inte. Det gör vi inte heller.', 'Bättre än att googla "vad ska jag laga" för 45:e gången.', 'Disclaimer: Vi tar inget ansvar om du blir bra på att laga mat.', 'Fungerar bäst med låga förväntningar och hög hunger.', 'Ja, du kan frysa in rester. Nej, du kommer inte äta dem.', 'Det är okej att laga samma rätt tre gånger i veckan. Vi berättar inte.', 'Ingen AI ersätter känslan av att bränna vitlöken och börja om.', 'Innehåller spår av ambition och orealistiska portionsberäkningar.', 'Du kommer säga "nästa gång gör jag det från scratch". Du kommer inte göra det.', 'Bieffekter: plötslig matlagningsförmåga och lägre Foodora-räkning.', 'Om du följer receptet och det ändå smakar konstigt — det är karaktär.', 'Garanterat fri från transfetter, men inte från dåliga ordvitsar.', 'Vi vet att du bara läser ingredienslistan och sedan improviserar.', 'Steg 1: Öppna kylskåpet. Steg 2: Stäng kylskåpet. Steg 3: Öppna den här appen.', 'Varning: Kan leda till att vänner börjar fråga dig om middagstips.'],
     en: ['No food was harmed during development. The developer, however...', 'If the app crashes — blame the garlic.', 'Disclaimer: We take no responsibility for cooking ambitions at 11 PM.', 'This app doesn\'t replace a grandma. But it tries.', 'AI-generated recipes. Human panic. Real hunger.', 'Better than googling "what should I cook" for the 45th time.', 'Side effects: sudden cooking skills, boosted confidence, lower Uber Eats bill.', 'Works best with low expectations and high hunger.'],
     es: ['Ningún alimento fue dañado. El desarrollador, sin embargo...', 'Si la app falla — culpa al ajo.', 'Esta app no reemplaza a una abuela. Pero lo intenta.', 'Recetas de IA. Pánico humano. Hambre real.', 'Efectos secundarios: habilidades culinarias repentinas, confianza elevada.', 'Funciona mejor con expectativas bajas y mucha hambre.'],
     bs: ['Nijedna hrana nije oštećena. Programer, međutim...', 'Ako app padne — kriv je bijeli luk.', 'Ova aplikacija ne zamjenjuje nanu. Ali pokušava.', 'AI recepti. Ljudska panika. Prava glad.', 'Nuspojave: iznenadne kulinarske vještine, povećano samopouzdanje.', 'Najbolje radi uz niska očekivanja i veliku glad.'],
   };
 
   const loadingMessages = {
-    sv: ['Amko tänker på vad du ska käka...', 'Mixar dina grejer i molnet...', 'Letar efter recept som funkar med det du har...', 'Räknar vitlöksklyftor (det räcker aldrig)...', 'Kollar vad man kan trolla fram...', 'Hoppas du är hungrig...', 'Konsulterar kökets högre makter...', 'Testar kombinationer som din farmor aldrig hade godkänt...', 'Gör det jobb du borde ha gjort kl 15...', 'Garanterar ingenting men gör sitt bästa...', 'Letar bland tusentals recept efter fyra du faktiskt orkar laga...'],
+    sv: ['Amko tänker på vad du ska käka...', 'Mixar dina grejer i molnet...', 'Letar efter recept som funkar med det du har...', 'Räknar vitlöksklyftor (det räcker aldrig)...', 'Kollar vad man kan trolla fram...', 'Hoppas du är hungrig...', 'Konsulterar kökets högre makter...', 'Testar kombinationer som din farmor aldrig hade godkänt...', 'Gör det jobb du borde ha gjort kl 15...', 'Garanterar ingenting men gör sitt bästa...', 'Letar bland tusentals recept efter fyra du faktiskt orkar laga...', 'Amko bläddrar i sin kokbok... (den är digital, lugn)', 'Räknar kalorier... skoja bara, det gör vi aldrig', 'Luktar i ditt kylskåp... digitalt alltså', 'Överväger om pasta räknas som svar på allt...', 'Frågar Gordon Ramsay... nej, vi frågar Amko istället', 'Letar bland recept som inte kräver att du är kock...', 'Sorterar bort allt som tar mer än 45 min... du har ju inte hela dan', 'Funderar på hur man gör guld av dina rester...', 'Dubbelkollar att vitlöken verkligen räcker...'],
     en: ['Amko is thinking about what you should eat', 'Consulting the culinary oracle', 'Mixing ingredients in the cloud', 'Not googling — trusting the AI instead', 'Looking for recipes that don\'t require talent', 'Counting garlic cloves (never enough)'],
     es: ['Amko está pensando qué deberías comer', 'Consultando el oráculo culinario', 'Mezclando ingredientes en la nube', 'Buscando recetas que no requieran talento'],
     bs: ['Amko razmišlja šta da jedeš', 'Konsultuje kulinarski orakul', 'Miješa sastojke u oblaku', 'Traži recepte koji ne zahtijevaju talenat'],
@@ -1209,13 +1228,13 @@
   // ─── Toast messages (with variation) ───
   const toastVariations = {
     favAdded: {
-      sv: ['Sparad! Den där är en keeper.', 'In bland favoriterna!', 'Noterat. Du har bra smak.', 'Sparad — bra val.', 'Den håller vi koll på åt dig.', 'Bra val. Den förtjänade det.', 'Sparad. Du kommer tacka dig själv senare.'],
+      sv: ['Sparad! Den där är en keeper.', 'In bland favoriterna!', 'Noterat. Du har bra smak.', 'Sparad — bra val.', 'Den håller vi koll på åt dig.', 'Bra val. Den förtjänade det.', 'Sparad. Du kommer tacka dig själv senare.', 'In i hjärtat med den!', 'Den rätten förtjänar kärlek. Och smör.', 'Amko godkänner ditt val.', 'Sparad för framtida "vad ska vi äta"-panik.'],
       en: ['Saved! That one\'s a keeper ❤️', 'Into the favorites vault! 🏆', 'Noted. You have great taste.', 'Saved — Amko approves 👨‍🍳', 'Nice pick. Amko would\'ve done the same.'],
       es: ['¡Guardada! Esa es imperdible ❤️', '¡Al estante de favoritos! 🏆', 'Anotado. Buen gusto.', 'Guardada — Amko aprueba 👨‍🍳'],
       bs: ['Sačuvano! Ta je za čuvanje ❤️', 'U ormar favorita! 🏆', 'Primljeno. Imaš dobar ukus.', 'Sačuvano — Amko odobrava 👨‍🍳'],
     },
     favRemoved: {
-      sv: ['Borttagen. Vi pratar aldrig om det igen.', 'Bort med den. Ingen dömer.', 'Raderad. Som om det aldrig hände.', 'Okej, den var kanske inte så bra ändå.', 'Borta. Ibland får man gå vidare.', 'Det är okej att ångra sig. Vi har alla varit där.'],
+      sv: ['Borttagen. Vi pratar aldrig om det igen.', 'Bort med den. Ingen dömer.', 'Raderad. Som om det aldrig hände.', 'Okej, den var kanske inte så bra ändå.', 'Borta. Ibland får man gå vidare.', 'Det är okej att ångra sig. Vi har alla varit där.', 'Avsparkat från favoritlaget.', 'Borta med vinden. Och receptet.', 'Relationen tog slut. Vi önskar er båda lycka till.'],
       en: ['Gone. We don\'t talk about it.', 'Removed. No judgment.', 'Deleted. Like it never happened.', 'Unfavorited. No hard feelings.'],
       es: ['Eliminada. No hablaremos de eso.', 'Quitada. Sin juicio.', 'Borrada. Como si nunca existió.'],
       bs: ['Obrisano. Ne pričamo o tome.', 'Uklonjeno. Bez osude.', 'Izbrisano. Kao da se nije desilo.'],
@@ -1238,6 +1257,9 @@
     loggedOut: () => t('toastLoggedOut'),
     magicSent: () => t('toastMagicSent'),
     error: () => t('toastError'),
+    pizzaEgg: () => 'Pizza som ingrediens? Beställ istället. Eller... skriv vad du har PÅ pizzan!',
+    icaEgg: () => 'Du har hela Ica hemma eller? Vi hittade recept ändå!',
+    milestone100: () => 'Sökning nummer 100! Du borde starta en foodblogg vid det här laget.',
   };
 
   // ─── DOM refs ───
@@ -1795,6 +1817,16 @@
     clearSuggestions();
     render();
     ingInput.focus();
+
+    // Easter egg: pizza as only ingredient
+    if (ingredients.length === 1 && ingredients[0] === 'pizza') {
+      showToast('pizzaEgg');
+    }
+    // Easter egg: >10 ingredients
+    if (ingredients.length > 10 && !window.__icaEggShown) {
+      window.__icaEggShown = true;
+      showToast('icaEgg');
+    }
   }
 
   function removeIng(idx) { ingredients.splice(idx, 1); render(); }
@@ -2178,7 +2210,7 @@
 
     if (!navigator.onLine) {
       errBox.style.display = 'block';
-      errBox.textContent = t('offlineMessage') || 'Du verkar vara offline. Kolla dina sparade favoriter medan du väntar på nätet!';
+      errBox.textContent = t('offlineMessage') || 'Inget internet? Amko kan inte hjälpa utan WiFi. Kolla dina sparade favoriter medan du väntar!';
       return;
     }
 
@@ -2319,6 +2351,13 @@
         renderRecipes();
         initTilt(recipeList);
         saveToHistory(ingredients, recipes);
+
+        // Easter egg: 100th search milestone
+        let searchCount = parseInt(localStorage.getItem('total_search_count') || '0', 10) + 1;
+        localStorage.setItem('total_search_count', String(searchCount));
+        if (searchCount === 100) {
+          showToast('milestone100');
+        }
 
         // Update URL with shareable search params
         if (!isFreetext && ingredients.length) {
@@ -3366,11 +3405,20 @@
     return picks;
   }
 
+  // Map badge keys to large display emojis for Amko cards
+  const amkoCardEmojis = {
+    weekPick: '🍖', fastest: '⚡', classic: '🧆', spicy: '🌶️', green: '🥙',
+    italian: '🍝', friday: '🌮', healthy: '🥗', asian: '🍜', balkan: '🥟',
+    comfort: '🧀', weekend: '🍲', impress: '🍣', vegan: '🌱', quick15: '⏰',
+    greek: '🫒', handmade: '🥟', mexican: '🌯', winter: '🍜', steak: '🥩',
+  };
+
   function renderAmkoPicks() {
     const container = document.getElementById('arminPicks');
     if (!container) return;
     container.innerHTML = getWeeklyPicks(arminPicks).map(p => `
       <div class="armin-pick-card" data-ings="${escAttr(JSON.stringify(p.ings))}">
+        <span class="armin-pick-emoji">${amkoCardEmojis[p.badgeKey] || '🍽️'}</span>
         <span class="armin-pick-badge">${getBadge(p.badgeKey)}</span>
         <div class="armin-pick-name">${esc(p.name)}</div>
         <div class="armin-pick-desc">${esc(p.i18nDesc?.[currentLang] || p.i18nDesc?.sv || p.desc)}</div>
@@ -3856,15 +3904,47 @@
   }
   translatePage();
 
-  // Rotate hero subtitle
+  // Rotate hero subtitle — with late-night easter egg
   const heroSubEl = document.querySelector('.hero-sub');
-  if (heroSubEl) heroSubEl.textContent = pick(heroSubtitles[currentLang] || heroSubtitles.sv);
+  const heroEyebrowEl = document.getElementById('heroEyebrow');
+  const currentHour = new Date().getHours();
+  if (currentHour >= 23 || currentHour < 5) {
+    // Late night mode
+    const lateNightSubs = [
+      'Midnattshunger? Vi dömer inte.',
+      'Klockan är mycket. Men hungern sover aldrig.',
+      'Sen middag > ingen middag.',
+      'Nattmacka-nivå eller lite mer ambitiöst?',
+      'Kylskåpet väntar. Precis som vi.',
+    ];
+    if (heroSubEl) heroSubEl.textContent = pick(lateNightSubs);
+    if (heroEyebrowEl) heroEyebrowEl.textContent = 'Uppe och snackar med kylskåpet?';
+  } else {
+    if (heroSubEl) heroSubEl.textContent = pick(heroSubtitles[currentLang] || heroSubtitles.sv);
+  }
 
   // Rotate footer texts
   const ftTagline = document.querySelector('.footer-tagline:not(.footer-irony)');
   const ftIrony = document.querySelector('.footer-irony');
   if (ftTagline) ftTagline.textContent = pick(footerTaglines[currentLang] || footerTaglines.sv);
   if (ftIrony) ftIrony.textContent = pick(footerIronies[currentLang] || footerIronies.sv);
+
+  // Rotate footer links with fun phrases
+  const footerLinkPairs = [
+    ['🍝 Drivs av panik kl 17:00', '🤖 AI som faktiskt lagar mat (nåja)'],
+    ['🧄 Sponsrad av vitlök', '🍳 Testad av hungriga studenter'],
+    ['🥕 Ingen morot skadades', '👨‍🍳 Amko godkänner detta meddelande'],
+    ['🔥 Kokplattan är på', '🛒 Kylskåpet är... halvfullt?'],
+    ['🍕 Pizza är alltid plan B', '⏰ Bäst före: nu'],
+    ['🧑‍🍳 Lagat med kärlek (och panik)', '📱 Matlagning i fickan'],
+  ];
+  const footerLink1 = document.getElementById('footerLink1');
+  const footerLink2 = document.getElementById('footerLink2');
+  if (footerLink1 && footerLink2) {
+    const pair = pick(footerLinkPairs);
+    footerLink1.textContent = pair[0];
+    footerLink2.textContent = pair[1];
+  }
 
   // Handle initial hash
   const initView = location.hash.replace('#', '') || 'search';

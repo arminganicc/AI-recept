@@ -2675,7 +2675,10 @@ body {
   .filter-tab:not(.active):hover { border-color: var(--border); color: var(--text-secondary); background: transparent; }
   .filter-tab:active { transform: scale(0.95); }
   .pref-chip:active { transform: scale(0.95); }
+  .surprise-btn:hover { animation: none; transform: none; }
   .surprise-btn:active { transform: scale(0.97); }
+  .trending-card:hover { transform: none; box-shadow: 0 1px 4px rgba(26,18,8,0.03); border-color: var(--border); }
+  .trending-card:active { transform: scale(0.97); transition-duration: 0.1s; }
   .search-btn:active { transform: scale(0.98); }
   .nav-item:active { transform: scale(0.88); }
   .fav-btn:hover { transform: none; }
