@@ -227,6 +227,21 @@
       portionLabel: 'portioner',
       addToShopBtn: 'Lägg till i inköpslistan',
       drinkPairingTitle: 'Amkos dryckestips',
+      // Aria-labels
+      ariaMyAccount: 'Mitt konto', ariaSelectLang: 'Välj språk', ariaToggleTheme: 'Växla tema',
+      ariaOnboarding: 'Välkomstguide', ariaScanFood: 'Fota dina råvaror', ariaRemove: 'Ta bort',
+      ariaAdd: 'Lägg till', ariaDecrease: 'Minska portioner', ariaIncrease: 'Öka portioner',
+      ariaInspiration: 'Inspiration', ariaSavedRecipes: 'Sparade recept',
+      ariaShoppingList: 'Inköpslista', ariaMainNav: 'Huvudnavigation',
+      ariaSearchRecipes: 'Sök recept', ariaFavorites: 'Favoriter',
+      ariaRecipeDetails: 'Receptdetaljer', ariaLogin: 'Inloggning',
+      ariaClose: 'Stäng', ariaRecipeResults: 'Receptresultat', ariaCloseResults: 'Stäng resultat',
+      ariaCookMode: 'Kokläge', ariaCloseCookMode: 'Stäng kokläge',
+      ariaPrevStep: 'Föregående steg', ariaNextStep: 'Nästa steg',
+      ariaFridgeScanning: 'Identifierar råvaror',
+      ariaFavSearch: 'Sök bland favoriter...',
+      ariaManualListAdd: 'Lägg till vara i inköpslistan',
+      offlineMessage: 'Du verkar vara offline. Kolla dina sparade favoriter medan du väntar på nätet!',
     },
     en: {
       heroEyebrow: "Tonight's eternal dilemma", heroTitle: 'What should we cook?',
@@ -381,6 +396,21 @@
       portionLabel: 'servings',
       addToShopBtn: 'Add to shopping list',
       drinkPairingTitle: 'Amko\'s drink picks',
+      // Aria-labels
+      ariaMyAccount: 'My account', ariaSelectLang: 'Select language', ariaToggleTheme: 'Toggle theme',
+      ariaOnboarding: 'Welcome guide', ariaScanFood: 'Snap your ingredients', ariaRemove: 'Remove',
+      ariaAdd: 'Add', ariaDecrease: 'Decrease servings', ariaIncrease: 'Increase servings',
+      ariaInspiration: 'Inspiration', ariaSavedRecipes: 'Saved recipes',
+      ariaShoppingList: 'Shopping list', ariaMainNav: 'Main navigation',
+      ariaSearchRecipes: 'Search recipes', ariaFavorites: 'Favorites',
+      ariaRecipeDetails: 'Recipe details', ariaLogin: 'Login',
+      ariaClose: 'Close', ariaRecipeResults: 'Recipe results', ariaCloseResults: 'Close results',
+      ariaCookMode: 'Cooking mode', ariaCloseCookMode: 'Close cooking mode',
+      ariaPrevStep: 'Previous step', ariaNextStep: 'Next step',
+      ariaFridgeScanning: 'Identifying ingredients',
+      ariaFavSearch: 'Search favorites...',
+      ariaManualListAdd: 'Add item to shopping list',
+      offlineMessage: 'You seem to be offline. Check your saved favorites while you wait!',
     },
     es: {
       heroEyebrow: 'El eterno dilema de la cena', heroTitle: '¿Qué cocinamos?',
@@ -535,6 +565,21 @@
       portionLabel: 'porciones',
       addToShopBtn: 'Añadir a la lista',
       drinkPairingTitle: 'Sugerencias de Amko',
+      // Aria-labels
+      ariaMyAccount: 'Mi cuenta', ariaSelectLang: 'Seleccionar idioma', ariaToggleTheme: 'Cambiar tema',
+      ariaOnboarding: 'Guía de bienvenida', ariaScanFood: 'Fotografía tus ingredientes', ariaRemove: 'Eliminar',
+      ariaAdd: 'Añadir', ariaDecrease: 'Reducir porciones', ariaIncrease: 'Aumentar porciones',
+      ariaInspiration: 'Inspiración', ariaSavedRecipes: 'Recetas guardadas',
+      ariaShoppingList: 'Lista de compras', ariaMainNav: 'Navegación principal',
+      ariaSearchRecipes: 'Buscar recetas', ariaFavorites: 'Favoritos',
+      ariaRecipeDetails: 'Detalles de receta', ariaLogin: 'Iniciar sesión',
+      ariaClose: 'Cerrar', ariaRecipeResults: 'Resultados de recetas', ariaCloseResults: 'Cerrar resultados',
+      ariaCookMode: 'Modo cocina', ariaCloseCookMode: 'Cerrar modo cocina',
+      ariaPrevStep: 'Paso anterior', ariaNextStep: 'Paso siguiente',
+      ariaFridgeScanning: 'Identificando ingredientes',
+      ariaFavSearch: 'Buscar en favoritos...',
+      ariaManualListAdd: 'Añadir artículo a la lista',
+      offlineMessage: 'Parece que estás sin conexión. ¡Revisa tus recetas guardadas mientras esperas!',
     },
     bs: {
       heroEyebrow: 'Vječna dilema večere', heroTitle: 'Šta da kuhamo?',
@@ -665,6 +710,21 @@
       changelogTitle: 'Novosti', changelogClose: 'Shvaćeno!',
       holidayApproaching: 'se približava!', portionLabel: 'porcija',
       addToShopBtn: 'Dodaj na listu', drinkPairingTitle: 'Amkove preporuke pića',
+      // Aria-labels
+      ariaMyAccount: 'Moj račun', ariaSelectLang: 'Odaberi jezik', ariaToggleTheme: 'Promijeni temu',
+      ariaOnboarding: 'Vodič dobrodošlice', ariaScanFood: 'Slikaj svoje namirnice', ariaRemove: 'Ukloni',
+      ariaAdd: 'Dodaj', ariaDecrease: 'Smanji porcije', ariaIncrease: 'Povećaj porcije',
+      ariaInspiration: 'Inspiracija', ariaSavedRecipes: 'Sačuvani recepti',
+      ariaShoppingList: 'Lista za kupovinu', ariaMainNav: 'Glavna navigacija',
+      ariaSearchRecipes: 'Traži recepte', ariaFavorites: 'Favoriti',
+      ariaRecipeDetails: 'Detalji recepta', ariaLogin: 'Prijava',
+      ariaClose: 'Zatvori', ariaRecipeResults: 'Rezultati recepata', ariaCloseResults: 'Zatvori rezultate',
+      ariaCookMode: 'Način kuhanja', ariaCloseCookMode: 'Zatvori način kuhanja',
+      ariaPrevStep: 'Prethodni korak', ariaNextStep: 'Sljedeći korak',
+      ariaFridgeScanning: 'Identifikacija namirnica',
+      ariaFavSearch: 'Pretraži favorite...',
+      ariaManualListAdd: 'Dodaj artikal na listu',
+      offlineMessage: 'Izgleda da si offline. Provjeri sačuvane favorite dok čekaš mrežu!',
     },
   };
 
@@ -820,6 +880,76 @@
     const ftIrony = document.querySelector('.footer-irony');
     if (ftTagline) ftTagline.textContent = pick(footerTaglines[currentLang] || footerTaglines.sv);
     if (ftIrony) ftIrony.textContent = pick(footerIronies[currentLang] || footerIronies.sv);
+
+    // Aria-labels
+    const ariaMap = [
+      ['#accountBtn', 'ariaMyAccount'], ['#langSelect', 'ariaSelectLang'],
+      ['#settingsToggle', 'ariaToggleTheme'], ['#onboardingOverlay', 'ariaOnboarding'],
+      ['#fridgeBtn', 'ariaScanFood'], ['#fridgeRemove', 'ariaRemove'],
+      ['#addBtn', 'ariaAdd'], ['#spMinus', 'ariaDecrease'], ['#spPlus', 'ariaIncrease'],
+      ['#viewInspiration', 'ariaInspiration'], ['#viewFavorites', 'ariaSavedRecipes'],
+      ['#viewShopping', 'ariaShoppingList'], ['#manualListAddBtn', 'ariaAdd'],
+      ['nav.bottom-nav', 'ariaMainNav'],
+      ['.nav-item[data-view="search"]', 'ariaSearchRecipes'],
+      ['.nav-item[data-view="inspiration"]', 'ariaInspiration'],
+      ['.nav-item[data-view="favorites"]', 'ariaFavorites'],
+      ['.nav-item[data-view="shopping"]', 'ariaShoppingList'],
+      ['#overlay', 'ariaRecipeDetails'], ['#authOverlay', 'ariaLogin'],
+      ['#closeAuth', 'ariaClose'], ['#resultsOverlay', 'ariaRecipeResults'],
+      ['#resultsClose', 'ariaCloseResults'], ['#cookModeOverlay', 'ariaCookMode'],
+      ['#cookModeClose', 'ariaCloseCookMode'],
+      ['#cookModePrev', 'ariaPrevStep'], ['#cookModeNext', 'ariaNextStep'],
+      ['#viewSearch', 'ariaSearchRecipes'],
+    ];
+    ariaMap.forEach(([sel, key]) => {
+      const el = document.querySelector(sel);
+      if (el) el.setAttribute('aria-label', t(key));
+    });
+    // Fridge scanning text
+    const fridgeScanText = document.querySelector('#fridgeScanning span');
+    if (fridgeScanText) fridgeScanText.innerHTML = t('ariaFridgeScanning') + '<span class="loading-dots"></span>';
+    // Fav search placeholder
+    const favSearchInput = document.getElementById('favSearchInput');
+    if (favSearchInput) favSearchInput.placeholder = t('ariaFavSearch');
+    // Manual list input label
+    const manualListLabel = document.querySelector('label[for="manualListInput"]');
+    if (manualListLabel) manualListLabel.textContent = t('ariaManualListAdd');
+    // Auth account manage section
+    const authManageLabel = document.querySelector('.account-manage-label');
+    if (authManageLabel) authManageLabel.textContent = t('authManage');
+    const authInfoLabels = document.querySelectorAll('.account-manage-info-label');
+    if (authInfoLabels[0]) authInfoLabels[0].textContent = t('authMethod');
+    if (authInfoLabels[1]) authInfoLabels[1].textContent = t('authSavedFavs');
+    // Auth manage buttons
+    const authChangePw = document.querySelector('#authChangePassword span');
+    if (authChangePw) authChangePw.textContent = t('authChangePassword');
+    const authDeleteAcc = document.querySelector('#authDeleteAccount span');
+    if (authDeleteAcc) authDeleteAcc.textContent = t('authDeleteAccount');
+    const authSignOutBtn = document.getElementById('authSignOut');
+    if (authSignOutBtn) authSignOutBtn.textContent = t('authSignOut');
+    // Login form labels
+    const authEmailLabel = document.querySelector('label[for="authEmail"]');
+    if (authEmailLabel) authEmailLabel.textContent = t('authEmail');
+    const authPwLabel = document.querySelector('label[for="authPassword"]');
+    if (authPwLabel) authPwLabel.textContent = t('authChangePassword').replace('Ändra ', '').replace('Change ', '').replace('Cambiar ', '').replace('Promijeni ', '');
+    // Auth login btn
+    const authLoginBtn = document.getElementById('authLoginBtn');
+    if (authLoginBtn) authLoginBtn.textContent = t('authLogin');
+    // Manual list input placeholder
+    const manualListInput = document.getElementById('manualListInput');
+    if (manualListInput) {
+      const mlPlaceholders = { sv: 'Lägg till vara...', en: 'Add item...', es: 'Añadir artículo...', bs: 'Dodaj artikal...' };
+      manualListInput.placeholder = mlPlaceholders[currentLang] || mlPlaceholders.sv;
+    }
+    // Auth password placeholder
+    const authPwInput = document.getElementById('authPassword');
+    if (authPwInput) {
+      const pwPlaceholders = { sv: 'Lösenord (minst 6 tecken)', en: 'Password (min 6 characters)', es: 'Contraseña (mín. 6 caracteres)', bs: 'Lozinka (najmanje 6 znakova)' };
+      authPwInput.placeholder = pwPlaceholders[currentLang] || pwPlaceholders.sv;
+    }
+    // Skip link
+    const skipLink = document.querySelector('.skip-link');
+    if (skipLink) skipLink.textContent = currentLang === 'sv' ? 'Hoppa till innehåll' : currentLang === 'en' ? 'Skip to content' : currentLang === 'es' ? 'Saltar al contenido' : 'Preskoči na sadržaj';
 
     document.documentElement.lang = currentLang;
   }
@@ -1296,7 +1426,7 @@
         const favCountEl2 = document.getElementById('authFavCount');
         if (providerEl) {
           const provider = currentUser.app_metadata?.provider || 'email';
-          const labels = { google: 'Google', apple: 'Apple', email: 'E-post' };
+          const labels = { google: 'Google', apple: 'Apple', email: t('authEmail') };
           providerEl.textContent = labels[provider] || provider;
         }
         if (favCountEl2) favCountEl2.textContent = `${favorites.length} ${t('recipeCountPlural')}`;
@@ -1315,7 +1445,7 @@
       <div class="modal-top" style="position:sticky;top:0;background:var(--bg-surface);z-index:2;padding-top:8px;">
         <div class="modal-title">🆕 ${t('changelogTitle')}</div>
         <div class="modal-actions">
-          <button class="modal-action-btn close-btn" id="closeBtn" aria-label="Stäng">${iconClose}</button>
+          <button class="modal-action-btn close-btn" id="closeBtn" aria-label="${t('ariaClose')}">${iconClose}</button>
         </div>
       </div>
       <div class="changelog-list">
@@ -2588,7 +2718,7 @@
               <polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/>
             </svg>
           </button>
-          <button class="modal-action-btn close-btn" id="closeBtn" aria-label="Stäng">${iconClose}</button>
+          <button class="modal-action-btn close-btn" id="closeBtn" aria-label="${t('ariaClose')}">${iconClose}</button>
         </div>
       </div>
 
@@ -2610,9 +2740,9 @@
       <div class="portions-row">
         <span class="portions-label">${t('portions')}</span>
         <div class="portions-ctrl">
-          <button id="portMinus" aria-label="Färre portioner">-</button>
+          <button id="portMinus" aria-label="${t('ariaDecrease')}">-</button>
           <span class="portions-num" id="portNum">${portions}</span>
-          <button id="portPlus" aria-label="Fler portioner">+</button>
+          <button id="portPlus" aria-label="${t('ariaIncrease')}">+</button>
         </div>
       </div>
 
