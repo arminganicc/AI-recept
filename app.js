@@ -1960,6 +1960,12 @@
     const isFreetext = searchMode === 'freetext' && freetextInput?.value.trim();
     if (!isFreetext && !ingredients.length) return;
 
+    if (!navigator.onLine) {
+      errBox.style.display = 'block';
+      errBox.textContent = t('offlineMessage') || 'Du verkar vara offline. Kolla dina sparade favoriter medan du väntar på nätet!';
+      return;
+    }
+
     const cacheKey = isFreetext ? `freetext:${freetextInput.value.trim()}:${searchPortions}:${[...prefs].sort().join(',')}` : getCacheKey();
     if (recipeCache.has(cacheKey)) {
       const cached = recipeCache.get(cacheKey);
@@ -2294,11 +2300,19 @@
           <div class="see-more">${t('seeRecipe')}</div>
         </div>
       `;
-    }).join('') + '</div>'; // close recipes-container
+    }).join('') + '</div>' + `
+      <div class="results-retry-row">
+        <button class="results-retry-btn" id="retrySearchBtn">${t('retrySearch') || 'Inget passade? Sök igen'}</button>
+      </div>
+    `; // close recipes-container
 
     // Render in results overlay
     if (resultsBody) {
       resultsBody.innerHTML = resultsHTML;
+      document.getElementById('retrySearchBtn')?.addEventListener('click', () => {
+        closeResultsOverlay();
+        document.getElementById('ingInput')?.focus();
+      });
       if (resultsTitle) resultsTitle.textContent = `${recipes.length} ${t('recipeCountPlural')}`;
       openResultsOverlay();
     } else {
@@ -2361,6 +2375,16 @@
 
   let favFilter = 'all';
 
+  let favSearchQuery = '';
+  const favSearchInput = document.getElementById('favSearchInput');
+  const favSearchWrapper = document.getElementById('favSearchWrapper');
+  if (favSearchInput) {
+    favSearchInput.addEventListener('input', () => {
+      favSearchQuery = favSearchInput.value.trim().toLowerCase();
+      renderFavView();
+    });
+  }
+
   function renderFavView() {
     if (!favGrid || !favsEmpty) return;
     updateFavBadge();
@@ -2369,9 +2393,11 @@
       favsEmpty.style.display = '';
       favGrid.innerHTML = '';
       if (favFilterEl) favFilterEl.innerHTML = '';
+      if (favSearchWrapper) favSearchWrapper.style.display = 'none';
       return;
     }
     favsEmpty.style.display = 'none';
+    if (favSearchWrapper) favSearchWrapper.style.display = favorites.length >= 3 ? '' : 'none';
 
     // Render filter chips
     if (favFilterEl && favorites.length) {
@@ -2387,7 +2413,8 @@
       favFilterEl.innerHTML = '';
     }
 
-    const filteredFavs = favFilter === 'all' ? favorites : favorites.filter(f => f.difficulty === favFilter);
+    let filteredFavs = favFilter === 'all' ? favorites : favorites.filter(f => f.difficulty === favFilter);
+    if (favSearchQuery) filteredFavs = filteredFavs.filter(f => f.name.toLowerCase().includes(favSearchQuery));
     favGrid.innerHTML = filteredFavs.map((f, i) => {
       const realIdx = favorites.indexOf(f);
       return `
@@ -2710,6 +2737,29 @@
 
     overlay.classList.add('open');
     document.body.style.overflow = 'hidden';
+
+    // Focus trap
+    trapFocus(modal);
+  }
+
+  let previouslyFocused = null;
+  function trapFocus(container) {
+    previouslyFocused = document.activeElement;
+    const focusable = container.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+    if (!focusable.length) return;
+    focusable[0].focus();
+    container._trapHandler = (e) => {
+      if (e.key !== 'Tab') return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    };
+    container.addEventListener('keydown', container._trapHandler);
+  }
+  function releaseFocus(container) {
+    if (container._trapHandler) { container.removeEventListener('keydown', container._trapHandler); delete container._trapHandler; }
+    if (previouslyFocused) { previouslyFocused.focus(); previouslyFocused = null; }
   }
 
   function recipeToText(r) {
@@ -2721,6 +2771,7 @@
   function closeModal() {
     overlay.classList.remove('open');
     document.body.style.overflow = '';
+    releaseFocus(modal);
   }
 
   overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
@@ -2765,7 +2816,12 @@
     const stepText = typeof step === 'string' ? step : (step?.instruction || '');
     const stepTip = typeof step === 'object' ? step?.tip : '';
 
+    const ingsHTML = (cookModeRecipe.ingredients || []).map(ing => `<div class="cook-mode-ing-item">${esc(ing)}</div>`).join('');
     body.innerHTML = `
+      <details class="cook-mode-ingredients">
+        <summary class="cook-mode-ingredients-toggle">${t('ingredients')} (${(cookModeRecipe.ingredients || []).length})</summary>
+        <div class="cook-mode-ingredients-list">${ingsHTML}</div>
+      </details>
       <div class="step-number">${cookModeStep + 1}</div>
       <div class="step-content">${esc(stepText)}</div>
       ${stepTip ? `<div class="cook-mode-tip">💡 ${esc(stepTip)}</div>` : ''}
@@ -3248,7 +3304,7 @@
     ings.forEach(ing => { if (!ingredients.includes(ing)) ingredients.push(ing); });
     switchView('search');
     render();
-    ingInput.focus();
+    setTimeout(() => findRecipes(), 400);
   });
 
   document.getElementById('surpriseBtn')?.addEventListener('click', () => {
@@ -3260,7 +3316,7 @@
     switchView('search');
     render();
     showToast(`${c.flag} ${d.name}`);
-    ingInput.focus();
+    setTimeout(() => findRecipes(), 400);
   });
 
   // ─── Image compression for fridge photos ───

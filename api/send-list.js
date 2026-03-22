@@ -1,3 +1,7 @@
+function escapeHtml(str) {
+  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
 
@@ -10,7 +14,7 @@ export default async function handler(req, res) {
   }
 
   const itemsHTML = items
-    .map(i => `<li style="padding:6px 0;font-size:15px;color:#1A1208;">${i.name || i.text || i}</li>`)
+    .map(i => `<li style="padding:6px 0;font-size:15px;color:#1A1208;">${escapeHtml(i.name || i.text || i)}</li>`)
     .join('');
 
   try {
@@ -23,11 +27,11 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         from: process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
         to: email,
-        subject: `Inköpslista: ${recipeName || 'Vad ska vi laga?'}`,
+        subject: `Inköpslista: ${escapeHtml(recipeName || 'Vad ska vi laga?')}`,
         html: `
           <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:480px;margin:0 auto;padding:24px;">
             <h2 style="font-size:22px;color:#1A1208;margin-bottom:8px;font-weight:700;">
-              ${recipeName || 'Din inköpslista'}
+              ${escapeHtml(recipeName || 'Din inköpslista')}
             </h2>
             <p style="color:#6B5B4E;margin-bottom:20px;font-size:15px;">
               Din inköpslista från Vad ska vi laga?

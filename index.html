@@ -19,6 +19,7 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
 <meta property="og:type" content="website">
 <meta property="og:locale" content="sv_SE">
 <meta property="og:image" content="/og-image.jpg">
+<meta property="og:url" content="https://vadskavialaga.se/">
 <!-- SEO: Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Vad ska vi laga?">
@@ -36,9 +37,10 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
 <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
+<a href="#mainContent" class="skip-link">Hoppa till innehåll</a>
 
 <!-- ═══ VIEW: SÖK ═══ -->
-<section class="view" id="viewSearch">
+<section class="view" id="viewSearch" aria-label="Sök recept">
   <header class="hero">
     <div class="hero-inner">
       <div class="hero-toolbar">
@@ -62,9 +64,9 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
     </div>
   </header>
 
-  <div class="view-content">
+  <div class="view-content" id="mainContent">
     <!-- Onboarding welcome -->
-    <div class="onboarding-overlay" id="onboardingOverlay" hidden>
+    <div class="onboarding-overlay" id="onboardingOverlay" hidden role="dialog" aria-modal="true" aria-label="Välkomstguide">
       <div class="onboarding-modal">
         <div class="onboarding-logo" id="onboardingLogo"></div>
         <h2 class="onboarding-title">Välkommen! Middagsstressen slutar här.</h2>
@@ -102,20 +104,20 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
 
     <!-- Search mode tabs -->
     <div class="search-mode-tabs" id="searchModeTabs" role="tablist">
-      <button class="search-mode-tab active" data-mode="ingredients" role="tab" aria-selected="true">🥕 Ingredienser</button>
-      <button class="search-mode-tab" data-mode="freetext" role="tab" aria-selected="false">💬 Berätta fritt</button>
+      <button class="search-mode-tab active" data-mode="ingredients" role="tab" aria-selected="true" id="tabIngredients" aria-controls="ingredientMode">🥕 Ingredienser</button>
+      <button class="search-mode-tab" data-mode="freetext" role="tab" aria-selected="false" id="tabFreetext" aria-controls="freetextMode">💬 Berätta fritt</button>
     </div>
 
     <section class="card">
       <!-- Free-text mode (hidden by default) -->
-      <div id="freetextMode" hidden>
-        <label class="card-label">Berätta vad du är sugen på</label>
+      <div id="freetextMode" hidden role="tabpanel" aria-labelledby="tabFreetext">
+        <label class="card-label" for="freetextInput">Berätta vad du är sugen på</label>
         <textarea class="freetext-input" id="freetextInput" rows="3" maxlength="500" placeholder="T.ex. 'Planera 5 middagar för en student under 200 kr', 'Sugen på Balkan', 'Barnvänlig veckomeny', 'Festmiddag för 8 pers', 'Proteinrik lunch som mättar hela dan'..."></textarea>
         <p class="hint">Skriv fritt — Amko fattar vad du menar.</p>
       </div>
 
       <!-- Ingredient mode (default) -->
-      <div id="ingredientMode">
+      <div id="ingredientMode" role="tabpanel" aria-labelledby="tabIngredients">
       <label for="ingInput" class="card-label" data-i18n="yourIngredients">Dina råvaror</label>
 
       <div class="fridge-upload" id="fridgeUpload">
@@ -153,14 +155,14 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
       <div class="divider"></div>
       <div class="quick-label" data-i18n="howPicky">Hur kräsen är du?</div>
       <div class="pref-chips" id="prefChips">
-        <button class="pref-chip" data-pref="vegetariskt">Vegetariskt</button>
-        <button class="pref-chip" data-pref="veganskt">Veganskt</button>
-        <button class="pref-chip" data-pref="glutenfritt">Glutenfritt</button>
-        <button class="pref-chip" data-pref="snabbt">Under 30 min</button>
-        <button class="pref-chip" data-pref="laktosfritt">Laktosfritt</button>
-        <button class="pref-chip" data-pref="nötfritt">Nötfritt</button>
-        <button class="pref-chip" data-pref="barnvänligt">Barnvänligt</button>
-        <button class="pref-chip" data-pref="budgetvänligt">Budgetvänligt</button>
+        <button class="pref-chip" data-pref="vegetariskt" aria-pressed="false">Vegetariskt</button>
+        <button class="pref-chip" data-pref="veganskt" aria-pressed="false">Veganskt</button>
+        <button class="pref-chip" data-pref="glutenfritt" aria-pressed="false">Glutenfritt</button>
+        <button class="pref-chip" data-pref="snabbt" aria-pressed="false">Under 30 min</button>
+        <button class="pref-chip" data-pref="laktosfritt" aria-pressed="false">Laktosfritt</button>
+        <button class="pref-chip" data-pref="nötfritt" aria-pressed="false">Nötfritt</button>
+        <button class="pref-chip" data-pref="barnvänligt" aria-pressed="false">Barnvänligt</button>
+        <button class="pref-chip" data-pref="budgetvänligt" aria-pressed="false">Budgetvänligt</button>
       </div>
 
       <div class="search-portions">
@@ -173,8 +175,8 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
       </div>
 
       <button class="search-btn" id="searchBtn" disabled data-i18n="showRecipes">Visa recept</button>
-      <p class="search-btn-hint" id="searchBtnHint">Lägg till minst en ingrediens för att söka</p>
-      <div class="error" id="errBox" style="display:none"></div>
+      <p class="search-btn-hint" id="searchBtnHint" aria-live="polite">Lägg till minst en ingrediens för att söka</p>
+      <div class="error" id="errBox" role="alert" aria-live="assertive" style="display:none"></div>
     </section>
 
     <div id="historySection"></div>
@@ -184,7 +186,7 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
 </section>
 
 <!-- ═══ VIEW: INSPIRATION ═══ -->
-<section class="view" id="viewInspiration" hidden>
+<section class="view" id="viewInspiration" hidden aria-label="Inspiration">
   <div class="view-header">
     <h2 class="view-title">Inspiration</h2>
     <p class="view-sub">Amkos favoriter och världens kök — allt på ett ställe</p>
@@ -214,7 +216,7 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
 </section>
 
 <!-- ═══ VIEW: FAVORITER ═══ -->
-<section class="view" id="viewFavorites" hidden>
+<section class="view" id="viewFavorites" hidden aria-label="Sparade recept">
   <div class="view-header">
     <h2 class="view-title" data-i18n="savedRecipes">Sparade recept</h2>
     <p class="view-sub" id="favCount">0 recept sparade</p>
@@ -228,13 +230,16 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
       <p class="empty-desc" data-i18n="noSavedDesc">Tryck på hjärtat på ett recept för att spara det här.</p>
       <button class="empty-cta" id="emptyCtaBtn" data-i18n="findRecipes">Hitta recept &rarr;</button>
     </div>
+    <div class="fav-search-wrapper" id="favSearchWrapper" style="display:none">
+      <input class="fav-search-input" id="favSearchInput" type="text" placeholder="Sök bland favoriter..." autocomplete="off">
+    </div>
     <div class="fav-filter-chips" id="favFilterChips"></div>
     <div id="favGrid" class="fav-grid"></div>
   </div>
 </section>
 
 <!-- ═══ VIEW: INKÖPSLISTA ═══ -->
-<section class="view" id="viewShopping" hidden>
+<section class="view" id="viewShopping" hidden aria-label="Inköpslista">
   <div class="view-header shopping-header">
     <div>
       <h2 class="view-title" data-i18n="shoppingList">Inköpslista</h2>
@@ -248,6 +253,7 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
   <div class="view-content">
     <div class="shopping-manual-add">
       <div class="input-row">
+        <label for="manualListInput" class="visually-hidden">Lägg till vara i inköpslistan</label>
         <input class="ing-input" id="manualListInput" type="text" placeholder="Lägg till vara..." autocomplete="off">
         <button class="add-btn" id="manualListAddBtn" aria-label="Lägg till">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -289,10 +295,10 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
 </nav>
 
 <!-- ═══ GLOBAL OVERLAYS ═══ -->
-<div class="overlay" id="overlay"><div class="modal" id="modal"></div></div>
+<div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-label="Receptdetaljer"><div class="modal" id="modal"></div></div>
 
 <!-- ═══ AUTH MODAL ═══ -->
-<div class="overlay" id="authOverlay">
+<div class="overlay" id="authOverlay" role="dialog" aria-modal="true" aria-label="Inloggning">
   <div class="modal auth-modal" id="authModal">
     <div class="auth-states">
       <!-- Ej inloggad -->
@@ -331,7 +337,9 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
             <span>Kom tillbaka till dina recept var som helst</span>
           </div>
         </div>
+        <label for="authEmail" class="visually-hidden">E-postadress</label>
         <input type="email" id="authEmail" class="auth-input" placeholder="din@email.com" autocomplete="email" inputmode="email">
+        <label for="authPassword" class="visually-hidden">Lösenord</label>
         <input type="password" id="authPassword" class="auth-input" placeholder="Lösenord (minst 6 tecken)" autocomplete="current-password">
         <button class="auth-btn" id="authSubmit">Logga in</button>
         <button class="auth-toggle-mode" id="authToggleMode">Har inget konto? <strong>Skapa ett här</strong></button>
@@ -386,7 +394,7 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
 </div>
 
 <!-- ═══ RESULTS OVERLAY ═══ -->
-<div class="results-overlay" id="resultsOverlay" hidden>
+<div class="results-overlay" id="resultsOverlay" hidden role="dialog" aria-modal="true" aria-label="Receptresultat">
   <div class="results-overlay-header">
     <button class="results-overlay-close" id="resultsClose" aria-label="Stäng resultat">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -397,7 +405,7 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
 </div>
 
 <!-- ═══ COOK MODE OVERLAY ═══ -->
-<div class="cook-mode-overlay" id="cookModeOverlay" hidden>
+<div class="cook-mode-overlay" id="cookModeOverlay" hidden role="dialog" aria-modal="true" aria-label="Kokläge">
   <div class="cook-mode-header">
     <button class="cook-mode-close" id="cookModeClose" aria-label="Stäng kokläge">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -417,7 +425,7 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
 </div>
 
 <!-- Confetti canvas -->
-<canvas id="confettiCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;"></canvas>
+<canvas id="confettiCanvas" aria-hidden="true" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;"></canvas>
 
 <div class="copy-toast" id="copyToast"></div>
 

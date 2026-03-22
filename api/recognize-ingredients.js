@@ -27,7 +27,7 @@ function getCorsHeaders(origin) {
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
   };
-  if (ALLOWED_ORIGINS.includes(origin) || (origin && origin.endsWith('.vercel.app'))) {
+  if (ALLOWED_ORIGINS.includes(origin)) {
     headers['Access-Control-Allow-Origin'] = origin;
   }
   return headers;
