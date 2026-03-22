@@ -1305,7 +1305,7 @@
 
     modal.innerHTML = `
       <div class="modal-top" style="position:sticky;top:0;background:var(--bg-surface);z-index:2;padding-top:8px;">
-        <div class="modal-title">🆕 Nyheter</div>
+        <div class="modal-title">🆕 ${t('changelogTitle')}</div>
         <div class="modal-actions">
           <button class="modal-action-btn close-btn" id="closeBtn" aria-label="Stäng">${iconClose}</button>
         </div>
@@ -1324,7 +1324,7 @@
           </div>
         `).join('')}
       </div>
-      <button class="changelog-close-bottom" id="closeChangelogBtn">Uppfattat!</button>
+      <button class="changelog-close-bottom" id="closeChangelogBtn">${t('changelogClose')}</button>
     `;
 
     overlay.classList.add('open');
@@ -1935,7 +1935,7 @@
 
     try {
       if (navigator.share) {
-        await navigator.share({ title: 'Inköpslista', text });
+        await navigator.share({ title: t('shareTitle'), text });
         return;
       }
     } catch (e) {
@@ -1976,7 +1976,7 @@
     // Update button to loading state
     const originalBtnText = searchBtn.textContent;
     searchBtn.disabled = true;
-    searchBtn.innerHTML = `<span class="search-btn-spinner"></span> Söker...`;
+    searchBtn.innerHTML = `<span class="search-btn-spinner"></span> ${t('searchingText')}`;
     searchBtn.setAttribute('aria-busy', 'true');
 
     loadingEl.style.display = 'block';
@@ -2005,7 +2005,7 @@
           const delay = Math.min(1000 * Math.pow(2, attempt), 10000);
           await new Promise(r => setTimeout(r, delay));
           loadingEl.querySelector('.loading-label').innerHTML =
-            `Försöker igen (${attempt + 1}/${maxRetries + 1})<span class="loading-dots"></span>`;
+            `${t('retryingText').replace('{attempt}', attempt + 1).replace('{total}', maxRetries + 1)}<span class="loading-dots"></span>`;
         }
 
         const controller = new AbortController();
@@ -2034,13 +2034,13 @@
 
         if (!res.ok) {
           if (res.status === 429) throw new Error('rate_limit');
-          if (res.status === 401 || res.status === 403) throw new Error('Något gick snett — försök ladda om sidan.');
+          if (res.status === 401 || res.status === 403) throw new Error(t('errorReload'));
           if (res.status >= 500) throw new Error('server');
-          throw new Error('Nätverksfel — kontrollera din anslutning och försök igen.');
+          throw new Error(t('errorNetwork'));
         }
 
         const data = await res.json();
-        if (data.error) throw new Error(data.error?.message || data.error || 'API-fel inträffade.');
+        if (data.error) throw new Error(data.error?.message || data.error || t('errorApiError'));
 
         const text = (data.content || []).map(b => b.text || '').join('');
         let clean = text.replace(/```json|```/g, '').trim();
@@ -2086,7 +2086,7 @@
         }
 
         recipes = sortRecipesByDifficulty(parsed.recipes || []);
-        if (!recipes.length) throw new Error('Inga recept returnerades — försök med andra ingredienser.');
+        if (!recipes.length) throw new Error(t('errorNoRecipes'));
 
         lastChefComment = parsed.chef_comment || '';
         lastMissingGlobally = parsed.missing_globally || [];
@@ -2121,14 +2121,14 @@
 
     if (lastError) {
       const errorMessages = {
-        parse_error: 'AI:n gav ett ofullständigt svar — försök igen.',
-        server: 'Servern svarar inte just nu — försök igen om en stund.',
-        rate_limit: 'Lite för många sökningar — vänta en minut och försök igen.',
+        parse_error: t('errorParseError'),
+        server: t('errorServer'),
+        rate_limit: t('errorRateLimit'),
       };
       const msg = lastError.name === 'AbortError'
-        ? 'Sökningen tog för lång tid — försök igen.'
+        ? t('errorTimeout')
         : errorMessages[lastError.message] || lastError.message;
-      errBox.innerHTML = `${esc(msg)} <button class="retry-btn" id="retryBtn">Försök igen</button>`;
+      errBox.innerHTML = `${esc(msg)} <button class="retry-btn" id="retryBtn">${t('retryBtn')}</button>`;
       errBox.style.display = 'block';
       document.getElementById('retryBtn')?.addEventListener('click', () => { errBox.style.display = 'none'; findRecipes(); });
     }
@@ -2145,7 +2145,7 @@
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.addEventListener('message', event => {
       if (event.data && event.data.type === 'SW_UPDATED') {
-        showToast('Ny version tillgänglig — ladda om för uppdatering');
+        showToast(t('errorNewVersion'));
       }
     });
   }
@@ -2217,10 +2217,12 @@
   document.getElementById('resultsClose')?.addEventListener('click', closeResultsOverlay);
 
   // ─── Render Recipes ───
+  let lastSortedRecipes = [];
   function renderRecipes() {
     if (!recipes.length) { if (resultsBody) resultsBody.innerHTML = ''; recipeList.innerHTML = ''; return; }
 
     const sorted = sortRecipesList(recipes, recipeSort);
+    lastSortedRecipes = sorted;
 
     let headerHTML = '';
 
@@ -2297,7 +2299,7 @@
     // Render in results overlay
     if (resultsBody) {
       resultsBody.innerHTML = resultsHTML;
-      if (resultsTitle) resultsTitle.textContent = `${recipes.length} recept`;
+      if (resultsTitle) resultsTitle.textContent = `${recipes.length} ${t('recipeCountPlural')}`;
       openResultsOverlay();
     } else {
       recipeList.innerHTML = resultsHTML;
@@ -2317,11 +2319,23 @@
     const favBtn = e.target.closest('.fav-btn');
     if (favBtn) {
       e.stopPropagation();
-      toggleFavorite(recipes[Number(favBtn.dataset.fav)]);
+      const fi = Number(favBtn.dataset.fav);
+      const sortedR = lastSortedRecipes[fi];
+      toggleFavorite(sortedR || recipes[fi]);
       renderRecipes(); renderFavView(); return;
     }
     const card = e.target.closest('.recipe-card');
-    if (card) openRecipe(Number(card.dataset.idx));
+    if (card) {
+      const idx = Number(card.dataset.idx);
+      // Map sorted index back to original recipes array
+      const sortedRecipe = lastSortedRecipes[idx];
+      if (sortedRecipe) {
+        const realIdx = recipes.findIndex(r => r.name === sortedRecipe.name);
+        openRecipe(realIdx >= 0 ? realIdx : idx);
+      } else {
+        openRecipe(idx);
+      }
+    }
   }
 
   recipeList.addEventListener('click', handleRecipeListClick);
@@ -2528,13 +2542,13 @@
       <div class="modal-top">
         <div class="modal-title">${esc(r.name)}</div>
         <div class="modal-actions">
-          <button class="modal-action-btn" id="copyBtn" aria-label="Kopiera recept" title="Kopiera">
+          <button class="modal-action-btn" id="copyBtn" aria-label="${t('recipeCopy')}" title="${t('recipeCopy')}">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
             </svg>
           </button>
-          <button class="modal-action-btn" id="shareBtn" aria-label="Dela recept" title="Dela">${iconShare}</button>
-          <button class="modal-action-btn" id="printBtn" aria-label="Skriv ut recept" title="Skriv ut">
+          <button class="modal-action-btn" id="shareBtn" aria-label="${t('recipeShare')}" title="${t('recipeShare')}">${iconShare}</button>
+          <button class="modal-action-btn" id="printBtn" aria-label="${t('recipePrint')}" title="${t('recipePrint')}">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/>
             </svg>
@@ -2553,13 +2567,13 @@
       <div class="recipe-desc">${esc(r.description)}</div>
 
       <button class="cook-mode-start-btn" id="startCookMode">
-        👨‍🍳 Starta kokläge
+        ${t('recipeCookMode')}
       </button>
 
       ${missingHTML}
 
       <div class="portions-row">
-        <span class="portions-label">Portioner</span>
+        <span class="portions-label">${t('portions')}</span>
         <div class="portions-ctrl">
           <button id="portMinus" aria-label="Färre portioner">-</button>
           <span class="portions-num" id="portNum">${portions}</span>
@@ -2567,7 +2581,7 @@
         </div>
       </div>
 
-      <div class="section-lbl">Ingredienser <button class="copy-ings-btn" id="copyIngsBtn" title="Kopiera ingredienslista">📋</button></div>
+      <div class="section-lbl">${t('ingredients')} <button class="copy-ings-btn" id="copyIngsBtn" title="${t('copyIngList')}">📋</button></div>
       <div id="modalIngredients">
         ${(r.ingredients || []).map(ing => `<div class="ing-item"><span class="dot"></span>${esc(ing)}</div>`).join('')}
       </div>
@@ -2575,7 +2589,7 @@
       ${nutritionHTML}
       ${subsHTML}
 
-      <div class="section-lbl">Gör så här</div>
+      <div class="section-lbl">${t('steps')}</div>
       ${steps.map((s, i) => `
         <div class="step-row">
           <div class="step-num">${i + 1}</div>
@@ -2588,14 +2602,14 @@
       `).join('')}
 
       <button class="add-to-shop-btn" id="addToShopBtn">
-        ${iconShop} Lägg till i inköpslistan
+        ${iconShop} ${t('addToShopBtn')}
       </button>
 
       ${r.leftovers_tip ? `<div class="leftovers-banner">♻️ ${esc(r.leftovers_tip)}</div>` : ''}
 
       ${r.drink_pairing ? `
       <div class="drink-pairing">
-        <div class="drink-pairing-title">🍷 Amkos dryckestips</div>
+        <div class="drink-pairing-title">🍷 ${t('drinkPairingTitle')}</div>
         <div class="drink-pairing-items">
           ${r.drink_pairing.wine ? `<div class="drink-pairing-item"><span class="drink-pairing-icon">🍷</span> ${esc(r.drink_pairing.wine)}</div>` : ''}
           ${r.drink_pairing.beer ? `<div class="drink-pairing-item"><span class="drink-pairing-icon">🍺</span> ${esc(r.drink_pairing.beer)}</div>` : ''}
@@ -2605,10 +2619,10 @@
       ` : ''}
 
       <div class="rating-row">
-        <span class="rating-label">Betygsätt receptet</span>
-        <div class="stars" id="stars" role="group" aria-label="Betygsätt recept, ${currentRating} av 5 stjärnor">
+        <span class="rating-label">${t('rateRecipe')}</span>
+        <div class="stars" id="stars" role="group" aria-label="${t('rateRecipe')}">
           ${[1,2,3,4,5].map(n => `
-            <button class="star-btn${n <= currentRating ? ' active' : ''}" data-star="${n}" role="radio" aria-checked="${n <= currentRating}" aria-label="${n} av 5 stjärnor" title="Klicka för att betygsätta ${n} stjärnor">★</button>
+            <button class="star-btn${n <= currentRating ? ' active' : ''}" data-star="${n}" role="radio" aria-checked="${n <= currentRating}" aria-label="${t('ratingScore').replace('{score}', n)}" title="${t('ratingScore').replace('{score}', n)}">★</button>
           `).join('')}
         </div>
       </div>
@@ -2675,7 +2689,7 @@
       ratings[r.name] = star;
       localStorage.setItem('recipe_ratings', JSON.stringify(ratings));
       starsEl.querySelectorAll('.star-btn').forEach((s, i) => s.classList.toggle('active', i < star));
-      showToast(star === 5 ? '⭐ Toppen!' : `Betyg: ${star}/5 stjärnor`);
+      showToast(star === 5 ? t('ratingTopScore') : t('ratingScore').replace('{score}', star));
       renderRecipes();
     });
 
@@ -2701,7 +2715,7 @@
   function recipeToText(r) {
     const ingText  = (r.ingredients || []).map(x => `  - ${x}`).join('\n');
     const stepText = (r.steps || []).map((s, i) => `  ${i + 1}. ${typeof s === 'string' ? s : (s.instruction || '')}`).join('\n');
-    return `${r.name}\n${r.time} | ${r.difficulty} | ${r.servings || 4} portioner\n\n${r.description}\n\nIngredienser:\n${ingText}\n\nGör så här:\n${stepText}`;
+    return `${r.name}\n${r.time} | ${r.difficulty} | ${r.servings || 4} ${t('portionLabel')}\n\n${r.description}\n\n${t('ingredients')}:\n${ingText}\n\n${t('steps')}:\n${stepText}`;
   }
 
   function closeModal() {
@@ -2745,7 +2759,7 @@
     const prevBtn = document.getElementById('cookModePrev');
     const nextBtn = document.getElementById('cookModeNext');
 
-    indicator.textContent = `Steg ${cookModeStep + 1} av ${steps.length}`;
+    indicator.textContent = t('cookModeStepOf').replace('{current}', cookModeStep + 1).replace('{total}', steps.length);
 
     const step = steps[cookModeStep];
     const stepText = typeof step === 'string' ? step : (step?.instruction || '');
@@ -2759,9 +2773,9 @@
 
     prevBtn.disabled = cookModeStep === 0;
     if (cookModeStep >= steps.length - 1) {
-      nextBtn.textContent = '✓ Klar!';
+      nextBtn.textContent = t('cookModeDone');
     } else {
-      nextBtn.textContent = 'Nästa →';
+      nextBtn.textContent = t('cookModeNext');
     }
   }
 
@@ -2808,11 +2822,11 @@
       cookModeTimer = null;
       cookModeSeconds = 0;
       if (display) { display.hidden = true; display.textContent = '00:00'; }
-      document.getElementById('cookModeTimerBtn').textContent = '⏱ Starta timer';
+      document.getElementById('cookModeTimerBtn').textContent = t('cookModeStartTimer');
     } else {
       cookModeSeconds = 0;
       if (display) display.hidden = false;
-      document.getElementById('cookModeTimerBtn').textContent = '⏹ Stoppa timer';
+      document.getElementById('cookModeTimerBtn').textContent = t('cookModeStopTimer');
       cookModeTimer = setInterval(() => {
         cookModeSeconds++;
         const m = String(Math.floor(cookModeSeconds / 60)).padStart(2, '0');
@@ -3253,7 +3267,7 @@
   function compressImage(base64Full, maxWidth = 800, quality = 0.7) {
     return new Promise((resolve, reject) => {
       const img = new Image();
-      const timeout = setTimeout(() => reject(new Error('Bildladdning tog för lång tid')), 15000);
+      const timeout = setTimeout(() => reject(new Error(t('fridgeImageLoadTimeout'))), 15000);
       img.onload = () => {
         clearTimeout(timeout);
         const canvas = document.createElement('canvas');
@@ -3264,7 +3278,7 @@
         const compressed = canvas.toDataURL('image/jpeg', quality);
         resolve(compressed.split(',')[1]);
       };
-      img.onerror = () => { clearTimeout(timeout); reject(new Error('Kunde inte ladda bilden')); };
+      img.onerror = () => { clearTimeout(timeout); reject(new Error(t('fridgeImageLoadFail'))); };
       img.src = base64Full;
     });
   }
@@ -3301,7 +3315,7 @@
           });
           clearTimeout(imgTimeout);
 
-          if (!res.ok) throw new Error('Kunde inte analysera bilden');
+          if (!res.ok) throw new Error(t('fridgeAnalysisFail'));
 
           const data = await res.json();
           const text = (data.content || []).map(b => b.text || '').join('');
@@ -3309,7 +3323,7 @@
 
           let found;
           try { found = JSON.parse(clean); }
-          catch { throw new Error('Kunde inte tolka svaret'); }
+          catch { throw new Error(t('fridgeParseFail')); }
 
           if (Array.isArray(found) && found.length > 0) {
             ingredients = [];
@@ -3318,7 +3332,7 @@
               if (ing && !ingredients.includes(ing)) ingredients.push(ing);
             }
             render();
-            showToast(`Vi hittade ${ingredients.length} råvaror`);
+            showToast(t('fridgeFound').replace('{count}', ingredients.length));
 
             if (ingredients.length > 0) {
               setTimeout(() => findRecipes(), 600);
@@ -3328,8 +3342,8 @@
           }
         } catch (e) {
           const errorMsg = e.name === 'AbortError'
-            ? 'Bildanalysen tog för lång tid — försök igen'
-            : (e.message || 'Något gick fel');
+            ? t('fridgeAnalysisTimeout')
+            : (e.message || t('toastError'));
           showToast(errorMsg);
           console.error('Fridge scan error:', e);
         }
@@ -3425,7 +3439,7 @@
     banner.innerHTML = `
       <span class="holiday-emoji">${holiday.emoji}</span>
       <div class="holiday-text">
-        <div class="holiday-title">${holiday.name} närmar sig!</div>
+        <div class="holiday-title">${holiday.name} ${t('holidayApproaching')}</div>
         <div class="holiday-desc">${holiday.desc}</div>
       </div>
     `;
@@ -3495,7 +3509,7 @@
     haptic('medium');
     try {
       if (navigator.share) {
-        await navigator.share({ title: 'Vad ska vi laga?', text: 'Kolla in den här receptappen — AI som fixar middagen åt dig!', url: window.location.origin });
+        await navigator.share({ title: t('heroTitle'), text: t('shareAppText'), url: window.location.origin });
         return;
       }
     } catch (e) { if (e.name === 'AbortError') return; }
