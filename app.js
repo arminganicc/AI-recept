@@ -1276,6 +1276,9 @@
     d.textContent = str;
     return d.innerHTML;
   }
+  function escAttr(str) {
+    return str.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
 
   function saveFavorites() { saveStorage('fav_recipes', favorites); }
   function isFav(name) { return favorites.some(f => f.name === name); }
@@ -3271,7 +3274,7 @@
     const container = document.getElementById('arminPicks');
     if (!container) return;
     container.innerHTML = getWeeklyPicks(arminPicks).map(p => `
-      <div class="armin-pick-card" data-ings="${esc(JSON.stringify(p.ings))}">
+      <div class="armin-pick-card" data-ings="${escAttr(JSON.stringify(p.ings))}">
         <span class="armin-pick-badge">${getBadge(p.badgeKey)}</span>
         <div class="armin-pick-name">${esc(p.name)}</div>
         <div class="armin-pick-desc">${esc(p.i18nDesc?.[currentLang] || p.i18nDesc?.sv || p.desc)}</div>
@@ -3446,7 +3449,7 @@
         </div>
         <div class="world-dishes">
           ${c.dishes.map(d => `
-            <button class="dish-btn" data-ings="${esc(JSON.stringify(d.ings))}">${esc(d.name)}</button>
+            <button class="dish-btn" data-ings="${escAttr(JSON.stringify(d.ings))}">${esc(d.name)}</button>
           `).join('')}
         </div>
       </div>
