@@ -11,6 +11,7 @@
 <script>try{if(localStorage.getItem('dark_mode')==='true')document.documentElement.setAttribute('data-theme','dark')}catch(e){}</script>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -18,6 +19,9 @@
 <section class="view" id="viewSearch">
   <header class="hero">
     <div class="hero-inner">
+      <button class="account-btn" id="accountBtn" aria-label="Mitt konto">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </button>
       <div class="hero-eyebrow">Kvällens stora fråga</div>
       <h1 class="hero-title">Vad ska vi laga?</h1>
       <p class="hero-sub">Töm kylskåpet. Vi fixar resten.</p>
@@ -26,6 +30,14 @@
   </header>
 
   <div class="view-content">
+    <!-- Onboarding tooltip -->
+    <div class="onboarding-tooltip" id="onboardingTooltip" hidden>
+      <div class="onboarding-content">
+        <p><strong>Välkommen!</strong> Skriv in dina råvaror eller skanna kylskåpet med kameran — så föreslår vi recept åt dig.</p>
+        <button class="onboarding-close" id="onboardingClose">Uppfattat!</button>
+      </div>
+    </div>
+
     <section class="card">
       <label for="ingInput" class="card-label">Dina råvaror</label>
 
@@ -45,7 +57,10 @@
       <div class="or-divider"><span>eller skriv manuellt</span></div>
 
       <div class="input-row">
-        <input class="ing-input" id="ingInput" type="text" placeholder="kyckling, tomat, grädde..." autocomplete="off">
+        <div class="ing-wrapper">
+          <input class="ing-input" id="ingInput" type="text" placeholder="kyckling, tomat, grädde..." autocomplete="off">
+          <div class="ing-suggestions" id="ingSuggestions" hidden></div>
+        </div>
         <button class="add-btn" id="addBtn" aria-label="Lägg till">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         </button>
@@ -117,36 +132,140 @@
   </div>
 </section>
 
+<!-- ═══ VIEW: INKÖPSLISTA ═══ -->
+<section class="view" id="viewShopping" hidden>
+  <div class="view-header shopping-header">
+    <div>
+      <h2 class="view-title">Inköpslista</h2>
+      <p class="view-sub" id="listSubtitle"></p>
+    </div>
+    <div class="list-actions">
+      <button class="list-action-btn" id="clearList">Rensa</button>
+      <button class="list-action-btn primary" id="sendList">Skicka till mejl</button>
+    </div>
+  </div>
+  <div class="view-content">
+    <div id="listEmpty" class="empty-state">
+      <div class="empty-icon">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      </div>
+      <p class="empty-title">Listan är tom</p>
+      <p class="empty-desc">Öppna ett recept och tryck "Lägg till i inköpslistan" för att samla ingredienser här.</p>
+      <button class="empty-cta" onclick="window.__switchView && window.__switchView('search')">Hitta recept &rarr;</button>
+    </div>
+    <div id="shoppingListContent"></div>
+  </div>
+</section>
+
 <!-- ═══ BOTTOM NAV ═══ -->
 <nav class="bottom-nav" role="navigation" aria-label="Huvudnavigation">
   <button class="nav-item active" data-view="search" aria-label="Sök recept">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
     <span>Sök</span>
   </button>
   <button class="nav-item" data-view="inspiration" aria-label="Inspiration">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
     <span>Inspiration</span>
   </button>
   <button class="nav-item" data-view="favorites" aria-label="Favoriter">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
     <span>Favoriter</span>
     <span class="nav-badge" id="favBadge" aria-live="polite"></span>
   </button>
+  <button class="nav-item" data-view="shopping" aria-label="Inköpslista">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+    <span>Lista</span>
+    <span class="nav-badge" id="listBadge" aria-live="polite"></span>
+  </button>
 </nav>
 
-<!-- ═══ GLOBAL ═══ -->
+<!-- ═══ GLOBAL OVERLAYS ═══ -->
 <div class="overlay" id="overlay"><div class="modal" id="modal"></div></div>
-<div class="overlay" id="shopOverlay"><div class="modal" id="shopModal"></div></div>
 
-<button class="shop-fab" id="shopFab" aria-label="Inköpslista">
-  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-  Inköpslista
-  <span class="shop-count" id="shopCount">0</span>
-</button>
+<!-- ═══ AUTH MODAL ═══ -->
+<div class="overlay" id="authOverlay">
+  <div class="modal auth-modal" id="authModal">
+    <div class="auth-states">
+      <!-- Ej inloggad -->
+      <div id="authSignIn">
+        <div class="auth-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <h2 class="auth-title">Logga in eller skapa konto</h2>
+        <p class="auth-desc">Ange din e-postadress — vi skickar en länk som loggar in dig direkt. Inget lösenord behövs.</p>
+        <div class="auth-benefits">
+          <div class="benefit-item">
+            <span class="benefit-icon">❤️</span>
+            <span>Favoriter synkas på alla enheter</span>
+          </div>
+          <div class="benefit-item">
+            <span class="benefit-icon">🛒</span>
+            <span>Skicka inköpslistan till din mejl</span>
+          </div>
+          <div class="benefit-item">
+            <span class="benefit-icon">🔁</span>
+            <span>Kom tillbaka till dina recept var som helst</span>
+          </div>
+        </div>
+        <input type="email" id="authEmail" class="auth-input" placeholder="din@email.com" autocomplete="email" inputmode="email">
+        <button class="auth-btn" id="authSubmit">Skicka inloggningslänk</button>
+        <p class="auth-privacy">Vi lagrar bara din e-postadress. Ingen spam, inga nyhetsbrev.</p>
+      </div>
+
+      <!-- Magic link skickad -->
+      <div id="authSent" hidden>
+        <div class="auth-sent-icon">✉️</div>
+        <h2 class="auth-title">Kolla din mejl</h2>
+        <p class="auth-desc">Vi har skickat en inloggningslänk till <strong id="authSentEmail"></strong>. Tryck på länken för att logga in — den gäller i 10 minuter.</p>
+        <button class="auth-btn-secondary" id="authResend">Skicka igen</button>
+      </div>
+
+      <!-- Inloggad -->
+      <div id="authLoggedIn" hidden>
+        <div class="auth-avatar" id="authAvatar"></div>
+        <h2 class="auth-title">Inloggad</h2>
+        <p class="auth-desc" id="authUserEmail"></p>
+        <button class="auth-btn-secondary danger" id="authSignOut">Logga ut</button>
+      </div>
+    </div>
+    <button class="modal-action-btn close-btn" id="closeAuth" aria-label="Stäng">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- ═══ COOK MODE OVERLAY ═══ -->
+<div class="cook-mode-overlay" id="cookModeOverlay" hidden>
+  <div class="cook-mode-header">
+    <button class="cook-mode-close" id="cookModeClose" aria-label="Stäng kokläge">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div class="cook-mode-title" id="cookModeTitle"></div>
+    <div class="cook-mode-step-indicator" id="cookModeStepIndicator"></div>
+  </div>
+  <div class="cook-mode-body" id="cookModeBody"></div>
+  <div class="cook-mode-nav">
+    <button class="cook-mode-nav-btn" id="cookModePrev" aria-label="Föregående steg">← Föregående</button>
+    <button class="cook-mode-nav-btn primary" id="cookModeNext" aria-label="Nästa steg">Nästa →</button>
+  </div>
+  <div class="cook-mode-timer" id="cookModeTimer" hidden>
+    <button class="cook-mode-timer-btn" id="cookModeTimerBtn">⏱ Starta timer</button>
+    <div class="cook-mode-timer-display" id="cookModeTimerDisplay" hidden>00:00</div>
+  </div>
+</div>
+
+<!-- Confetti canvas -->
+<canvas id="confettiCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;"></canvas>
 
 <div class="copy-toast" id="copyToast"></div>
 
-<footer class="app-footer"><p>Gjord med nyfikenhet och lite för mycket vitlök.</p></footer>
+<footer class="app-footer">
+  <div class="footer-inner">
+    <span class="footer-brand">Vad ska vi laga?</span>
+    <span class="footer-divider">·</span>
+    <span class="footer-tagline">Gjord med nyfikenhet och lite för mycket vitlök.</span>
+  </div>
+</footer>
 
 <script src="app.js"></script>
 </body>

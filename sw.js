@@ -1,4 +1,4 @@
-const CACHE_NAME = 'receptappen-v1';
+const CACHE_NAME = 'receptappen-v5';
 const STATIC_ASSETS = ['/', '/style.css', '/app.js', '/manifest.json'];
 
 self.addEventListener('install', event => {
