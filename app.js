@@ -879,53 +879,97 @@
     errBox.style.display = 'none';
     searchBtn.disabled = true;
 
-    try {
-      const res = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ingredients: [...ingredients],
-          portions: searchPortions,
-          prefs: [...prefs],
-          conversationHistory
-        })
-      });
+    const maxRetries = 2;
+    let lastError = null;
 
-      if (!res.ok) {
-        if (res.status === 429) throw new Error('Lite för snabbt — vänta en stund och försök igen.');
-        if (res.status === 401 || res.status === 403) throw new Error('Något gick snett med autentiseringen.');
-        if (res.status >= 500) throw new Error('Något gick snett — försök igen om en stund.');
-        throw new Error('Något gick snett — kontrollera anslutningen och försök igen.');
+    for (let attempt = 0; attempt <= maxRetries; attempt++) {
+      try {
+        if (attempt > 0) {
+          loadingEl.querySelector('.loading-label').innerHTML =
+            `Försöker igen (${attempt + 1}/${maxRetries + 1})<span class="loading-dots"></span>`;
+        }
+
+        const res = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ingredients: [...ingredients],
+            portions: searchPortions,
+            prefs: [...prefs],
+            conversationHistory
+          })
+        });
+
+        if (!res.ok) {
+          if (res.status === 429) throw new Error('Lite för snabbt — vänta en stund och försök igen.');
+          if (res.status === 401 || res.status === 403) throw new Error('Något gick snett med autentiseringen.');
+          if (res.status >= 500) throw new Error('server');
+          throw new Error('Något gick snett — kontrollera anslutningen och försök igen.');
+        }
+
+        const data = await res.json();
+        if (data.error) throw new Error(data.error.message || 'API-fel inträffade.');
+
+        const text = (data.content || []).map(b => b.text || '').join('');
+        let clean = text.replace(/```json|```/g, '').trim();
+
+        // Try to fix truncated JSON by closing brackets
+        let parsed;
+        try {
+          parsed = JSON.parse(clean);
+        } catch {
+          // Attempt to salvage truncated JSON
+          let fixed = clean;
+          // Count open/close braces and brackets
+          const openBraces = (fixed.match(/\{/g) || []).length;
+          const closeBraces = (fixed.match(/\}/g) || []).length;
+          const openBrackets = (fixed.match(/\[/g) || []).length;
+          const closeBrackets = (fixed.match(/\]/g) || []).length;
+
+          // Add missing closing brackets/braces
+          for (let b = 0; b < openBrackets - closeBrackets; b++) fixed += ']';
+          for (let b = 0; b < openBraces - closeBraces; b++) fixed += '}';
+
+          try {
+            parsed = JSON.parse(fixed);
+          } catch {
+            throw new Error('parse_error');
+          }
+        }
+
+        recipes = parsed.recipes || [];
+        if (!recipes.length) throw new Error('Inga recept returnerades — försök med andra ingredienser.');
+
+        lastChefComment = parsed.chef_comment || '';
+        lastMissingGlobally = parsed.missing_globally || [];
+        lastSuggestedSwaps = parsed.suggested_swaps || [];
+
+        recipeCache.set(cacheKey, parsed);
+        renderRecipes();
+        initTilt(recipeList);
+        saveToHistory(ingredients, recipes);
+
+        setTimeout(() => recipeList.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+        lastError = null;
+        break;
+
+      } catch (e) {
+        lastError = e;
+        console.error(`Recipe fetch attempt ${attempt + 1} error:`, e);
+        // Only retry on parse errors or server errors
+        if (e.message !== 'parse_error' && e.message !== 'server') break;
+        if (attempt >= maxRetries) break;
       }
+    }
 
-      const data = await res.json();
-      if (data.error) throw new Error(data.error.message || 'API-fel inträffade.');
-
-      const text = (data.content || []).map(b => b.text || '').join('');
-      const clean = text.replace(/```json|```/g, '').trim();
-
-      let parsed;
-      try { parsed = JSON.parse(clean); }
-      catch { throw new Error('Kunde inte tolka svaret från AI — försök igen.'); }
-
-      recipes = parsed.recipes || [];
-      if (!recipes.length) throw new Error('Inga recept returnerades — försök med andra ingredienser.');
-
-      lastChefComment = parsed.chef_comment || '';
-      lastMissingGlobally = parsed.missing_globally || [];
-      lastSuggestedSwaps = parsed.suggested_swaps || [];
-
-      recipeCache.set(cacheKey, parsed);
-      renderRecipes();
-      initTilt(recipeList);
-      saveToHistory(ingredients, recipes);
-
-      setTimeout(() => recipeList.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
-
-    } catch (e) {
-      errBox.textContent = e.message || 'Något gick fel — kontrollera anslutningen och försök igen.';
+    if (lastError) {
+      const msg = lastError.message === 'parse_error'
+        ? 'AI:n gav ett ofullständigt svar — försök igen.'
+        : lastError.message === 'server'
+        ? 'Servern svarar inte just nu — försök igen om en stund.'
+        : lastError.message;
+      errBox.textContent = msg;
       errBox.style.display = 'block';
-      console.error('Recipe fetch error:', e);
     }
 
     loadingEl.style.display = 'none';
