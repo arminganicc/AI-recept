@@ -228,6 +228,14 @@
   let searchPortions = 4;
   let prefs = new Set();
   const recipeCache = new Map();
+  const CACHE_MAX = 20;
+  function cacheSet(key, value) {
+    if (recipeCache.size >= CACHE_MAX) {
+      const oldest = recipeCache.keys().next().value;
+      recipeCache.delete(oldest);
+    }
+    recipeCache.set(key, value);
+  }
   let conversationHistory = [];
   let lastChefComment = '';
   let lastMissingGlobally = [];
@@ -236,6 +244,11 @@
   function loadStorage(key, fallback) {
     try { return JSON.parse(localStorage.getItem(key) || 'null') ?? fallback; }
     catch { return fallback; }
+  }
+
+  function saveStorage(key, value) {
+    try { localStorage.setItem(key, JSON.stringify(value)); }
+    catch (e) { console.warn('localStorage full:', e); }
   }
 
   let favorites     = loadStorage('fav_recipes', []);
@@ -1267,10 +1280,19 @@
         lastMissingGlobally = parsed.missing_globally || [];
         lastSuggestedSwaps = parsed.suggested_swaps || [];
 
-        recipeCache.set(cacheKey, parsed);
+        cacheSet(cacheKey, parsed);
         renderRecipes();
         initTilt(recipeList);
         saveToHistory(ingredients, recipes);
+
+        // Update URL with shareable search params
+        if (!isFreetext && ingredients.length) {
+          const params = new URLSearchParams();
+          params.set('ings', ingredients.join(','));
+          if (prefs.size) params.set('prefs', [...prefs].join(','));
+          if (searchPortions !== 4) params.set('portions', searchPortions);
+          history.replaceState(null, '', `?${params.toString()}#search`);
+        }
 
         setTimeout(() => recipeList.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
         lastError = null;
@@ -1444,28 +1466,50 @@
     updateFavBadge();
   }
 
+  let favFilter = 'all';
+
   function renderFavView() {
     if (!favGrid || !favsEmpty) return;
     updateFavBadge();
+    const favFilterEl = document.getElementById('favFilterChips');
     if (!favorites.length) {
       favsEmpty.style.display = '';
       favGrid.innerHTML = '';
+      if (favFilterEl) favFilterEl.innerHTML = '';
       return;
     }
     favsEmpty.style.display = 'none';
-    favGrid.innerHTML = favorites.map((f, i) => `
-      <div class="fav-card" data-fav-open="${i}">
+
+    // Render filter chips
+    if (favFilterEl && favorites.length) {
+      const tags = [...new Set(favorites.map(f => f.difficulty).filter(Boolean))];
+      favFilterEl.innerHTML = `
+        <button class="fav-filter-chip${favFilter === 'all' ? ' active' : ''}" data-filter="all">Alla (${favorites.length})</button>
+        ${tags.map(tag => {
+          const count = favorites.filter(f => f.difficulty === tag).length;
+          return `<button class="fav-filter-chip${favFilter === tag ? ' active' : ''}" data-filter="${esc(tag)}">${esc(tag)} (${count})</button>`;
+        }).join('')}
+      `;
+    } else if (favFilterEl) {
+      favFilterEl.innerHTML = '';
+    }
+
+    const filteredFavs = favFilter === 'all' ? favorites : favorites.filter(f => f.difficulty === favFilter);
+    favGrid.innerHTML = filteredFavs.map((f, i) => {
+      const realIdx = favorites.indexOf(f);
+      return `
+      <div class="fav-card" data-fav-open="${realIdx}">
         <div class="fav-card-info">
           <div class="fav-card-name">${esc(f.name)}</div>
           <div class="fav-card-meta">${esc(f.time || '')} · ${esc(f.difficulty || '')}</div>
         </div>
         <div class="fav-card-actions">
-          <button class="fav-action-btn delete" data-fav-rm="${i}" aria-label="Ta bort">
+          <button class="fav-action-btn delete" data-fav-rm="${realIdx}" aria-label="Ta bort">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
           </button>
         </div>
       </div>
-    `).join('');
+    `}).join('');
   }
 
   if (favGrid) {
@@ -1483,6 +1527,13 @@
       if (card) { recipes = [...favorites]; openRecipe(Number(card.dataset.favOpen)); }
     });
   }
+
+  document.getElementById('favFilterChips')?.addEventListener('click', e => {
+    const chip = e.target.closest('.fav-filter-chip');
+    if (!chip) return;
+    favFilter = chip.dataset.filter;
+    renderFavView();
+  });
 
   // ─── Modal ───
   // Scale ingredient amounts based on portion change
@@ -2232,6 +2283,23 @@
     ingInput.focus();
   });
 
+  // ─── Image compression for fridge photos ───
+  function compressImage(base64Full, maxWidth = 800, quality = 0.7) {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let w = img.width, h = img.height;
+        if (w > maxWidth) { h = Math.round(h * maxWidth / w); w = maxWidth; }
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        const compressed = canvas.toDataURL('image/jpeg', quality);
+        resolve(compressed.split(',')[1]);
+      };
+      img.src = base64Full;
+    });
+  }
+
   // ─── Fridge Photo to Recipe ───
   if (fridgeBtn && fridgeInput) {
     fridgeBtn.addEventListener('click', () => fridgeInput.click());
@@ -2248,8 +2316,8 @@
 
       const reader = new FileReader();
       reader.onload = async () => {
-        const base64 = reader.result.split(',')[1];
-        const mediaType = file.type || 'image/jpeg';
+        const base64 = await compressImage(reader.result);
+        const mediaType = 'image/jpeg';
 
         try {
           const res = await fetch('/api/recognize-ingredients', {
@@ -2306,11 +2374,16 @@
   function initTilt(container) {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     container.querySelectorAll('.recipe-card').forEach(card => {
+      let tiltRAF;
       card.addEventListener('mousemove', e => {
-        const rect = card.getBoundingClientRect();
-        const x = (e.clientX - rect.left) / rect.width - 0.5;
-        const y = (e.clientY - rect.top) / rect.height - 0.5;
-        card.style.transform = `perspective(800px) rotateY(${x * 3.5}deg) rotateX(${-y * 3.5}deg) translateY(-3px)`;
+        if (tiltRAF) return;
+        tiltRAF = requestAnimationFrame(() => {
+          const rect = card.getBoundingClientRect();
+          const x = (e.clientX - rect.left) / rect.width - 0.5;
+          const y = (e.clientY - rect.top) / rect.height - 0.5;
+          card.style.transform = `perspective(800px) rotateY(${x * 3.5}deg) rotateX(${-y * 3.5}deg) translateY(-3px)`;
+          tiltRAF = null;
+        });
       });
       card.addEventListener('mouseleave', () => {
         card.style.transform = '';
@@ -2396,6 +2469,14 @@
   showOnboarding();
   showHolidayBanner();
 
+  // Pulse ingredient input for first-time users
+  if (!localStorage.getItem('onboarding_seen')) {
+    setTimeout(() => {
+      ingInput?.classList.add('guide-pulse');
+      setTimeout(() => ingInput?.classList.remove('guide-pulse'), 6500);
+    }, 2000);
+  }
+
   // Inject logo into hero
   const heroLogo = document.getElementById('heroLogo');
   if (heroLogo) heroLogo.innerHTML = appLogoSVG(52);
@@ -2445,10 +2526,35 @@
     } catch { showToast('error'); }
   });
 
+  // Help button - re-show onboarding
+  document.getElementById('helpBtn')?.addEventListener('click', () => {
+    haptic();
+    const overlay = document.getElementById('onboardingOverlay');
+    if (overlay) {
+      overlay.hidden = false;
+      document.body.style.overflow = 'hidden';
+      const logoContainer = document.getElementById('onboardingLogo');
+      if (logoContainer) logoContainer.innerHTML = appLogoSVG(64);
+    }
+  });
+
   // Show changelog if new version
   const lastSeenVersion = loadStorage('changelog_seen', '0');
   if (changelog.length && lastSeenVersion !== changelog[0].version) {
     setTimeout(() => showChangelog(), 1500);
+  }
+
+  // Load shared search from URL params
+  const urlParams = new URLSearchParams(window.location.search);
+  const sharedIngs = urlParams.get('ings');
+  if (sharedIngs) {
+    ingredients = sharedIngs.split(',').map(s => s.trim()).filter(Boolean);
+    const sharedPrefs = urlParams.get('prefs');
+    if (sharedPrefs) sharedPrefs.split(',').forEach(p => prefs.add(p));
+    const sharedPortions = urlParams.get('portions');
+    if (sharedPortions) searchPortions = parseInt(sharedPortions) || 4;
+    render();
+    setTimeout(() => findRecipes(), 500);
   }
 
   // Scroll animations after initial render

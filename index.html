@@ -88,7 +88,7 @@ if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then
       <!-- Free-text mode (hidden by default) -->
       <div id="freetextMode" hidden>
         <label class="card-label">Berätta vad du är sugen på</label>
-        <textarea class="freetext-input" id="freetextInput" rows="3" placeholder="T.ex. 'Sugen på något från Balkan', 'Snabb studentmiddag under 40 kr', 'Festmat för 8 pers', 'Frukost som mättar hela dan'..."></textarea>
+        <textarea class="freetext-input" id="freetextInput" rows="3" placeholder="T.ex. 'Planera 5 middagar för en student under 200 kr', 'Sugen på Balkan', 'Barnvänlig veckomeny', 'Festmiddag för 8 pers', 'Proteinrik lunch som mättar hela dan'..."></textarea>
         <p class="hint">Skriv fritt — Armin fattar vad du menar.</p>
       </div>
 
@@ -205,6 +205,7 @@ if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then
       <p class="empty-desc" data-i18n="noSavedDesc">Tryck på hjärtat på ett recept för att spara det här.</p>
       <button class="empty-cta" id="emptyCtaBtn" data-i18n="findRecipes">Hitta recept &rarr;</button>
     </div>
+    <div class="fav-filter-chips" id="favFilterChips"></div>
     <div id="favGrid" class="fav-grid"></div>
   </div>
 </section>
@@ -388,6 +389,7 @@ if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then
     <p class="footer-tagline">Gjord med kärlek, kaos och alldeles för mycket vitlök.</p>
     <p class="footer-tagline footer-irony">Ingen mat skadades under utvecklingen. Samma sak kan inte sägas om utvecklaren.</p>
     <span class="footer-brand">Vad ska vi laga?</span>
+    <button class="footer-help-btn" id="helpBtn">❓ Hur funkar det?</button>
     <button class="footer-share-btn" id="shareAppBtn">Dela med en vän 📤</button>
   </div>
 </footer>
