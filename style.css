@@ -1505,6 +1505,55 @@ body {
   margin: 0 auto 16px;
 }
 
+/* ═══ RESULTS OVERLAY ═══ */
+.results-overlay {
+  position: fixed; inset: 0;
+  background: var(--bg-page);
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.results-overlay[hidden] { display: none; }
+.results-overlay-header {
+  padding: max(16px, env(safe-area-inset-top)) 20px 12px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg-page);
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+.results-overlay-close {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  width: 44px; height: 44px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-secondary);
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+.results-overlay-close:hover { border-color: var(--border-strong); color: var(--text-primary); }
+.results-overlay-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.3px;
+  flex: 1;
+}
+.results-overlay-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 16px calc(20px + env(safe-area-inset-bottom));
+  max-width: 640px;
+  margin: 0 auto;
+  width: 100%;
+}
+
 /* ═══ COOK MODE ═══ */
 .cook-mode-overlay {
   position: fixed; inset: 0;
