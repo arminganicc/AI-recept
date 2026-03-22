@@ -599,7 +599,7 @@
     const latest = changelog[0];
 
     modal.innerHTML = `
-      <div class="modal-top">
+      <div class="modal-top" style="position:sticky;top:0;background:var(--bg-surface);z-index:2;padding-top:8px;">
         <div class="modal-title">🆕 Nyheter</div>
         <div class="modal-actions">
           <button class="modal-action-btn close-btn" id="closeBtn" aria-label="Stäng">${iconClose}</button>
@@ -619,11 +619,13 @@
           </div>
         `).join('')}
       </div>
+      <button class="changelog-close-bottom" id="closeChangelogBtn">Uppfattat!</button>
     `;
 
     overlay.classList.add('open');
     document.body.style.overflow = 'hidden';
     document.getElementById('closeBtn').addEventListener('click', closeModal);
+    document.getElementById('closeChangelogBtn').addEventListener('click', closeModal);
     localStorage.setItem('changelog_seen', latest.version);
     updateNewsBadge();
   }
@@ -1382,9 +1384,10 @@
     }
 
     recipeList.innerHTML = `
+      <div class="recipes-container">
       <div class="recipes-header">
-        <div class="recipes-title">Här är ${recipes.length} förslag</div>
-        <div class="recipes-subtitle">Öppna för fullständigt recept</div>
+        <div class="recipes-title">🍽️ Armin hittade ${recipes.length} recept åt dig</div>
+        <div class="recipes-subtitle">Tryck på ett recept för att se allt</div>
       </div>
       ${headerHTML}
     ` + recipes.map((r, i) => {
@@ -1409,7 +1412,7 @@
           <div class="see-more">Visa recept &rarr;</div>
         </div>
       `;
-    }).join('');
+    }).join('') + '</div>'; // close recipes-container
   }
 
   recipeList.addEventListener('click', e => {
