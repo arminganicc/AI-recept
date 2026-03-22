@@ -1291,7 +1291,7 @@
           const labels = { google: 'Google', apple: 'Apple', email: 'E-post' };
           providerEl.textContent = labels[provider] || provider;
         }
-        if (favCountEl2) favCountEl2.textContent = `${favorites.length} recept`;
+        if (favCountEl2) favCountEl2.textContent = `${favorites.length} ${t('recipeCountPlural')}`;
       }
     } else {
       if (signInEl) signInEl.hidden = false;
@@ -1603,14 +1603,14 @@
 
   function render() {
     tagsEl.innerHTML = ingredients.map((ing, i) =>
-      `<span class="tag">${esc(translateIng(ing))}<button aria-label="Ta bort ${esc(translateIng(ing))}" data-idx="${i}">×</button></span>`
+      `<span class="tag">${esc(translateIng(ing))}<button aria-label="${t('removeItem')} ${esc(translateIng(ing))}" data-idx="${i}">×</button></span>`
     ).join('');
     // Add clear-all button when 3+ ingredients
     const clearAllBtn = tagsEl.querySelector('.clear-all-ings');
     if (ingredients.length >= 3 && !clearAllBtn) {
       const btn = document.createElement('button');
       btn.className = 'clear-all-ings';
-      btn.textContent = currentLang === 'en' ? 'Clear all' : currentLang === 'es' ? 'Borrar todo' : currentLang === 'bs' ? 'Obriši sve' : 'Rensa alla';
+      btn.textContent = t('clearAllIngs');
       btn.addEventListener('click', () => { ingredients = []; render(); });
       tagsEl.appendChild(btn);
     }
@@ -1718,8 +1718,8 @@
     historySection.innerHTML = `
       <div class="history-section">
         <div class="history-header">
-          <div class="history-title">${iconClock} Senaste sökningar</div>
-          <button class="history-clear-btn" id="historyClearBtn">Rensa</button>
+          <div class="history-title">${iconClock} ${t('historyTitle')}</div>
+          <button class="history-clear-btn" id="historyClearBtn">${t('historyClear')}</button>
         </div>
         ${searchHistory.slice(0, 5).map(entry => `
           <div class="history-item" data-hid="${entry.id}">
@@ -1734,7 +1734,7 @@
       searchHistory = [];
       localStorage.removeItem('search_history');
       renderHistory();
-      showToast('Sökhistorik rensad');
+      showToast(t('historyCleared'));
     });
 
     historySection.querySelectorAll('.history-item').forEach(item => {
@@ -1820,7 +1820,7 @@
     const uncheckedCount = shoppingList.filter(i => !i.checked).length;
     if (subtitle) {
       subtitle.textContent = shoppingList.length > 0
-        ? `${uncheckedCount} av ${shoppingList.length} kvar`
+        ? t('listRemaining').replace('{unchecked}', uncheckedCount).replace('{total}', shoppingList.length)
         : '';
     }
 
@@ -1834,7 +1834,7 @@
     // Group by recipe
     const byRecipe = {};
     shoppingList.forEach((item, i) => {
-      const key = item.recipe || 'Övrigt';
+      const key = item.recipe || t('otherItems');
       if (!byRecipe[key]) byRecipe[key] = [];
       byRecipe[key].push({ ...item, index: i });
     });
@@ -1848,7 +1848,7 @@
               <input type="checkbox" ${item.checked ? 'checked' : ''}
                 data-idx="${item.index}" class="list-checkbox">
               <span class="list-text">${esc(item.name)}</span>
-              <button class="list-item-remove" data-rm="${item.index}" aria-label="Ta bort">×</button>
+              <button class="list-item-remove" data-rm="${item.index}" aria-label="${t('removeItem')}">×</button>
             </label>
           `).join('')}
         </div>
@@ -1917,7 +1917,7 @@
     const unchecked = shoppingList.filter(i => !i.checked);
     const byRecipe = {};
     unchecked.forEach(item => {
-      const key = item.recipe || 'Övrigt';
+      const key = item.recipe || t('otherItems');
       if (!byRecipe[key]) byRecipe[key] = [];
       byRecipe[key].push(item);
     });
@@ -2237,12 +2237,12 @@
     // Missing globally + suggested swaps combined tips banner
     if (lastMissingGlobally.length || lastSuggestedSwaps.length) {
       headerHTML += `<div class="tips-banner">`;
-      headerHTML += `<div class="tips-banner-title">🛒 Tips innan du lagar</div>`;
+      headerHTML += `<div class="tips-banner-title">🛒 ${t('tipsBefore')}</div>`;
       if (lastMissingGlobally.length) {
         headerHTML += `
           <div class="missing-globally">
             <span class="missing-icon">${iconShop}</span>
-            <span class="missing-label">Köp även:</span>
+            <span class="missing-label">${t('buyAlso')}</span>
             ${lastMissingGlobally.map(m => `<span class="missing-chip">${esc(m)}</span>`).join('')}
           </div>
         `;
@@ -2260,14 +2260,14 @@
     const resultsHTML = `
       <div class="recipes-container">
       <div class="recipes-header">
-        <div class="recipes-title">🍽️ Amko hittade ${recipes.length} recept åt dig</div>
-        <div class="recipes-subtitle">Tryck på ett recept för att se allt</div>
+        <div class="recipes-title">🍽️ ${t('recipesFound').replace('{count}', recipes.length)}</div>
+        <div class="recipes-subtitle">${t('recipesHint')}</div>
       </div>
       <div class="recipe-sort-bar">
-        <span class="recipe-sort-label">Sortera:</span>
-        <button class="recipe-sort-btn${recipeSort === 'difficulty' ? ' active' : ''}" data-sort="difficulty">Svårighet</button>
-        <button class="recipe-sort-btn${recipeSort === 'time' ? ' active' : ''}" data-sort="time">Tid</button>
-        <button class="recipe-sort-btn${recipeSort === 'name' ? ' active' : ''}" data-sort="name">Namn</button>
+        <span class="recipe-sort-label">${t('sortLabel')}</span>
+        <button class="recipe-sort-btn${recipeSort === 'difficulty' ? ' active' : ''}" data-sort="difficulty">${t('sortDifficulty')}</button>
+        <button class="recipe-sort-btn${recipeSort === 'time' ? ' active' : ''}" data-sort="time">${t('sortTime')}</button>
+        <button class="recipe-sort-btn${recipeSort === 'name' ? ' active' : ''}" data-sort="name">${t('sortName')}</button>
       </div>
       ${headerHTML}
     ` + sorted.map((r, i) => {
@@ -2278,18 +2278,18 @@
           ${tag ? `<span class="recipe-tag ${tagClass(tag)}">${esc(tag)}</span>` : ''}
           <div class="recipe-top">
             <div class="recipe-name">${esc(r.name)}</div>
-            <button class="fav-btn${isFav(r.name) ? ' active' : ''}" data-fav="${i}" aria-label="Spara favorit">${iconHeart(isFav(r.name))}</button>
+            <button class="fav-btn${isFav(r.name) ? ' active' : ''}" data-fav="${i}" aria-label="${t('recipeFav')}">${iconHeart(isFav(r.name))}</button>
           </div>
           <div class="badges">
             <span class="badge">${iconClock} ${esc(r.time)}</span>
             <span class="badge ${difficultyClass(r.difficulty)}">${esc(r.difficulty)}</span>
-            <span class="badge">${(r.ingredients || []).length} ingredienser</span>
+            <span class="badge">${(r.ingredients || []).length} ${t('ingredientCount')}</span>
             ${r.nutrition_per_serving?.highlight ? `<span class="badge nutrition-hl">${esc(r.nutrition_per_serving.highlight)}</span>` : ''}
             ${rating > 0 ? `<span class="badge rated">${'★'.repeat(rating)}</span>` : ''}
           </div>
           <div class="recipe-desc">${esc(r.description)}</div>
           ${r.week_tip ? `<div class="recipe-week-tip">${esc(r.week_tip)}</div>` : ''}
-          <div class="see-more">Visa recept &rarr;</div>
+          <div class="see-more">${t('seeRecipe')}</div>
         </div>
       `;
     }).join('') + '</div>'; // close recipes-container
@@ -2383,7 +2383,7 @@
           <div class="fav-card-meta">${esc(f.time || '')} · ${esc(f.difficulty || '')}</div>
         </div>
         <div class="fav-card-actions">
-          <button class="fav-action-btn delete" data-fav-rm="${realIdx}" aria-label="Ta bort">
+          <button class="fav-action-btn delete" data-fav-rm="${realIdx}" aria-label="${t('removeItem')}">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
           </button>
         </div>
@@ -2509,7 +2509,7 @@
     // Substitutions
     const subsHTML = (r.substitutions && r.substitutions.length) ? `
       <details class="substitutions-section" open>
-        <summary class="substitutions-toggle">💡 Saknar du något?</summary>
+        <summary class="substitutions-toggle">💡 ${t('missingSomething')}</summary>
         <div class="substitutions-list">
           ${r.substitutions.map(s => `<p class="substitution-item">${esc(s)}</p>`).join('')}
         </div>
@@ -2519,7 +2519,7 @@
     // Missing ingredients
     const missingHTML = (r.missing_ingredients && r.missing_ingredients.length && r.missing_ingredients[0] !== 'Du har allt!') ? `
       <div class="missing-ing-row">
-        <span class="missing-ing-label">Saknas:</span>
+        <span class="missing-ing-label">${t('missingLabel')}</span>
         ${r.missing_ingredients.map(m => `<span class="missing-ing-chip">${esc(m)}</span>`).join('')}
       </div>
     ` : '';
