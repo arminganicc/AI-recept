@@ -1398,22 +1398,26 @@
   updateThemeColor();
 
   // ─── Onboarding ───
+  const onboardingOverlay = document.getElementById('onboardingOverlay');
+
+  function closeOnboarding() {
+    if (onboardingOverlay) {
+      onboardingOverlay.hidden = true;
+      document.body.style.overflow = '';
+      try { localStorage.setItem('onboarding_seen', 'true'); } catch {}
+    }
+  }
+
+  // Always register close button listener
+  document.getElementById('onboardingClose')?.addEventListener('click', closeOnboarding);
+
   function showOnboarding() {
     if (localStorage.getItem('onboarding_seen')) return;
-    const overlay = document.getElementById('onboardingOverlay');
-    if (overlay) {
-      overlay.hidden = false;
+    if (onboardingOverlay) {
+      onboardingOverlay.hidden = false;
       document.body.style.overflow = 'hidden';
-
-      // Inject the logo SVG
       const logoContainer = document.getElementById('onboardingLogo');
       if (logoContainer) logoContainer.innerHTML = appLogoSVG(64);
-
-      document.getElementById('onboardingClose')?.addEventListener('click', () => {
-        overlay.hidden = true;
-        document.body.style.overflow = '';
-        try { localStorage.setItem('onboarding_seen', 'true'); } catch {}
-      });
     }
   }
 
