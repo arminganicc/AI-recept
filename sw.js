@@ -1,10 +1,15 @@
 const CACHE_NAME = 'receptappen-v7.4';
 const STATIC_ASSETS = ['/', '/index.html', '/style.css', '/app.js', '/manifest.json', '/apple-touch-icon.png'];
 
+// Immutable assets that rarely change — cache for long periods
+const IMMUTABLE_HOSTS = ['fonts.gstatic.com'];
+
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => cache.addAll(STATIC_ASSETS)).catch(() => {})
   );
+  // Activate immediately without waiting for existing clients to close
+  self.skipWaiting();
 });
 
 self.addEventListener('activate', event => {
@@ -30,6 +35,9 @@ self.addEventListener('message', event => {
 self.addEventListener('fetch', event => {
   const url = new URL(event.request.url);
 
+  // Only handle GET requests in cache strategies
+  if (event.request.method !== 'GET') return;
+
   // API calls: network-only with offline error response
   if (url.pathname.startsWith('/api/')) {
     event.respondWith(
@@ -43,8 +51,8 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // Google Fonts & CDN: cache-first
-  if (url.hostname === 'fonts.googleapis.com' || url.hostname === 'fonts.gstatic.com' || url.hostname === 'cdn.jsdelivr.net') {
+  // Immutable font files: cache-first (never revalidate)
+  if (IMMUTABLE_HOSTS.includes(url.hostname)) {
     event.respondWith(
       caches.match(event.request).then(cached => {
         if (cached) return cached;
@@ -55,7 +63,41 @@ self.addEventListener('fetch', event => {
             caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone)).catch(() => {});
           }
           return response;
+        }).catch(() => cached || new Response('', { status: 408 }));
+      })
+    );
+    return;
+  }
+
+  // Google Fonts CSS & CDN: stale-while-revalidate
+  if (url.hostname === 'fonts.googleapis.com' || url.hostname === 'cdn.jsdelivr.net') {
+    event.respondWith(
+      caches.match(event.request).then(cached => {
+        const fetchPromise = fetch(event.request).then(response => {
+          if (response && response.status === 200) {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone)).catch(() => {});
+          }
+          return response;
         }).catch(() => cached);
+        return cached || fetchPromise;
+      })
+    );
+    return;
+  }
+
+  // Static assets (same-origin): stale-while-revalidate for fast loads
+  if (url.origin === self.location.origin) {
+    event.respondWith(
+      caches.match(event.request).then(cached => {
+        const fetchPromise = fetch(event.request).then(response => {
+          if (response && response.status === 200 && response.type === 'basic') {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone)).catch(() => {});
+          }
+          return response;
+        }).catch(() => cached);
+        return cached || fetchPromise;
       })
     );
     return;

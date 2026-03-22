@@ -3,32 +3,74 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vad ska vi laga?</title>
-<meta name="description" content="Vad ska vi laga? Skriv in dina ingredienser eller fota kylskåpet, så föreslår vår AI fyra recept du kan laga direkt. Gratis, ingen inloggning krävs. Spara favoriter, skapa inköpslistor och följ steg-för-steg i kokläge.">
-<meta name="theme-color" content="#F7F4EF">
+<title>Vad ska vi laga? — AI-recepthjälp med ingredienser du har hemma</title>
+<meta name="description" content="Skriv in dina ingredienser eller fota kylskåpet — AI:n föreslår 8 recept du kan laga direkt. Gratis recepthjälp utan inloggning. Spara favoriter, skapa inköpslistor och följ steg-för-steg i kokläge.">
+<meta name="keywords" content="recept, AI, ingredienser, matlagning, middagstips, receptförslag, kylskåp, inköpslista, kokläge, svenska recept">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta name="theme-color" content="#F7F4EF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0E0C0A" media="(prefers-color-scheme: dark)">
 <link rel="manifest" href="/manifest.json">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
 try{if(localStorage.getItem('dark_mode')==='true')document.documentElement.setAttribute('data-theme','dark')}catch(e){}
 // Register service worker + clean old caches
 if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(function(){});caches.keys().then(function(k){k.forEach(function(n){if(n!=='receptappen-v7.4')caches.delete(n)})})}
 </script>
 <!-- SEO: Open Graph -->
-<meta property="og:title" content="Vad ska vi laga?">
+<meta property="og:title" content="Vad ska vi laga? — AI-recepthjälp">
 <meta property="og:description" content="Skriv in dina ingredienser eller fota kylskåpet — AI:n föreslår 8 recept du kan laga direkt. Gratis, ingen inloggning krävs.">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="sv_SE">
-<meta property="og:image" content="/og-image.jpg">
+<meta property="og:image" content="https://vadskavialaga.se/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Vad ska vi laga? — AI-driven receptapp">
 <meta property="og:url" content="https://vadskavialaga.se/">
+<meta property="og:site_name" content="Vad ska vi laga?">
 <!-- SEO: Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Vad ska vi laga?">
+<meta name="twitter:title" content="Vad ska vi laga? — AI-recepthjälp">
 <meta name="twitter:description" content="AI-driven recepthjälp. Släng in vad du har hemma — få 8 recept direkt.">
+<meta name="twitter:image" content="https://vadskavialaga.se/og-image.jpg">
 <!-- SEO: Canonical -->
 <link rel="canonical" href="https://vadskavialaga.se/">
+<!-- SEO: JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Vad ska vi laga?",
+  "url": "https://vadskavialaga.se/",
+  "description": "Svensk AI-driven receptapp. Skriv in dina ingredienser eller fota kylskåpet — AI:n föreslår 8 recept du kan laga direkt.",
+  "applicationCategory": "LifestyleApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "SEK"
+  },
+  "inLanguage": "sv",
+  "author": {
+    "@type": "Person",
+    "name": "Armin"
+  },
+  "browserRequirements": "Requires JavaScript",
+  "softwareVersion": "7.3",
+  "screenshot": "https://vadskavialaga.se/og-image.jpg"
+}
+</script>
 <!-- Performance: preconnect to Google Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Performance: preconnect to Anthropic API -->
+<link rel="preconnect" href="https://api.anthropic.com">
+<!-- Performance: preconnect to Supabase CDN -->
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+<!-- Performance: preload critical CSS -->
+<link rel="preload" href="style.css" as="style">
+<!-- Performance: preload app script -->
+<link rel="preload" href="app.js" as="script">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <!-- PWA: Apple touch icon -->
@@ -80,7 +122,7 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
     </div>
   </header>
 
-  <div class="view-content" id="mainContent">
+  <main class="view-content" id="mainContent" role="main">
     <!-- Onboarding welcome -->
     <div class="onboarding-overlay" id="onboardingOverlay" hidden role="dialog" aria-modal="true" aria-label="Välkomstguide">
       <div class="onboarding-modal">
@@ -157,7 +199,7 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
           <span data-i18n="scanFood">Fota dina råvaror</span>
         </button>
         <div class="fridge-preview" id="fridgePreview" style="display:none">
-          <img id="fridgeImg" alt="Kylskåpsbild">
+          <img id="fridgeImg" alt="Kylskåpsbild" loading="lazy">
           <div class="fridge-scanning" id="fridgeScanning"><span>Identifierar råvaror<span class="loading-dots"></span></span></div>
           <button class="fridge-remove" id="fridgeRemove" aria-label="Ta bort">&times;</button>
         </div>
@@ -212,7 +254,7 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
     <div id="historySection"></div>
     <div id="loadingEl" style="display:none"></div>
     <div id="recipeList" aria-live="polite"></div>
-  </div>
+  </main>
 </section>
 
 <!-- ═══ VIEW: INSPIRATION ═══ -->
