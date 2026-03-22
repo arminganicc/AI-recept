@@ -23,10 +23,16 @@
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       </button>
       <div class="hero-logo" id="heroLogo"></div>
-      <div class="hero-eyebrow">Kvällens eviga dilemma</div>
-      <h1 class="hero-title">Vad ska vi laga?</h1>
+      <div class="hero-eyebrow" data-i18n="heroEyebrow">Kvällens eviga dilemma</div>
+      <h1 class="hero-title" data-i18n="heroTitle">Vad ska vi laga?</h1>
       <p class="hero-sub">Släng in vad du har. Armin löser middagen.</p>
       <button class="theme-toggle" id="settingsToggle" aria-label="Växla tema"></button>
+      <select class="lang-select" id="langSelect">
+        <option value="sv">🇸🇪 SV</option>
+        <option value="en">🇬🇧 EN</option>
+        <option value="es">🇪🇸 ES</option>
+        <option value="bs">🇧🇦 BS</option>
+      </select>
     </div>
   </header>
 
@@ -66,13 +72,13 @@
     </div>
 
     <section class="card">
-      <label for="ingInput" class="card-label">Dina råvaror</label>
+      <label for="ingInput" class="card-label" data-i18n="yourIngredients">Dina råvaror</label>
 
       <div class="fridge-upload" id="fridgeUpload">
         <input type="file" id="fridgeInput" accept="image/*" capture="environment" hidden>
         <button class="fridge-btn" id="fridgeBtn" aria-label="Skanna kylskåpet">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-          <span>Skanna ditt kylskåp</span>
+          <span data-i18n="scanFridge">Skanna ditt kylskåp</span>
         </button>
         <div class="fridge-preview" id="fridgePreview" style="display:none">
           <img id="fridgeImg" alt="Kylskåpsbild">
@@ -81,7 +87,7 @@
         </div>
       </div>
 
-      <div class="or-divider"><span>eller skriv manuellt</span></div>
+      <div class="or-divider"><span data-i18n="orManual">eller skriv manuellt</span></div>
 
       <div class="input-row">
         <div class="ing-wrapper">
@@ -92,24 +98,28 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         </button>
       </div>
-      <p class="hint">Enter lägger till. Komma separerar.</p>
+      <p class="hint" data-i18n="inputHint">Enter lägger till. Komma separerar.</p>
 
       <div class="divider"></div>
-      <div class="quick-label">Vad har du hemma?</div>
+      <div class="quick-label" data-i18n="whatDoYouHave">Vad har du hemma?</div>
       <div class="quick-picks" id="quickPicks"></div>
       <div class="tags" id="tags"></div>
 
       <div class="divider"></div>
-      <div class="quick-label">Hur kräsen är du?</div>
+      <div class="quick-label" data-i18n="howPicky">Hur kräsen är du?</div>
       <div class="pref-chips" id="prefChips">
         <button class="pref-chip" data-pref="vegetariskt">Vegetariskt</button>
         <button class="pref-chip" data-pref="veganskt">Veganskt</button>
         <button class="pref-chip" data-pref="glutenfritt">Glutenfritt</button>
         <button class="pref-chip" data-pref="snabbt">Under 30 min</button>
+        <button class="pref-chip" data-pref="laktosfritt">Laktosfritt</button>
+        <button class="pref-chip" data-pref="nötfritt">Nötfritt</button>
+        <button class="pref-chip" data-pref="barnvänligt">Barnvänligt</button>
+        <button class="pref-chip" data-pref="budgetvänligt">Budgetvänligt</button>
       </div>
 
       <div class="search-portions">
-        <span class="search-portions-label">Portioner</span>
+        <span class="search-portions-label" data-i18n="portions">Portioner</span>
         <div class="search-portions-ctrl">
           <button id="spMinus">-</button>
           <span class="search-portions-num" id="spNum">4</span>
@@ -117,7 +127,7 @@
         </div>
       </div>
 
-      <button class="search-btn" id="searchBtn" disabled>Visa recept</button>
+      <button class="search-btn" id="searchBtn" disabled data-i18n="showRecipes">Visa recept</button>
       <div class="error" id="errBox" style="display:none"></div>
     </section>
 
@@ -160,7 +170,7 @@
 <!-- ═══ VIEW: FAVORITER ═══ -->
 <section class="view" id="viewFavorites" hidden>
   <div class="view-header">
-    <h2 class="view-title">Sparade recept</h2>
+    <h2 class="view-title" data-i18n="savedRecipes">Sparade recept</h2>
     <p class="view-sub" id="favCount">0 recept sparade</p>
   </div>
   <div class="view-content">
@@ -168,9 +178,9 @@
       <div class="empty-icon">
         <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
       </div>
-      <p class="empty-title">Inga sparade recept ännu</p>
-      <p class="empty-desc">Tryck på hjärtat på ett recept för att spara det här.</p>
-      <button class="empty-cta" id="emptyCtaBtn">Hitta recept &rarr;</button>
+      <p class="empty-title" data-i18n="noSavedRecipes">Inga sparade recept ännu</p>
+      <p class="empty-desc" data-i18n="noSavedDesc">Tryck på hjärtat på ett recept för att spara det här.</p>
+      <button class="empty-cta" id="emptyCtaBtn" data-i18n="findRecipes">Hitta recept &rarr;</button>
     </div>
     <div id="favGrid" class="fav-grid"></div>
   </div>
@@ -180,12 +190,12 @@
 <section class="view" id="viewShopping" hidden>
   <div class="view-header shopping-header">
     <div>
-      <h2 class="view-title">Inköpslista</h2>
+      <h2 class="view-title" data-i18n="shoppingList">Inköpslista</h2>
       <p class="view-sub" id="listSubtitle"></p>
     </div>
     <div class="list-actions">
-      <button class="list-action-btn" id="clearList">Rensa</button>
-      <button class="list-action-btn primary" id="sendList">Dela lista 📤</button>
+      <button class="list-action-btn" id="clearList" data-i18n="clear">Rensa</button>
+      <button class="list-action-btn primary" id="sendList" data-i18n="shareList">Dela lista 📤</button>
     </div>
   </div>
   <div class="view-content">
@@ -205,20 +215,20 @@
 <nav class="bottom-nav" role="navigation" aria-label="Huvudnavigation">
   <button class="nav-item active" data-view="search" aria-label="Sök recept">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-    <span>Sök</span>
+    <span data-i18n="navSearch">Sök</span>
   </button>
   <button class="nav-item" data-view="inspiration" aria-label="Inspiration">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-    <span>Inspiration</span>
+    <span data-i18n="navInspiration">Inspiration</span>
   </button>
   <button class="nav-item" data-view="favorites" aria-label="Favoriter">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-    <span>Favoriter</span>
+    <span data-i18n="navFavorites">Favoriter</span>
     <span class="nav-badge" id="favBadge" aria-live="polite"></span>
   </button>
   <button class="nav-item" data-view="shopping" aria-label="Inköpslista">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-    <span>Lista</span>
+    <span data-i18n="navList">Lista</span>
     <span class="nav-badge" id="listBadge" aria-live="polite"></span>
   </button>
 </nav>

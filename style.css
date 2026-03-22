@@ -294,6 +294,29 @@ body {
 .theme-toggle:hover { border-color: var(--border-strong); color: var(--text-primary); }
 .theme-toggle.dark-active { color: var(--accent); }
 
+/* ═══ LANGUAGE SELECTOR ═══ */
+.lang-select {
+  position: absolute;
+  top: 20px; right: 66px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 10px;
+  padding: 6px 8px;
+  font-family: var(--font);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  outline: none;
+  transition: all 0.15s;
+  height: 38px;
+}
+.lang-select:hover { border-color: var(--border-strong); color: var(--text-primary); }
+.lang-select:focus { border-color: var(--accent); }
+.lang-select option { background: var(--bg-surface); color: var(--text-primary); }
+
 /* ═══ ACCOUNT BUTTON ═══ */
 .account-btn {
   position: absolute;
@@ -1414,6 +1437,26 @@ body {
   margin: 0;
 }
 
+/* ═══ TIPS BANNER ═══ */
+.tips-banner {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-strong);
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+}
+.tips-banner-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 10px;
+  letter-spacing: 0.01em;
+}
+[data-theme="dark"] .tips-banner {
+  background: var(--bg-surface);
+  border-color: var(--border-strong);
+}
+
 /* ═══ MISSING GLOBALLY ═══ */
 .missing-globally {
   display: flex;
@@ -1421,10 +1464,10 @@ body {
   gap: 8px;
   flex-wrap: wrap;
   padding: 10px 14px;
-  background: var(--bg-subtle);
+  background: var(--bg-surface);
   border: 1px solid var(--border);
   border-radius: 10px;
-  margin-bottom: 14px;
+  margin-bottom: 10px;
 }
 .missing-icon { color: var(--text-muted); display: flex; align-items: center; }
 .missing-label { font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
@@ -1444,7 +1487,7 @@ body {
   overflow-x: auto;
   gap: 8px;
   padding-bottom: 4px;
-  margin-bottom: 14px;
+  margin-bottom: 0;
   scrollbar-width: none;
 }
 .suggested-swaps::-webkit-scrollbar { display: none; }

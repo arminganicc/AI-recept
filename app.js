@@ -47,6 +47,109 @@
     </svg>`;
   }
 
+  // ─── i18n Translations ───
+  let currentLang = (() => { try { return localStorage.getItem('app_language') || 'sv'; } catch { return 'sv'; } })();
+
+  const translations = {
+    sv: {
+      heroEyebrow: 'Kvällens eviga dilemma', heroTitle: 'Vad ska vi laga?',
+      yourIngredients: 'Dina råvaror', scanFridge: 'Skanna ditt kylskåp',
+      orManual: 'eller skriv manuellt', inputHint: 'Enter lägger till. Komma separerar.',
+      whatDoYouHave: 'Vad har du hemma?', howPicky: 'Hur kräsen är du?',
+      portions: 'Portioner', showRecipes: 'Visa recept',
+      savedRecipes: 'Sparade recept', noSavedRecipes: 'Inga sparade recept ännu',
+      noSavedDesc: 'Tryck på hjärtat på ett recept för att spara det här.',
+      findRecipes: 'Hitta recept →', shoppingList: 'Inköpslista',
+      clear: 'Rensa', shareList: 'Dela lista 📤',
+      navSearch: 'Sök', navInspiration: 'Inspiration', navFavorites: 'Favoriter', navList: 'Lista',
+      vegetariskt: 'Vegetariskt', veganskt: 'Veganskt', glutenfritt: 'Glutenfritt',
+      snabbt: 'Under 30 min', laktosfritt: 'Laktosfritt', nötfritt: 'Nötfritt',
+      barnvänligt: 'Barnvänligt', budgetvänligt: 'Budgetvänligt',
+      ingredients: 'Ingredienser', steps: 'Gör så här',
+      arminTitle: 'Armin rekommenderar', worldKitchens: 'Världens kök',
+      surpriseMe: '🎲 Överraska mig', inspiration: 'Inspiration',
+    },
+    en: {
+      heroEyebrow: "Tonight's eternal dilemma", heroTitle: 'What should we cook?',
+      yourIngredients: 'Your ingredients', scanFridge: 'Scan your fridge',
+      orManual: 'or type manually', inputHint: 'Enter to add. Comma separates.',
+      whatDoYouHave: 'What do you have at home?', howPicky: 'How picky are you?',
+      portions: 'Servings', showRecipes: 'Show recipes',
+      savedRecipes: 'Saved recipes', noSavedRecipes: 'No saved recipes yet',
+      noSavedDesc: 'Tap the heart on a recipe to save it here.',
+      findRecipes: 'Find recipes →', shoppingList: 'Shopping list',
+      clear: 'Clear', shareList: 'Share list 📤',
+      navSearch: 'Search', navInspiration: 'Inspiration', navFavorites: 'Favorites', navList: 'List',
+      vegetariskt: 'Vegetarian', veganskt: 'Vegan', glutenfritt: 'Gluten-free',
+      snabbt: 'Under 30 min', laktosfritt: 'Lactose-free', nötfritt: 'Nut-free',
+      barnvänligt: 'Kid-friendly', budgetvänligt: 'Budget-friendly',
+      ingredients: 'Ingredients', steps: 'Instructions',
+      arminTitle: 'Armin recommends', worldKitchens: 'World cuisines',
+      surpriseMe: '🎲 Surprise me', inspiration: 'Inspiration',
+    },
+    es: {
+      heroEyebrow: 'El eterno dilema de la cena', heroTitle: '¿Qué cocinamos?',
+      yourIngredients: 'Tus ingredientes', scanFridge: 'Escanea tu nevera',
+      orManual: 'o escribe manualmente', inputHint: 'Enter para añadir. Coma separa.',
+      whatDoYouHave: '¿Qué tienes en casa?', howPicky: '¿Qué tan exigente eres?',
+      portions: 'Porciones', showRecipes: 'Mostrar recetas',
+      savedRecipes: 'Recetas guardadas', noSavedRecipes: 'No hay recetas guardadas',
+      noSavedDesc: 'Toca el corazón en una receta para guardarla aquí.',
+      findRecipes: 'Buscar recetas →', shoppingList: 'Lista de compras',
+      clear: 'Borrar', shareList: 'Compartir lista 📤',
+      navSearch: 'Buscar', navInspiration: 'Inspiración', navFavorites: 'Favoritos', navList: 'Lista',
+      vegetariskt: 'Vegetariano', veganskt: 'Vegano', glutenfritt: 'Sin gluten',
+      snabbt: 'Menos de 30 min', laktosfritt: 'Sin lactosa', nötfritt: 'Sin frutos secos',
+      barnvänligt: 'Para niños', budgetvänligt: 'Económico',
+      ingredients: 'Ingredientes', steps: 'Preparación',
+      arminTitle: 'Armin recomienda', worldKitchens: 'Cocinas del mundo',
+      surpriseMe: '🎲 Sorpréndeme', inspiration: 'Inspiración',
+    },
+    bs: {
+      heroEyebrow: 'Vječna dilema večere', heroTitle: 'Šta da kuhamo?',
+      yourIngredients: 'Tvoji sastojci', scanFridge: 'Skeniraj frižider',
+      orManual: 'ili piši ručno', inputHint: 'Enter za dodavanje. Zarez odvaja.',
+      whatDoYouHave: 'Šta imaš kod kuće?', howPicky: 'Koliko si izbirljiv/a?',
+      portions: 'Porcije', showRecipes: 'Prikaži recepte',
+      savedRecipes: 'Sačuvani recepti', noSavedRecipes: 'Nema sačuvanih recepata',
+      noSavedDesc: 'Pritisni srce na receptu da ga sačuvaš ovdje.',
+      findRecipes: 'Pronađi recepte →', shoppingList: 'Lista za kupovinu',
+      clear: 'Obriši', shareList: 'Podijeli listu 📤',
+      navSearch: 'Traži', navInspiration: 'Inspiracija', navFavorites: 'Favoriti', navList: 'Lista',
+      vegetariskt: 'Vegetarijansko', veganskt: 'Vegansko', glutenfritt: 'Bez glutena',
+      snabbt: 'Ispod 30 min', laktosfritt: 'Bez laktoze', nötfritt: 'Bez orašastih',
+      barnvänligt: 'Za djecu', budgetvänligt: 'Povoljno',
+      ingredients: 'Sastojci', steps: 'Priprema',
+      arminTitle: 'Armin preporučuje', worldKitchens: 'Kuhinje svijeta',
+      surpriseMe: '🎲 Iznenadi me', inspiration: 'Inspiracija',
+    },
+  };
+
+  function t(key) {
+    return (translations[currentLang] || translations.sv)[key] || translations.sv[key] || key;
+  }
+
+  function translatePage() {
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.dataset.i18n;
+      const val = t(key);
+      if (val) el.textContent = val;
+    });
+    // Translate pref chip labels
+    document.querySelectorAll('.pref-chip[data-pref]').forEach(chip => {
+      const key = chip.dataset.pref;
+      const val = t(key);
+      if (val) chip.textContent = val;
+    });
+    // Update placeholder
+    const ingInput = document.getElementById('ingInput');
+    if (ingInput) {
+      const placeholders = { sv: 'kyckling, tomat, grädde...', en: 'chicken, tomato, cream...', es: 'pollo, tomate, nata...', bs: 'piletina, paradajz, pavlaka...' };
+      ingInput.placeholder = placeholders[currentLang] || placeholders.sv;
+    }
+    document.documentElement.lang = currentLang;
+  }
+
   // ─── Supabase Setup ───
   let supabaseClient = null;
   let currentUser = null;
@@ -119,7 +222,7 @@
   let ratings        = loadStorage('recipe_ratings', {});
 
   const quickCategories = [
-    { label: '🥩 Sugen på kött?', items: ['kyckling', 'köttfärs', 'bacon', 'fläsk', 'lamm'] },
+    { label: '🥩 Sugen på kött', items: ['kyckling', 'köttfärs', 'bacon', 'fläsk', 'lamm'] },
     { label: '🐟 Fisk & skaldjur', items: ['lax', 'räkor', 'torsk', 'tonfisk'] },
     { label: '🥬 Grönsakslådan', items: ['tomat', 'paprika', 'spenat', 'broccoli', 'morötter', 'potatis'] },
     { label: '🧀 Basics', items: ['pasta', 'ris', 'ägg', 'ost', 'grädde', 'lök', 'vitlök'] },
@@ -143,43 +246,61 @@
   // ─── Rotating humor ───
   function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
-  const heroSubtitles = [
-    'Släng in vad du har. Armin löser middagen.',
-    'Du har mat hemma. Du vet bara inte vad du ska göra med den.',
-    'Från "vi har inget hemma" till middag på 30 min.',
-    'Kylskåpskaos → Kulinarisk genialitet.',
-    'Armin judgar inte ditt kylskåp. (Okej, lite.)',
-    'Svaret på frågan ingen vill ställa.',
-    'Tre ingredienser. Noll ursäkter.',
-  ];
+  const heroSubtitles = {
+    sv: [
+      'Släng in vad du har. Armin löser middagen.',
+      'Du har mat hemma. Du vet bara inte vad du ska göra med den.',
+      'Från "vi har inget hemma" till middag på 30 min.',
+      'Kylskåpskaos → Kulinarisk genialitet.',
+      'Armin judgar inte ditt kylskåp. (Okej, lite.)',
+      'Svaret på frågan ingen vill ställa.',
+      'Tre ingredienser. Noll ursäkter.',
+    ],
+    en: [
+      'Throw in what you have. Armin handles dinner.',
+      'You have food at home. You just don\'t know what to do with it.',
+      'From "we have nothing" to dinner in 30 min.',
+      'Fridge chaos → Culinary genius.',
+      'Armin doesn\'t judge your fridge. (Okay, a little.)',
+      'The answer to the question no one wants to ask.',
+      'Three ingredients. Zero excuses.',
+    ],
+    es: [
+      'Pon lo que tengas. Armin se encarga de la cena.',
+      'Tienes comida en casa. Solo no sabes qué hacer con ella.',
+      'De "no tenemos nada" a cena en 30 min.',
+      'Caos en la nevera → Genialidad culinaria.',
+      'Armin no juzga tu nevera. (Bueno, un poco.)',
+    ],
+    bs: [
+      'Ubaci šta imaš. Armin rješava večeru.',
+      'Imaš hranu kod kuće. Samo ne znaš šta da radiš s njom.',
+      'Od "nemamo ništa" do večere za 30 min.',
+      'Kaos u frižideru → Kulinarska genijalnost.',
+      'Armin ne osuđuje tvoj frižider. (Dobro, malo.)',
+    ],
+  };
 
-  const footerTaglines = [
-    'Gjord med kärlek, kaos och alldeles för mycket vitlök.',
-    'Inga kockar skadades. Några ägg däremot.',
-    'Kodad med kaffe. Testad med hunger.',
-    'Byggt av någon som googlar "hur kokar man ris" ibland.',
-    'Made in Sweden. Inspirerad av allt utom husmanskost.',
-    'Funkar bäst kl 16:55 när paniken slår till.',
-  ];
+  const footerTaglines = {
+    sv: ['Gjord med kärlek, kaos och alldeles för mycket vitlök.', 'Inga kockar skadades. Några ägg däremot.', 'Kodad med kaffe. Testad med hunger.', 'Byggt av någon som googlar "hur kokar man ris" ibland.', 'Made in Sweden. Inspirerad av allt utom husmanskost.', 'Funkar bäst kl 16:55 när paniken slår till.'],
+    en: ['Made with love, chaos, and way too much garlic.', 'No chefs were harmed. A few eggs, though.', 'Coded with coffee. Tested with hunger.', 'Built by someone who googles "how to boil rice" sometimes.', 'Works best at 4:55 PM when panic kicks in.'],
+    es: ['Hecho con amor, caos y demasiado ajo.', 'Ningún chef fue lastimado. Algunos huevos sí.', 'Programado con café. Probado con hambre.', 'Funciona mejor a las 16:55 cuando entra el pánico.'],
+    bs: ['Napravljeno s ljubavlju, haosom i previše bijelog luka.', 'Nijedan kuhar nije povrijeđen. Nekoliko jaja jeste.', 'Kodirano uz kafu. Testirano glađu.', 'Najbolje radi u 16:55 kad udari panika.'],
+  };
 
-  const footerIronies = [
-    'Ingen mat skadades under utvecklingen. Samma sak kan inte sägas om utvecklaren.',
-    'Om appen kraschar — skylls på vitlöken.',
-    'Disclaimer: Vi tar inget ansvar för matlagnings-ambitionen du får kl 23.',
-    'Denna app ersätter inte en mormor. Men den försöker.',
-    'AI-genererade recept. Mänsklig panik. Äkta hunger.',
-    'Eventuella likheter med riktiga kockar är helt oavsiktliga.',
-  ];
+  const footerIronies = {
+    sv: ['Ingen mat skadades under utvecklingen. Samma sak kan inte sägas om utvecklaren.', 'Om appen kraschar — skylls på vitlöken.', 'Disclaimer: Vi tar inget ansvar för matlagnings-ambitionen du får kl 23.', 'Denna app ersätter inte en mormor. Men den försöker.', 'AI-genererade recept. Mänsklig panik. Äkta hunger.', 'Eventuella likheter med riktiga kockar är helt oavsiktliga.'],
+    en: ['No food was harmed during development. The developer, however...', 'If the app crashes — blame the garlic.', 'Disclaimer: We take no responsibility for cooking ambitions at 11 PM.', 'This app doesn\'t replace a grandma. But it tries.', 'AI-generated recipes. Human panic. Real hunger.'],
+    es: ['Ningún alimento fue dañado. El desarrollador, sin embargo...', 'Si la app falla — culpa al ajo.', 'Esta app no reemplaza a una abuela. Pero lo intenta.', 'Recetas de IA. Pánico humano. Hambre real.'],
+    bs: ['Nijedna hrana nije oštećena. Programer, međutim...', 'Ako app padne — kriv je bijeli luk.', 'Ova aplikacija ne zamjenjuje nanu. Ali pokušava.', 'AI recepti. Ljudska panika. Prava glad.'],
+  };
 
-  const loadingMessages = [
-    'Armin funderar på vad du ska äta',
-    'Konsulterar det kulinariska oraklet',
-    'Mixar ingredienser i molnet',
-    'Googlar inte — litar på AI:n istället',
-    'Letar efter recept som inte kräver talang',
-    'Räknar vitlöksklyftor (aldrig nog)',
-    'Bläddrar genom tusen recept åt dig',
-  ];
+  const loadingMessages = {
+    sv: ['Armin funderar på vad du ska äta', 'Konsulterar det kulinariska oraklet', 'Mixar ingredienser i molnet', 'Googlar inte — litar på AI:n istället', 'Letar efter recept som inte kräver talang', 'Räknar vitlöksklyftor (aldrig nog)', 'Bläddrar genom tusen recept åt dig'],
+    en: ['Armin is thinking about what you should eat', 'Consulting the culinary oracle', 'Mixing ingredients in the cloud', 'Not googling — trusting the AI instead', 'Looking for recipes that don\'t require talent', 'Counting garlic cloves (never enough)'],
+    es: ['Armin está pensando qué deberías comer', 'Consultando el oráculo culinario', 'Mezclando ingredientes en la nube', 'Buscando recetas que no requieran talento'],
+    bs: ['Armin razmišlja šta da jedeš', 'Konsultuje kulinarski orakul', 'Miješa sastojke u oblaku', 'Traži recepte koji ne zahtijevaju talenat'],
+  };
 
   // ─── Toast messages (with variation) ───
   const toastVariations = {
@@ -993,7 +1114,7 @@
           </div>
         `).join('')}
       </div>
-      <div class="loading-label">${pick(loadingMessages)}<span class="loading-dots"></span></div>
+      <div class="loading-label">${pick(loadingMessages[currentLang] || loadingMessages.sv)}<span class="loading-dots"></span></div>
     `;
     recipeList.innerHTML = '';
     errBox.style.display = 'none';
@@ -1016,7 +1137,8 @@
             ingredients: [...ingredients],
             portions: searchPortions,
             prefs: [...prefs],
-            conversationHistory
+            conversationHistory,
+            language: currentLang
           })
         });
 
@@ -1124,24 +1246,27 @@
       `;
     }
 
-    // Missing globally
-    if (lastMissingGlobally.length) {
-      headerHTML += `
-        <div class="missing-globally">
-          <span class="missing-icon">${iconShop}</span>
-          <span class="missing-label">Köp även:</span>
-          ${lastMissingGlobally.map(m => `<span class="missing-chip">${esc(m)}</span>`).join('')}
-        </div>
-      `;
-    }
-
-    // Suggested swaps
-    if (lastSuggestedSwaps.length) {
-      headerHTML += `
-        <div class="suggested-swaps">
-          ${lastSuggestedSwaps.map(s => `<span class="swap-chip">💡 ${esc(s)}</span>`).join('')}
-        </div>
-      `;
+    // Missing globally + suggested swaps combined tips banner
+    if (lastMissingGlobally.length || lastSuggestedSwaps.length) {
+      headerHTML += `<div class="tips-banner">`;
+      headerHTML += `<div class="tips-banner-title">🛒 Tips innan du lagar</div>`;
+      if (lastMissingGlobally.length) {
+        headerHTML += `
+          <div class="missing-globally">
+            <span class="missing-icon">${iconShop}</span>
+            <span class="missing-label">Köp även:</span>
+            ${lastMissingGlobally.map(m => `<span class="missing-chip">${esc(m)}</span>`).join('')}
+          </div>
+        `;
+      }
+      if (lastSuggestedSwaps.length) {
+        headerHTML += `
+          <div class="suggested-swaps">
+            ${lastSuggestedSwaps.map(s => `<span class="swap-chip">💡 ${esc(s)}</span>`).join('')}
+          </div>
+        `;
+      }
+      headerHTML += `</div>`;
     }
 
     recipeList.innerHTML = `
@@ -1320,7 +1445,7 @@
 
     // Substitutions
     const subsHTML = (r.substitutions && r.substitutions.length) ? `
-      <details class="substitutions-section">
+      <details class="substitutions-section" open>
         <summary class="substitutions-toggle">💡 Saknar du något?</summary>
         <div class="substitutions-list">
           ${r.substitutions.map(s => `<p class="substitution-item">${esc(s)}</p>`).join('')}
@@ -1672,12 +1797,112 @@
       desc: 'Vegetariskt men ingen klagar. Inte ens köttätarna. Testat och verifierat av Armin själv.',
       ings: ['kikärtor', 'lök', 'vitlök', 'koriander', 'pitabröd'],
     },
+    {
+      badge: '🍝 Italiensk dröm',
+      name: 'Risotto ai funghi',
+      desc: 'Långsamt, meditativt, och totalt värt armträningen. Rör. Rör. Rör lite till.',
+      ings: ['ris', 'svamp', 'lök', 'vitlök', 'parmesan'],
+    },
+    {
+      badge: '🌮 Fredagsfavorit',
+      name: 'Tacos al pastor',
+      desc: 'Fredagsmys utan halvfabrikat. Ja, det kräver lite mer — men din familj förtjänar det.',
+      ings: ['tortilla', 'fläskfilé', 'ananas', 'lök', 'koriander'],
+    },
+    {
+      badge: '🥗 Hälsosamt (typ)',
+      name: 'Buddha bowl',
+      desc: 'Ser hälsosamt ut på Instagram. Smakar faktiskt bra på riktigt. Win-win.',
+      ings: ['quinoa', 'avokado', 'kikärtor', 'spenat', 'tomat'],
+    },
+    {
+      badge: '🍜 Asiatisk tröst',
+      name: 'Tonkotsu ramen',
+      desc: 'Japansk penicillin. Botar allt utom dålig smak i musik.',
+      ings: ['nudlar', 'ägg', 'soja', 'vitlök', 'ingefära'],
+    },
+    {
+      badge: '🔥 Balkanskt arv',
+      name: 'Burek',
+      desc: 'Om du inte har ätit burek med yoghurt har du missat livets mening. Ingen diskussion.',
+      ings: ['filodeg', 'köttfärs', 'lök', 'ägg', 'yoghurt'],
+    },
+    {
+      badge: '🧈 Comfort food',
+      name: 'Mac & cheese',
+      desc: 'Vuxna äter också barnmat. Vi bara kallar det comfort food för att det ska låta fint.',
+      ings: ['pasta', 'cheddar', 'mjölk', 'smör', 'ströbröd'],
+    },
+    {
+      badge: '🥘 Helgprojekt',
+      name: 'Tagine med kyckling',
+      desc: 'Marocko i en gryta. Sätter du på den kl 14 är du en hjälte till middag.',
+      ings: ['kyckling', 'morötter', 'lök', 'citron', 'oliver'],
+    },
+    {
+      badge: '🍣 Imponera-level',
+      name: 'Sushi bowls',
+      desc: 'All smak från sushi men utan origami-kunskaperna. Du behöver inte kunna rulla.',
+      ings: ['ris', 'lax', 'avokado', 'gurka', 'soja'],
+    },
+    {
+      badge: '🌿 Helt veganskt',
+      name: 'Dal tadka',
+      desc: 'Indisk linssoppa som bevisar att kött är överkurs. Linser + kryddor = magi.',
+      ings: ['linser', 'tomat', 'lök', 'vitlök', 'ingefära'],
+    },
+    {
+      badge: '⏰ 15-minutare',
+      name: 'Quesadillas',
+      desc: 'När du har 15 minuter och noll ambition. Ost fixar allt.',
+      ings: ['tortilla', 'ost', 'kyckling', 'paprika', 'gräddfil'],
+    },
+    {
+      badge: '🇬🇷 Medelhavsdröm',
+      name: 'Grekisk sallad med halloumi',
+      desc: 'Grilla halloumin. Släng på tomat och gurka. Känn dig som en gudinna.',
+      ings: ['halloumi', 'tomat', 'gurka', 'lök', 'olivolja'],
+    },
+    {
+      badge: '🥟 Handgjort',
+      name: 'Gyoza',
+      desc: 'Terapi i köket. Varje veckning är ett steg mot inre frid. Eller bara god mat.',
+      ings: ['köttfärs', 'kål', 'vitlök', 'ingefära', 'soja'],
+    },
+    {
+      badge: '🌶️ Mexikansk klassiker',
+      name: 'Enchiladas',
+      desc: 'Tortilla + fyllning + sås + ost = problemlösning på hög nivå.',
+      ings: ['tortilla', 'kyckling', 'ost', 'tomat', 'grädde'],
+    },
+    {
+      badge: '🍲 Vintervärme',
+      name: 'Tom kha gai',
+      desc: 'Thailändsk kokossoppa som gör vintern uthärdlig. Tack, Thailand.',
+      ings: ['kyckling', 'kokosmjölk', 'galangal', 'lime', 'citrongräs'],
+    },
+    {
+      badge: '🥩 Steakhouse hemma',
+      name: 'Grillad entrecôte',
+      desc: 'Stek. Smör. Vitlök. Rosmarin. Mer behövs inte. Sluta övertänka.',
+      ings: ['entrecôte', 'smör', 'vitlök', 'rosmarin', 'potatis'],
+    },
   ];
+
+  function getWeeklyPicks(allPicks, count = 5) {
+    const weekNum = Math.floor(Date.now() / (7 * 24 * 60 * 60 * 1000));
+    const start = (weekNum * count) % allPicks.length;
+    const picks = [];
+    for (let i = 0; i < count; i++) {
+      picks.push(allPicks[(start + i) % allPicks.length]);
+    }
+    return picks;
+  }
 
   function renderArminPicks() {
     const container = document.getElementById('arminPicks');
     if (!container) return;
-    container.innerHTML = arminPicks.map(p => `
+    container.innerHTML = getWeeklyPicks(arminPicks).map(p => `
       <div class="armin-pick-card" data-ings='${JSON.stringify(p.ings)}'>
         <span class="armin-pick-badge">${p.badge}</span>
         <div class="armin-pick-name">${esc(p.name)}</div>
@@ -1713,41 +1938,49 @@
       { name: 'Pasta alla carbonara', ings: ['pasta', 'ägg', 'guanciale', 'pecorino', 'svartpeppar'] },
       { name: 'Risotto ai funghi porcini', ings: ['ris', 'svamp', 'lök', 'vitlök', 'parmesan'] },
       { name: 'Ossobuco alla milanese', ings: ['kalvlägg', 'tomat', 'lök', 'vitlök', 'morot'] },
+      { name: 'Bruschetta al pomodoro', ings: ['bröd', 'tomat', 'vitlök', 'basilika', 'olivolja'] },
     ]},
     { flag: '🇧🇦', country: 'Bosnien & Hercegovina', dishes: [
       { name: 'Ćevapi', ings: ['köttfärs', 'lök', 'vitlök', 'pitabröd', 'paprika'] },
       { name: 'Burek', ings: ['filodeg', 'köttfärs', 'lök', 'ägg', 'yoghurt'] },
       { name: 'Begova čorba', ings: ['kyckling', 'okra', 'morot', 'grädde', 'citron'] },
+      { name: 'Dolma', ings: ['paprika', 'köttfärs', 'ris', 'tomat', 'lök'] },
     ]},
     { flag: '🇷🇸', country: 'Serbien', dishes: [
       { name: 'Pljeskavica', ings: ['köttfärs', 'lök', 'paprika', 'vitlök', 'pitabröd'] },
       { name: 'Sarma', ings: ['kål', 'köttfärs', 'ris', 'lök', 'paprika'] },
       { name: 'Ćevapčići', ings: ['köttfärs', 'lök', 'vitlök', 'kajmak', 'bröd'] },
+      { name: 'Ajvar-grillad kyckling', ings: ['kyckling', 'paprika', 'aubergine', 'vitlök', 'olivolja'] },
     ]},
     { flag: '🇬🇷', country: 'Grekland', dishes: [
       { name: 'Moussaka', ings: ['aubergine', 'köttfärs', 'tomat', 'ost', 'potatis'] },
       { name: 'Souvlaki', ings: ['kyckling', 'citron', 'vitlök', 'pitabröd', 'yoghurt'] },
       { name: 'Tzatziki', ings: ['yoghurt', 'gurka', 'vitlök', 'dill', 'citron'] },
+      { name: 'Spanakopita', ings: ['spenat', 'fetaost', 'filodeg', 'lök', 'ägg'] },
     ]},
     { flag: '🇹🇷', country: 'Turkiet', dishes: [
       { name: 'Adana kebab', ings: ['lammfärs', 'paprika', 'lök', 'vitlök', 'tomat'] },
       { name: 'Lahmacun', ings: ['köttfärs', 'tomat', 'lök', 'paprika', 'persilja'] },
       { name: 'Menemen', ings: ['ägg', 'tomat', 'paprika', 'lök', 'vitlök'] },
+      { name: 'Iskender kebab', ings: ['lamm', 'pitabröd', 'tomat', 'yoghurt', 'smör'] },
     ]},
     { flag: '🇱🇧', country: 'Libanon', dishes: [
       { name: 'Falafel', ings: ['kikärtor', 'lök', 'vitlök', 'koriander', 'pitabröd'] },
       { name: 'Shawarma', ings: ['kyckling', 'vitlök', 'yoghurt', 'pitabröd', 'tomat'] },
       { name: 'Tabbouleh', ings: ['bulgur', 'persilja', 'tomat', 'lök', 'citron'] },
+      { name: 'Fattoush', ings: ['sallad', 'tomat', 'gurka', 'pitabröd', 'citron'] },
     ]},
     { flag: '🇹🇭', country: 'Thailand', dishes: [
       { name: 'Pad thai', ings: ['risnudlar', 'ägg', 'tofu', 'lime', 'jordnötter'] },
       { name: 'Gaeng khiao wan', ings: ['kyckling', 'kokosmjölk', 'curry', 'paprika', 'ris'] },
       { name: 'Tom kha gai', ings: ['kyckling', 'kokosmjölk', 'galangal', 'lime', 'citrongräs'] },
+      { name: 'Som tam', ings: ['papaya', 'lime', 'jordnötter', 'chili', 'fisksås'] },
     ]},
     { flag: '🇯🇵', country: 'Japan', dishes: [
       { name: 'Tonkotsu ramen', ings: ['nudlar', 'ägg', 'soja', 'vitlök', 'ingefära'] },
       { name: 'Teriyaki-lax', ings: ['lax', 'soja', 'ris', 'sesam', 'ingefära'] },
       { name: 'Gyoza', ings: ['köttfärs', 'kål', 'vitlök', 'ingefära', 'soja'] },
+      { name: 'Katsu curry', ings: ['kyckling', 'panko', 'ris', 'curry', 'lök'] },
     ]},
     { flag: '🇰🇷', country: 'Korea', dishes: [
       { name: 'Bibimbap', ings: ['ris', 'ägg', 'morötter', 'spenat', 'köttfärs'] },
@@ -1759,16 +1992,19 @@
       { name: 'Gong bao ji ding', ings: ['kyckling', 'jordnötter', 'paprika', 'soja', 'vitlök'] },
       { name: 'Chow mein', ings: ['nudlar', 'kyckling', 'paprika', 'morötter', 'soja'] },
       { name: 'Mapo doufu', ings: ['tofu', 'köttfärs', 'vitlök', 'ingefära', 'soja'] },
+      { name: 'Dan dan-nudlar', ings: ['nudlar', 'köttfärs', 'soja', 'sesam', 'chili'] },
     ]},
     { flag: '🇮🇳', country: 'Indien', dishes: [
       { name: 'Murgh makhani', ings: ['kyckling', 'tomat', 'grädde', 'vitlök', 'ris'] },
       { name: 'Dal tadka', ings: ['linser', 'tomat', 'lök', 'vitlök', 'ingefära'] },
       { name: 'Palak paneer', ings: ['spenat', 'paneer', 'lök', 'vitlök', 'grädde'] },
+      { name: 'Aloo gobi', ings: ['potatis', 'blomkål', 'lök', 'tomat', 'gurkmeja'] },
     ]},
     { flag: '🇲🇽', country: 'Mexiko', dishes: [
       { name: 'Tacos al pastor', ings: ['tortilla', 'fläskfilé', 'ananas', 'lök', 'koriander'] },
       { name: 'Burrito bowl', ings: ['ris', 'bönor', 'avokado', 'tomat', 'ost'] },
       { name: 'Enchiladas verdes', ings: ['tortilla', 'kyckling', 'ost', 'tomatillo', 'grädde'] },
+      { name: 'Chilaquiles', ings: ['tortilla', 'tomat', 'ost', 'ägg', 'gräddfil'] },
     ]},
     { flag: '🇫🇷', country: 'Frankrike', dishes: [
       { name: 'Ratatouille', ings: ['aubergine', 'zucchini', 'paprika', 'tomat', 'vitlök'] },
@@ -1780,16 +2016,29 @@
       { name: 'Paella valenciana', ings: ['ris', 'kyckling', 'räkor', 'paprika', 'saffran'] },
       { name: 'Patatas bravas', ings: ['potatis', 'tomat', 'vitlök', 'paprika', 'majonnäs'] },
       { name: 'Gazpacho andaluz', ings: ['tomat', 'gurka', 'paprika', 'vitlök', 'olivolja'] },
+      { name: 'Tortilla española', ings: ['ägg', 'potatis', 'lök', 'olivolja', 'salt'] },
     ]},
     { flag: '🇲🇦', country: 'Marocko', dishes: [
       { name: 'Tagine bil djaj', ings: ['kyckling', 'morötter', 'lök', 'citron', 'oliver'] },
       { name: 'Couscous-sallad', ings: ['couscous', 'morötter', 'paprika', 'lök', 'kikärtor'] },
       { name: 'Harira', ings: ['linser', 'tomat', 'lök', 'koriander', 'kikärtor'] },
+      { name: 'Shakshuka', ings: ['ägg', 'tomat', 'paprika', 'lök', 'vitlök'] },
     ]},
     { flag: '🇺🇸', country: 'USA', dishes: [
       { name: 'Mac & cheese', ings: ['pasta', 'cheddar', 'mjölk', 'smör', 'ströbröd'] },
       { name: 'Pulled pork', ings: ['fläskkarré', 'lök', 'vitlök', 'BBQ-sås', 'bröd'] },
       { name: 'Clam chowder', ings: ['musslor', 'potatis', 'bacon', 'lök', 'grädde'] },
+      { name: 'Jambalaya', ings: ['ris', 'räkor', 'korv', 'paprika', 'lök'] },
+    ]},
+    { flag: '🇻🇳', country: 'Vietnam', dishes: [
+      { name: 'Phở bò', ings: ['risnudlar', 'nötfärs', 'lök', 'ingefära', 'koriander'] },
+      { name: 'Bánh mì', ings: ['baguette', 'fläsk', 'morötter', 'gurka', 'koriander'] },
+      { name: 'Bún chả', ings: ['fläsk', 'risnudlar', 'sallad', 'lime', 'fisksås'] },
+    ]},
+    { flag: '🇵🇪', country: 'Peru', dishes: [
+      { name: 'Ceviche', ings: ['fisk', 'lime', 'lök', 'koriander', 'chili'] },
+      { name: 'Lomo saltado', ings: ['nötfärs', 'tomat', 'lök', 'soja', 'potatis'] },
+      { name: 'Ají de gallina', ings: ['kyckling', 'bröd', 'ost', 'nötter', 'ris'] },
     ]},
   ];
 
@@ -1987,15 +2236,30 @@
   const heroLogo = document.getElementById('heroLogo');
   if (heroLogo) heroLogo.innerHTML = appLogoSVG(52);
 
+  // Language selector
+  const langSelect = document.getElementById('langSelect');
+  if (langSelect) {
+    langSelect.value = currentLang;
+    langSelect.addEventListener('change', () => {
+      currentLang = langSelect.value;
+      try { localStorage.setItem('app_language', currentLang); } catch {}
+      translatePage();
+      renderQuickPicks();
+      renderHistory();
+      updateFavBadge();
+    });
+  }
+  translatePage();
+
   // Rotate hero subtitle
   const heroSubEl = document.querySelector('.hero-sub');
-  if (heroSubEl) heroSubEl.textContent = pick(heroSubtitles);
+  if (heroSubEl) heroSubEl.textContent = pick(heroSubtitles[currentLang] || heroSubtitles.sv);
 
   // Rotate footer texts
   const ftTagline = document.querySelector('.footer-tagline:not(.footer-irony)');
   const ftIrony = document.querySelector('.footer-irony');
-  if (ftTagline) ftTagline.textContent = pick(footerTaglines);
-  if (ftIrony) ftIrony.textContent = pick(footerIronies);
+  if (ftTagline) ftTagline.textContent = pick(footerTaglines[currentLang] || footerTaglines.sv);
+  if (ftIrony) ftIrony.textContent = pick(footerIronies[currentLang] || footerIronies.sv);
 
   // Handle initial hash
   const initView = location.hash.replace('#', '') || 'search';

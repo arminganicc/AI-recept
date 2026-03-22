@@ -3,7 +3,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { ingredients, portions, prefs, conversationHistory } = req.body;
+  const { ingredients, portions, prefs, conversationHistory, language } = req.body;
 
   if (!ingredients || !ingredients.length) {
     return res.status(400).json({ error: 'Missing ingredients' });
@@ -14,40 +14,25 @@ export default async function handler(req, res) {
     ? conversationHistory.map((h, i) => `Omgång ${i + 1}: ${h.feedback}`).join('\n')
     : '';
 
-  const systemPrompt = `Du är Armin — en lite för entusiastisk hemkock som tar matlagning på blodigt allvar men aldrig sig själv. Du har humor, du är ärlig, och du säger ifrån om nåt inte funkar ("Alltså, zucchini och sylt? Vi kan göra det... men borde vi? Nej."). Du ger exakt 4 receptförslag som giltig JSON.
+  const langNames = { sv: 'svenska', en: 'English', es: 'español', bs: 'bosanski' };
+  const lang = langNames[language] || 'svenska';
+  const langInstruction = language && language !== 'sv'
+    ? `\n\nSPRÅK: Svara på ${lang}. Alla receptnamn, beskrivningar, ingredienser, steg, tips och kommentarer ska vara på ${lang}.`
+    : '';
 
-VIKTIGT — VERKLIGA RECEPT:
-- Basera ALLTID recepten på riktiga, beprövade maträtter som faktiskt lagas i verkligheten
-- Ingen påhittad fusion som ingen testat — ingredienserna ska faktiskt smaka bra ihop
-- Om ingredienserna är konstiga, säg det i chef_comment och gör ändå ditt bästa
-- Tänk "vad skulle en erfaren hemkock faktiskt laga?" — inte "vad kan AI hitta på?"
+  const systemPrompt = `Du är Armin — entusiastisk hemkock med humor. Ge exakt 4 verkliga receptförslag som JSON.
 
-REGLER:
-- Receptnamn: max 40 tecken
-- Beskrivning: max 120 tecken, gärna med en glimt i ögat
-- Tag: ENBART ett av: "Snabbaste", "Mest ambitiösa", "Oväntat", "Minst svinn"
-- Svårighetsgrad: ENBART "Lätt", "Medel" eller "Avancerad"
-- Tid: formatet "X min" eller "X–Y min"
-- Ingredienser med exakta mängder (300g, 2 dl, 1 msk)
-- Minst 5 steg per recept med temperatur, tid och sensorisk ledtråd
-- Inkludera basvaror (salt, peppar, olja) i ingredienslistan
-- chef_comment ska vara personlig och lite rolig — max 2 meningar
+REGLER: Receptnamn max 40 tkn. Beskrivning max 120 tkn. Tag: ett av "Snabbaste"/"Mest ambitiösa"/"Oväntat"/"Minst svinn". Svårighetsgrad: "Lätt"/"Medel"/"Avancerad". Tid: "X min" eller "X–Y min". Ingredienser med mängder. Minst 5 steg med temp/tid. chef_comment: personlig, max 2 meningar.
 
-VARIATION:
-1. "Snabbaste" — under 30 min
-2. "Mest ambitiösa" — 45–60 min
-3. "Oväntat" — annat kök eller oväntad (men god!) kombination
-4. "Minst svinn" — maximerar alla ingredienser
+VARIATION: 1) Snabbaste <30min 2) Mest ambitiösa 45–60min 3) Oväntat kök/kombination 4) Minst svinn.
 
-Svara ENBART med giltig JSON, inga kodblock, inga backticks.`;
+Svara ENBART med giltig JSON, inga kodblock.${langInstruction}`;
 
   const userPrompt = `Råvaror: ${ingredients.join(', ')}
 Portioner: ${portions || 4}
-Kostpreferenser: ${prefText}
-${historyText ? `Tidigare feedback: ${historyText}` : ''}
-
-Svara med denna JSON-struktur:
-{"chef_comment":"Armins personliga reaktion","missing_globally":["1-2 saknade råvaror"],"suggested_swaps":["1 bytesförslag"],"recipes":[{"name":"Namn","time":"25 min","difficulty":"Lätt","difficulty_reason":"Kort förklaring","servings":${portions || 4},"tag":"Snabbaste","description":"Kort beskrivning","missing_ingredients":["saknad ingrediens"],"substitutions":["Byt X mot Y"],"ingredients":["300g råvara","2 msk olja"],"steps":[{"instruction":"Steg med temp och tid","duration_minutes":5,"tip":"Valfritt tips"}],"leftovers_tip":"Tips om rester","nutrition_per_serving":{"calories":400,"protein_g":30,"carbs_g":40,"fat_g":15,"highlight":"Proteinrik"},"week_tip":"När rätten passar bäst"}]}`;
+Pref: ${prefText}
+${historyText ? `Feedback: ${historyText}` : ''}
+JSON: {"chef_comment":"..","missing_globally":[".."],"suggested_swaps":[".."],"recipes":[{"name":"..","time":"..","difficulty":"..","difficulty_reason":"..","servings":${portions || 4},"tag":"..","description":"..","missing_ingredients":[".."],"substitutions":[".."],"ingredients":[".."],"steps":[{"instruction":"..","duration_minutes":0,"tip":".."}],"leftovers_tip":"..","nutrition_per_serving":{"calories":0,"protein_g":0,"carbs_g":0,"fat_g":0,"highlight":".."},"week_tip":".."}]}`;
 
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -59,8 +44,8 @@ Svara med denna JSON-struktur:
       },
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001',
-        max_tokens: 6000,
-        system: systemPrompt,
+        max_tokens: 3000,
+        system: [{ type: 'text', text: systemPrompt, cache_control: { type: 'ephemeral' } }],
         messages: [{ role: 'user', content: userPrompt }],
       }),
     });
