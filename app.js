@@ -20,6 +20,33 @@
 
   const iconArrow = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>`;
 
+  // ─── App Logo ───
+  function appLogoSVG(size = 40) {
+    return `<svg width="${size}" height="${size}" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Steam wisps -->
+      <path d="M22 18c0-4 3-7 3-10" stroke="#C05A1F" stroke-width="2" stroke-linecap="round" opacity="0.5">
+        <animate attributeName="d" values="M22 18c0-4 3-7 3-10;M22 18c0-4-2-7-1-10;M22 18c0-4 3-7 3-10" dur="2s" repeatCount="indefinite"/>
+      </path>
+      <path d="M32 16c0-4 2-6 2-9" stroke="#C05A1F" stroke-width="2" stroke-linecap="round" opacity="0.4">
+        <animate attributeName="d" values="M32 16c0-4 2-6 2-9;M32 16c0-4-1-6 0-9;M32 16c0-4 2-6 2-9" dur="2.4s" repeatCount="indefinite"/>
+      </path>
+      <path d="M42 18c0-4-2-7-2-10" stroke="#C05A1F" stroke-width="2" stroke-linecap="round" opacity="0.3">
+        <animate attributeName="d" values="M42 18c0-4-2-7-2-10;M42 18c0-4 2-7 1-10;M42 18c0-4-2-7-2-10" dur="1.8s" repeatCount="indefinite"/>
+      </path>
+      <!-- Pot lid -->
+      <ellipse cx="32" cy="22" rx="18" ry="3" fill="#C05A1F" opacity="0.15"/>
+      <path d="M14 22h36" stroke="#C05A1F" stroke-width="2.5" stroke-linecap="round"/>
+      <circle cx="32" cy="20" r="2.5" fill="#C05A1F"/>
+      <!-- Pot body -->
+      <path d="M16 24c0 0 0 18 2 22a4 4 0 0 0 4 3h20a4 4 0 0 0 4-3c2-4 2-22 2-22" fill="#FAF0E8" stroke="#C05A1F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- Pot handles -->
+      <path d="M16 30c-4 0-6 2-6 4s2 4 6 4" stroke="#C05A1F" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <path d="M48 30c4 0 6 2 6 4s-2 4-6 4" stroke="#C05A1F" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <!-- Heart inside pot -->
+      <path d="M32 36c-1.5-2.5-5-3-6-1s0 4 6 8c6-4 7-6 6-8s-4.5-1.5-6 1z" fill="#C05A1F" opacity="0.6"/>
+    </svg>`;
+  }
+
   // ─── Supabase Setup ───
   let supabaseClient = null;
   let currentUser = null;
@@ -113,11 +140,67 @@
     'tofu', 'tempeh', 'halloumi', 'fetaost', 'gruyère', 'cheddar'
   ];
 
-  // ─── Toast messages ───
+  // ─── Rotating humor ───
+  function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+  const heroSubtitles = [
+    'Släng in vad du har. Armin löser middagen.',
+    'Du har mat hemma. Du vet bara inte vad du ska göra med den.',
+    'Från "vi har inget hemma" till middag på 30 min.',
+    'Kylskåpskaos → Kulinarisk genialitet.',
+    'Armin judgar inte ditt kylskåp. (Okej, lite.)',
+    'Svaret på frågan ingen vill ställa.',
+    'Tre ingredienser. Noll ursäkter.',
+  ];
+
+  const footerTaglines = [
+    'Gjord med kärlek, kaos och alldeles för mycket vitlök.',
+    'Inga kockar skadades. Några ägg däremot.',
+    'Kodad med kaffe. Testad med hunger.',
+    'Byggt av någon som googlar "hur kokar man ris" ibland.',
+    'Made in Sweden. Inspirerad av allt utom husmanskost.',
+    'Funkar bäst kl 16:55 när paniken slår till.',
+  ];
+
+  const footerIronies = [
+    'Ingen mat skadades under utvecklingen. Samma sak kan inte sägas om utvecklaren.',
+    'Om appen kraschar — skylls på vitlöken.',
+    'Disclaimer: Vi tar inget ansvar för matlagnings-ambitionen du får kl 23.',
+    'Denna app ersätter inte en mormor. Men den försöker.',
+    'AI-genererade recept. Mänsklig panik. Äkta hunger.',
+    'Eventuella likheter med riktiga kockar är helt oavsiktliga.',
+  ];
+
+  const loadingMessages = [
+    'Armin funderar på vad du ska äta',
+    'Konsulterar det kulinariska oraklet',
+    'Mixar ingredienser i molnet',
+    'Googlar inte — litar på AI:n istället',
+    'Letar efter recept som inte kräver talang',
+    'Räknar vitlöksklyftor (aldrig nog)',
+    'Bläddrar genom tusen recept åt dig',
+  ];
+
+  // ─── Toast messages (with variation) ───
+  const toastVariations = {
+    favAdded: [
+      'Sparad! Den där är en keeper ❤️',
+      'In i favoriter-skåpet! 🏆',
+      'Noterat. Du har bra smak.',
+      'Sparad — Armin godkänner 👨‍🍳',
+    ],
+    favRemoved: [
+      'Borttagen. Vi pratar aldrig om det igen.',
+      'Bort med den. Ingen dömer.',
+      'Raderad. Som om det aldrig hände.',
+      'Favorit-dumpad. Inga hårda känslor.',
+    ],
+  };
+
   const toastMessages = {
     copied: 'Kopierat! Dela på hälsa.',
-    favAdded: 'Sparad! Den där är en keeper ❤️',
-    favRemoved: 'Borttagen. Vi pratar aldrig om det igen.',
+    favAdded: () => pick(toastVariations.favAdded),
+    favRemoved: () => pick(toastVariations.favRemoved),
     listSent: 'Inköpslistan flyger iväg till din mejl ✈️',
     listAdded: 'Lagt till! Dags att handla snart.',
     emptyList: 'Listan är tom — inget att skicka!',
@@ -169,7 +252,7 @@
     window.scrollTo({ top: 0, behavior: 'instant' });
     history.pushState({ view: name }, '', `#${name}`);
     if (name === 'favorites') renderFavView();
-    if (name === 'inspiration') renderWorldCuisines();
+    if (name === 'inspiration') { renderArminPicks(); renderWorldCuisines(); }
     if (name === 'shopping') renderShoppingView();
   }
   // Expose for inline onclick in HTML
@@ -205,7 +288,8 @@
   function isFav(name) { return favorites.some(f => f.name === name); }
 
   function showToast(msg) {
-    const text = toastMessages[msg] || msg;
+    const raw = toastMessages[msg] || msg;
+    const text = typeof raw === 'function' ? raw() : raw;
     copyToast.textContent = text;
     copyToast.classList.add('show');
     clearTimeout(copyToast._t);
@@ -312,38 +396,54 @@
   // ─── Onboarding ───
   function showOnboarding() {
     if (localStorage.getItem('onboarding_seen')) return;
-    const tooltip = document.getElementById('onboardingTooltip');
-    if (tooltip) {
-      tooltip.hidden = false;
+    const overlay = document.getElementById('onboardingOverlay');
+    if (overlay) {
+      overlay.hidden = false;
+      document.body.style.overflow = 'hidden';
+
+      // Inject the logo SVG
+      const logoContainer = document.getElementById('onboardingLogo');
+      if (logoContainer) logoContainer.innerHTML = appLogoSVG(64);
+
       document.getElementById('onboardingClose')?.addEventListener('click', () => {
-        tooltip.hidden = true;
+        overlay.hidden = true;
+        document.body.style.overflow = '';
         localStorage.setItem('onboarding_seen', 'true');
       });
     }
   }
 
   // ─── Auth UI ───
+  let authIsSignUp = false;
+
   function updateAuthUI() {
     if (!accountBtn) return;
     accountBtn.classList.toggle('logged-in', !!currentUser);
 
     const signInEl = document.getElementById('authSignIn');
-    const sentEl = document.getElementById('authSent');
     const loggedInEl = document.getElementById('authLoggedIn');
 
     if (currentUser) {
       if (signInEl) signInEl.hidden = true;
-      if (sentEl) sentEl.hidden = true;
       if (loggedInEl) {
         loggedInEl.hidden = false;
         const emailEl = document.getElementById('authUserEmail');
         const avatarEl = document.getElementById('authAvatar');
         if (emailEl) emailEl.textContent = currentUser.email;
         if (avatarEl) avatarEl.textContent = (currentUser.email || '?')[0].toUpperCase();
+
+        // Update account management info
+        const providerEl = document.getElementById('authProvider');
+        const favCountEl2 = document.getElementById('authFavCount');
+        if (providerEl) {
+          const provider = currentUser.app_metadata?.provider || 'email';
+          const labels = { google: 'Google', apple: 'Apple', email: 'E-post' };
+          providerEl.textContent = labels[provider] || provider;
+        }
+        if (favCountEl2) favCountEl2.textContent = `${favorites.length} recept`;
       }
     } else {
       if (signInEl) signInEl.hidden = false;
-      if (sentEl) sentEl.hidden = true;
       if (loggedInEl) loggedInEl.hidden = true;
     }
   }
@@ -364,50 +464,122 @@
   document.getElementById('closeAuth')?.addEventListener('click', closeAuthModal);
   authOverlay?.addEventListener('click', e => { if (e.target === authOverlay) closeAuthModal(); });
 
-  // Magic link send
+  // Toggle sign-in / sign-up mode
+  document.getElementById('authToggleMode')?.addEventListener('click', () => {
+    authIsSignUp = !authIsSignUp;
+    const submitBtn = document.getElementById('authSubmit');
+    const toggleBtn = document.getElementById('authToggleMode');
+    if (authIsSignUp) {
+      submitBtn.textContent = 'Skapa konto';
+      toggleBtn.innerHTML = 'Har redan ett konto? <strong>Logga in här</strong>';
+    } else {
+      submitBtn.textContent = 'Logga in';
+      toggleBtn.innerHTML = 'Har inget konto? <strong>Skapa ett här</strong>';
+    }
+  });
+
+  // Email + Password sign in / sign up
   document.getElementById('authSubmit')?.addEventListener('click', async () => {
     const emailInput = document.getElementById('authEmail');
+    const passwordInput = document.getElementById('authPassword');
     const email = emailInput?.value?.trim();
-    if (!email) return;
+    const password = passwordInput?.value;
+    if (!email || !password) {
+      showToast('error');
+      return;
+    }
+    if (password.length < 6) {
+      showToast('error');
+      return;
+    }
 
     const submitBtn = document.getElementById('authSubmit');
     submitBtn.disabled = true;
-    submitBtn.textContent = 'Skickar...';
+    submitBtn.textContent = authIsSignUp ? 'Skapar konto...' : 'Loggar in...';
 
     try {
       if (!supabaseClient) throw new Error('Supabase ej konfigurerat');
-      const { error } = await supabaseClient.auth.signInWithOtp({
-        email,
-        options: { emailRedirectTo: window.location.origin }
-      });
-      if (error) throw error;
 
-      // Show "sent" state
-      document.getElementById('authSignIn').hidden = true;
-      document.getElementById('authSent').hidden = false;
-      document.getElementById('authSentEmail').textContent = email;
-      showToast('magicSent');
+      let result;
+      if (authIsSignUp) {
+        result = await supabaseClient.auth.signUp({ email, password });
+      } else {
+        result = await supabaseClient.auth.signInWithPassword({ email, password });
+      }
+
+      if (result.error) throw result.error;
+
+      if (authIsSignUp && result.data?.user && !result.data?.session) {
+        // Email confirmation required
+        showToast('magicSent');
+      } else {
+        closeAuthModal();
+      }
     } catch (e) {
       showToast('error');
       console.error('Auth error:', e);
     }
     submitBtn.disabled = false;
-    submitBtn.textContent = 'Skicka inloggningslänk';
+    submitBtn.textContent = authIsSignUp ? 'Skapa konto' : 'Logga in';
   });
 
-  // Resend magic link
-  document.getElementById('authResend')?.addEventListener('click', async () => {
-    const email = document.getElementById('authSentEmail')?.textContent;
-    if (!email || !supabaseClient) return;
+  // Google OAuth
+  document.getElementById('authGoogle')?.addEventListener('click', async () => {
+    if (!supabaseClient) { showToast('error'); return; }
     try {
-      await supabaseClient.auth.signInWithOtp({
-        email,
-        options: { emailRedirectTo: window.location.origin }
+      const { error } = await supabaseClient.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: window.location.origin }
       });
+      if (error) throw error;
+    } catch (e) {
+      showToast('error');
+      console.error('Google auth error:', e);
+    }
+  });
+
+  // Apple OAuth
+  document.getElementById('authApple')?.addEventListener('click', async () => {
+    if (!supabaseClient) { showToast('error'); return; }
+    try {
+      const { error } = await supabaseClient.auth.signInWithOAuth({
+        provider: 'apple',
+        options: { redirectTo: window.location.origin }
+      });
+      if (error) throw error;
+    } catch (e) {
+      showToast('error');
+      console.error('Apple auth error:', e);
+    }
+  });
+
+  // Change password
+  document.getElementById('authChangePassword')?.addEventListener('click', async () => {
+    if (!supabaseClient || !currentUser?.email) { showToast('error'); return; }
+    try {
+      const { error } = await supabaseClient.auth.resetPasswordForEmail(currentUser.email, {
+        redirectTo: window.location.origin
+      });
+      if (error) throw error;
       showToast('magicSent');
     } catch (e) {
       showToast('error');
+      console.error('Password reset error:', e);
     }
+  });
+
+  // Delete account
+  document.getElementById('authDeleteAccount')?.addEventListener('click', async () => {
+    if (!confirm('Är du säker på att du vill radera ditt konto? Alla sparade favoriter försvinner permanent.')) return;
+    if (supabaseClient) {
+      await supabaseClient.auth.signOut();
+    }
+    currentUser = null;
+    favorites = [];
+    saveFavorites();
+    updateAuthUI();
+    showToast('loggedOut');
+    closeAuthModal();
   });
 
   // Sign out
@@ -859,7 +1031,7 @@
     const cacheKey = getCacheKey();
     if (recipeCache.has(cacheKey)) {
       const cached = recipeCache.get(cacheKey);
-      recipes = cached.recipes || cached;
+      recipes = sortRecipesByDifficulty(cached.recipes || cached);
       lastChefComment = cached.chef_comment || '';
       lastMissingGlobally = cached.missing_globally || [];
       lastSuggestedSwaps = cached.suggested_swaps || [];
@@ -881,7 +1053,7 @@
           </div>
         `).join('')}
       </div>
-      <div class="loading-label">Armin funderar på vad du ska äta<span class="loading-dots"></span></div>
+      <div class="loading-label">${pick(loadingMessages)}<span class="loading-dots"></span></div>
     `;
     recipeList.innerHTML = '';
     errBox.style.display = 'none';
@@ -945,7 +1117,7 @@
           }
         }
 
-        recipes = parsed.recipes || [];
+        recipes = sortRecipesByDifficulty(parsed.recipes || []);
         if (!recipes.length) throw new Error('Inga recept returnerades — försök med andra ingredienser.');
 
         lastChefComment = parsed.chef_comment || '';
@@ -1161,6 +1333,18 @@
     if (d === 'medel') return 'diff-medium';
     if (d === 'avancerad') return 'diff-hard';
     return 'diff-easy';
+  }
+
+  function difficultyOrder(diff) {
+    const d = (diff || '').toLowerCase();
+    if (d === 'lätt') return 1;
+    if (d === 'medel') return 2;
+    if (d === 'avancerad') return 3;
+    return 0;
+  }
+
+  function sortRecipesByDifficulty(recipeList) {
+    return recipeList.sort((a, b) => difficultyOrder(a.difficulty) - difficultyOrder(b.difficulty));
   }
 
   function openRecipe(idx) {
@@ -1516,6 +1700,67 @@
     }
   }
 
+  // ─── Armin rekommenderar ───
+  const arminPicks = [
+    {
+      badge: '🔥 Veckans val',
+      name: 'Ćevapi med kajmak',
+      desc: 'Armins barndomsrätt. Om du inte har provat kajmak så har du inte levt. Sorry, jag gör inte reglerna.',
+      ings: ['köttfärs', 'lök', 'vitlök', 'kajmak', 'pitabröd'],
+    },
+    {
+      badge: '⚡ Snabbast i stan',
+      name: 'Pasta aglio e olio',
+      desc: 'Tre ingredienser, tio minuter, noll ursäkter. Den ultimata "jag-orkade-inte-handla"-middagen.',
+      ings: ['pasta', 'vitlök', 'olivolja', 'chili', 'persilja'],
+    },
+    {
+      badge: '🥇 Klassiker',
+      name: 'Köttbullar med gräddsås',
+      desc: 'Sveriges nationalrätt. Fast bättre än IKEAs, för den här har kärlek i receptet. Och vitlök.',
+      ings: ['köttfärs', 'lök', 'grädde', 'potatis', 'lingon'],
+    },
+    {
+      badge: '🌶️ För de modiga',
+      name: 'Kimchi jjigae',
+      desc: 'Koreansk comfort food som biter tillbaka. Perfekt för dagar när du vill att maten ska ha mer personlighet än du.',
+      ings: ['kimchi', 'tofu', 'lök', 'vitlök', 'ris'],
+    },
+    {
+      badge: '🌿 Grön favorit',
+      name: 'Falafel med tabbouleh',
+      desc: 'Vegetariskt men ingen klagar. Inte ens köttätarna. Testat och verifierat av Armin själv.',
+      ings: ['kikärtor', 'lök', 'vitlök', 'koriander', 'pitabröd'],
+    },
+  ];
+
+  function renderArminPicks() {
+    const container = document.getElementById('arminPicks');
+    if (!container) return;
+    container.innerHTML = arminPicks.map(p => `
+      <div class="armin-pick-card" data-ings='${JSON.stringify(p.ings)}'>
+        <span class="armin-pick-badge">${p.badge}</span>
+        <div class="armin-pick-name">${esc(p.name)}</div>
+        <div class="armin-pick-desc">${esc(p.desc)}</div>
+        <div class="armin-pick-ings">
+          ${p.ings.map(i => `<span class="armin-pick-ing">${esc(i)}</span>`).join('')}
+        </div>
+      </div>
+    `).join('');
+  }
+
+  document.getElementById('arminPicks')?.addEventListener('click', e => {
+    const card = e.target.closest('.armin-pick-card');
+    if (!card) return;
+    haptic();
+    const ings = JSON.parse(card.dataset.ings);
+    ingredients = [];
+    ings.forEach(ing => { if (!ingredients.includes(ing)) ingredients.push(ing); });
+    switchView('search');
+    render();
+    ingInput.focus();
+  });
+
   // ─── World Cuisine Catalog — with Balkans split ───
   const worldCuisines = [
     { flag: '🇸🇪', country: 'Sverige', dishes: [
@@ -1763,19 +2008,23 @@
   // ─── Scroll animations via IntersectionObserver ───
   function initScrollAnimations() {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          entry.target.style.opacity = '1';
-          entry.target.style.transform = 'translateY(0)';
+          // Stagger children if it's a container
+          const delay = entry.target.dataset.delay || '0';
+          entry.target.style.transitionDelay = delay + 'ms';
+          entry.target.classList.add('scroll-visible');
+          observer.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.1 });
+    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
 
-    document.querySelectorAll('.world-card, .fav-card, .list-group').forEach(el => {
-      el.style.opacity = '0';
-      el.style.transform = 'translateY(12px)';
-      el.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+    const selectors = '.world-card, .fav-card, .list-group, .armin-pick-card, .quick-category-label, .armin-header, .section-divider, .filter-tab';
+    document.querySelectorAll(selectors).forEach((el, i) => {
+      el.classList.add('scroll-animate');
+      el.dataset.delay = String((i % 6) * 60);
       observer.observe(el);
     });
   }
@@ -1793,6 +2042,20 @@
   renderQuickPicks();
   renderHistory();
   showOnboarding();
+
+  // Inject logo into hero
+  const heroLogo = document.getElementById('heroLogo');
+  if (heroLogo) heroLogo.innerHTML = appLogoSVG(52);
+
+  // Rotate hero subtitle
+  const heroSubEl = document.querySelector('.hero-sub');
+  if (heroSubEl) heroSubEl.textContent = pick(heroSubtitles);
+
+  // Rotate footer texts
+  const ftTagline = document.querySelector('.footer-tagline:not(.footer-irony)');
+  const ftIrony = document.querySelector('.footer-irony');
+  if (ftTagline) ftTagline.textContent = pick(footerTaglines);
+  if (ftIrony) ftIrony.textContent = pick(footerIronies);
 
   // Handle initial hash
   const initView = location.hash.replace('#', '') || 'search';

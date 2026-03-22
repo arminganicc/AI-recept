@@ -3,8 +3,8 @@
   "configurations": [
     {
       "name": "Static File Server",
-      "runtimeExecutable": "/usr/bin/ruby",
-      "runtimeArgs": ["-run", "-e", "httpd", "/tmp/receptappen", "-p", "3000"],
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["-e", "const http=require('http'),fs=require('fs'),path=require('path');const root='/Users/arminganic/Desktop/Claude code - projekt/receptappen';http.createServer((req,res)=>{const url=req.url.split('?')[0];let f=path.join(root,url==='/'?'/index.html':url);fs.readFile(f,(e,d)=>{if(e){res.writeHead(404);res.end('Not found')}else{const ext=path.extname(f);const t={'html':'text/html','css':'text/css','js':'application/javascript','json':'application/json','png':'image/png','jpg':'image/jpeg','svg':'image/svg+xml','ico':'image/x-icon'}[ext.slice(1)]||'text/plain';res.writeHead(200,{'Content-Type':t,'Cache-Control':'no-store, no-cache, must-revalidate','Pragma':'no-cache'});res.end(d)}})}).listen(3000,'127.0.0.1',()=>console.log('Server running on port 3000'))"],
       "port": 3000
     }
   ]
