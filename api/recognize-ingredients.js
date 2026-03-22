@@ -83,7 +83,7 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001',
-        max_tokens: 500,
+        max_tokens: 1024,
         messages: [{
           role: 'user',
           content: [
@@ -97,7 +97,22 @@ export default async function handler(req, res) {
             },
             {
               type: 'text',
-              text: `Identifiera alla matvaror, ingredienser och råvaror du ser i bilden. Det kan vara ett kylskåp, skafferi, matbord, kassar från mataffären eller liknande. Svara ENBART med en JSON-array av ingrediensnamn i gemener, t.ex. ["kyckling","tomat","lök"]. Inga andra ord eller förklaringar. ${langInstruction}`,
+              text: `Du är en expert på att identifiera matvaror i bilder. Titta noggrant på bilden och identifiera ALLA matvaror, ingredienser och råvaror du kan se. Det kan vara:
+- Ett kylskåp (öppet eller stängt med synligt innehåll)
+- Ett skafferi eller köksskåp
+- Matvaror på ett bord, bänk eller i kassar från mataffären
+- Enskilda produkter eller ingredienser
+- Förpackningar med synliga etiketter (läs texten på förpackningarna!)
+
+Var extra noggrann med:
+- Läs text på förpackningar, etiketter och varumärken för att identifiera produkten korrekt
+- Skilj på liknande produkter (t.ex. gräddfil vs grädde, kycklingfilé vs kycklingklubba)
+- Inkludera kryddor, såser och andra mindre ingredienser du ser
+- Om du ser grönsaker, var specifik (t.ex. "rödlök" istället för bara "lök" om det syns)
+
+Svara ENBART med en JSON-array av ingrediensnamn i gemener. Använd vanliga svenska matlagningsnamn.
+Exempel: ["kycklingfilé","tomat","rödlök","vitlök","grädde","pasta"]
+Inga andra ord, förklaringar eller kommentarer — bara JSON-arrayen. ${langInstruction}`,
             },
           ],
         }],

@@ -2094,9 +2094,12 @@
     });
   }
 
+  let isFetching = false;
   async function findRecipes() {
+    if (isFetching) return;
     const isFreetext = searchMode === 'freetext' && freetextInput?.value.trim();
     if (!isFreetext && !ingredients.length) return;
+    if (isFreetext && !freetextInput.value.trim()) return;
 
     if (!navigator.onLine) {
       errBox.style.display = 'block';
@@ -2119,6 +2122,7 @@
 
     // Update button to loading state
     const originalBtnText = searchBtn.textContent;
+    isFetching = true;
     searchBtn.disabled = true;
     searchBtn.innerHTML = `<span class="search-btn-spinner"></span> ${t('searchingText')}`;
     searchBtn.setAttribute('aria-busy', 'true');
@@ -2281,6 +2285,7 @@
     searchBtn.disabled = false;
     searchBtn.textContent = originalBtnText;
     searchBtn.removeAttribute('aria-busy');
+    isFetching = false;
   }
 
   searchBtn.addEventListener('click', () => { haptic('medium'); findRecipes(); });
@@ -3262,7 +3267,7 @@
     ings.forEach(ing => { if (!ingredients.includes(ing)) ingredients.push(ing); });
     switchView('search');
     render();
-    ingInput.focus();
+    setTimeout(() => findRecipes(), 400);
   });
 
   // ─── Country name translations ───

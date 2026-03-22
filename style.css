@@ -927,7 +927,7 @@ body {
 
 .recipe-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
 .recipe-name {
-  font-size: 17px;
+  font-size: clamp(15px, 4vw, 17px);
   font-weight: 700;
   letter-spacing: -0.3px;
   color: var(--text-primary);
@@ -936,7 +936,7 @@ body {
   transition: color 0.2s ease;
 }
 .recipe-card:hover .recipe-name { color: var(--accent); }
-.fav-btn { background: none; border: none; cursor: pointer; padding: 4px; transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1); flex-shrink: 0; color: var(--text-muted); display: flex; align-items: center; }
+.fav-btn { background: none; border: none; cursor: pointer; padding: 8px; min-width: 40px; min-height: 40px; transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1); flex-shrink: 0; color: var(--text-muted); display: flex; align-items: center; justify-content: center; }
 .fav-btn:hover { transform: scale(1.3); color: var(--accent); }
 .fav-btn:active { transform: scale(0.8); }
 .fav-btn.active { color: var(--accent); animation: elasticPop 0.4s cubic-bezier(0.16, 1, 0.3, 1); filter: drop-shadow(0 2px 4px rgba(192,90,31,0.3)); }
@@ -1194,7 +1194,7 @@ body {
   transition: opacity 0.2s ease;
 }
 .modal-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
-.modal-title { font-size: 28px; font-weight: 800; color: var(--text-primary); padding-right: 16px; line-height: 1.12; letter-spacing: -0.8px; }
+.modal-title { font-size: clamp(24px, 6vw, 28px); font-weight: 800; color: var(--text-primary); padding-right: 16px; line-height: 1.12; letter-spacing: -0.8px; }
 .modal-actions { display: flex; gap: 8px; flex-shrink: 0; }
 .modal-action-btn {
   background: var(--bg-subtle); border: 1px solid var(--border);
@@ -2298,6 +2298,26 @@ body {
   .account-btn { top: 16px; left: 16px; }
   .shopping-header { flex-direction: column; }
   .list-actions { padding-top: 0; }
+
+  /* Amko-picks: bättre mobilstorlek */
+  .armin-pick-card { flex: 0 0 220px; padding: 16px; }
+  .armin-pick-name { font-size: 15px; }
+  .armin-pick-desc { font-size: 11px; }
+
+  /* Dish-knappar: minst 44px touch target */
+  .dish-btn { min-height: 44px; padding: 12px 14px; font-size: 14px; }
+
+  /* Filter-tabs: bättre touch */
+  .filter-tab { padding: 8px 14px; min-height: 36px; }
+
+  /* Surprise-knappen */
+  .surprise-btn { padding: 14px 20px; min-height: 48px; }
+
+  /* World-kort padding */
+  .world-card { padding: 14px; }
+
+  /* Section divider */
+  .section-divider { margin: 24px 0 16px; }
 }
 
 /* ═══ v7.0 IMPROVEMENTS ═══ */
@@ -2461,6 +2481,45 @@ body {
   transition: all 0.15s;
 }
 .clear-all-ings:hover { border-color: var(--accent); color: var(--accent); border-style: solid; }
+
+/* ═══ MOBILE PREMIUM POLISH ═══ */
+@media (max-width: 390px) {
+  .hero-title { font-size: 36px; letter-spacing: -1.5px; }
+  .hero-sub { font-size: 15px; }
+  .hero-inner { padding: 40px 16px 32px; }
+  .card { padding: 16px; margin: 0 8px; }
+  .search-mode-tabs { margin: 0 8px; }
+  .armin-pick-card { flex: 0 0 200px; padding: 14px; }
+  .armin-pick-name { font-size: 14px; }
+  .armin-pick-desc { font-size: 11px; -webkit-line-clamp: 3; display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; }
+  .view-content { padding: 16px 8px 80px; }
+  .pref-chip { padding: 7px 12px; font-size: 12px; }
+  .nav-item { font-size: 10px; min-height: 48px; }
+}
+
+/* Smooth touch interactions */
+@media (hover: none) and (pointer: coarse) {
+  .armin-pick-card:hover { transform: none; box-shadow: 0 2px 8px rgba(26,18,8,0.04); border-color: var(--border); }
+  .armin-pick-card:hover::before { transform: scaleX(0); }
+  .armin-pick-card:active { transform: scale(0.97); transition-duration: 0.1s; }
+  .armin-pick-card:active::before { transform: scaleX(1); transition-duration: 0.1s; }
+  .dish-btn:hover { background: var(--bg-subtle); border-color: transparent; color: var(--text-primary); }
+  .dish-btn:active { background: var(--accent-surface); color: var(--accent); transform: scale(0.97); }
+  .world-card:hover { transform: none; box-shadow: 0 1px 4px rgba(26,18,8,0.03); border-color: var(--border); }
+  .recipe-card:hover { transform: none; box-shadow: 0 1px 3px rgba(26,18,8,0.04), 0 4px 12px rgba(26,18,8,0.03); border-color: var(--border); }
+  .recipe-card:hover::before { opacity: 0; }
+  .recipe-card:hover::after { transform: scaleY(0); }
+  .recipe-card:active { transform: scale(0.98); transition-duration: 0.1s; }
+  .recipe-card:active::after { transform: scaleY(1); transition-duration: 0.1s; }
+  .filter-tab:not(.active):hover { border-color: var(--border); color: var(--text-secondary); background: transparent; }
+  .filter-tab:active { transform: scale(0.95); }
+  .pref-chip:active { transform: scale(0.95); }
+  .surprise-btn:active { transform: scale(0.97); }
+  .search-btn:active { transform: scale(0.98); }
+  .nav-item:active { transform: scale(0.88); }
+  .fav-btn:hover { transform: none; }
+  .fav-btn:active { transform: scale(1.3); color: var(--accent); }
+}
 
 /* ═══ PRINT ═══ */
 @media print {
