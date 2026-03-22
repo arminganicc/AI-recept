@@ -53,7 +53,7 @@
   const translations = {
     sv: {
       heroEyebrow: 'Kvällens eviga dilemma', heroTitle: 'Vad ska vi laga?',
-      yourIngredients: 'Dina råvaror', scanFridge: 'Skanna ditt kylskåp',
+      yourIngredients: 'Dina råvaror', scanFood: '📸 Fota dina råvaror',
       orManual: 'eller skriv manuellt', inputHint: 'Enter lägger till. Komma separerar.',
       whatDoYouHave: 'Vad har du hemma?', howPicky: 'Hur kräsen är du?',
       portions: 'Portioner', showRecipes: 'Visa recept',
@@ -71,7 +71,7 @@
     },
     en: {
       heroEyebrow: "Tonight's eternal dilemma", heroTitle: 'What should we cook?',
-      yourIngredients: 'Your ingredients', scanFridge: 'Scan your fridge',
+      yourIngredients: 'Your ingredients', scanFood: '📸 Snap your ingredients',
       orManual: 'or type manually', inputHint: 'Enter to add. Comma separates.',
       whatDoYouHave: 'What do you have at home?', howPicky: 'How picky are you?',
       portions: 'Servings', showRecipes: 'Show recipes',
@@ -89,7 +89,7 @@
     },
     es: {
       heroEyebrow: 'El eterno dilema de la cena', heroTitle: '¿Qué cocinamos?',
-      yourIngredients: 'Tus ingredientes', scanFridge: 'Escanea tu nevera',
+      yourIngredients: 'Tus ingredientes', scanFood: '📸 Fotografía tus ingredientes',
       orManual: 'o escribe manualmente', inputHint: 'Enter para añadir. Coma separa.',
       whatDoYouHave: '¿Qué tienes en casa?', howPicky: '¿Qué tan exigente eres?',
       portions: 'Porciones', showRecipes: 'Mostrar recetas',
@@ -107,7 +107,7 @@
     },
     bs: {
       heroEyebrow: 'Vječna dilema večere', heroTitle: 'Šta da kuhamo?',
-      yourIngredients: 'Tvoji sastojci', scanFridge: 'Skeniraj frižider',
+      yourIngredients: 'Tvoji sastojci', scanFood: '📸 Slikaj svoje namirnice',
       orManual: 'ili piši ručno', inputHint: 'Enter za dodavanje. Zarez odvaja.',
       whatDoYouHave: 'Šta imaš kod kuće?', howPicky: 'Koliko si izbirljiv/a?',
       portions: 'Porcije', showRecipes: 'Prikaži recepte',
@@ -124,6 +124,28 @@
       surpriseMe: '🎲 Iznenadi me', inspiration: 'Inspiracija',
     },
   };
+
+  const changelog = [
+    { version: '6.2', date: '2026-03-22', title: 'Fri-text-sökning & dryckestips', items: [
+      'Skriv fritt vad du är sugen på — inte bara ingredienser!',
+      'Dryckesrekommendationer till varje rätt (vin, öl, alkoholfritt)',
+      'Högtidsrecept som dyker upp inför jul, midsommar och påsk',
+      'Vardagligare humor — mindre krångliga ord, mer skratt',
+      '4 nya preferenser: Laktosfritt, Nötfritt, Barnvänligt, Budgetvänligt',
+    ]},
+    { version: '6.1', date: '2026-03-22', title: 'Språkstöd & mer inspiration', items: [
+      'Välj språk: Svenska, Engelska, Spanska eller Bosniska',
+      '20 Armin-rekommendationer som roterar varje vecka',
+      '74 världsrätter från 19 länder (inkl. Vietnam & Peru)',
+    ]},
+    { version: '6.0', date: '2026-03-22', title: 'Ny design & funktioner', items: [
+      'Google & Apple-inloggning',
+      'Custom logga med animerad ånga',
+      'Professionell välkomstguide',
+      'Hantera konto-sektion',
+      'Stripe-inspirerade animationer',
+    ]},
+  ];
 
   function t(key) {
     return (translations[currentLang] || translations.sv)[key] || translations.sv[key] || key;
@@ -248,13 +270,16 @@
 
   const heroSubtitles = {
     sv: [
-      'Släng in vad du har. Armin löser middagen.',
-      'Du har mat hemma. Du vet bara inte vad du ska göra med den.',
-      'Från "vi har inget hemma" till middag på 30 min.',
-      'Kylskåpskaos → Kulinarisk genialitet.',
-      'Armin judgar inte ditt kylskåp. (Okej, lite.)',
-      'Svaret på frågan ingen vill ställa.',
-      'Tre ingredienser. Noll ursäkter.',
+      'Släng in vad du har. Armin fixar resten.',
+      'Du har grejer hemma. Du vet bara inte vad du ska göra med dem.',
+      'Från "vi har ju ingenting" till middag på 30 min.',
+      'Kylskåpskaos → Middagsmagi.',
+      'Armin dömer inte ditt kylskåp. (Nåja, lite.)',
+      'Svaret på frågan ingen orkar ställa.',
+      'Tre grejer. Noll ursäkter. En middag.',
+      'Studenter, föräldrar, alla — Armin fixar.',
+      'Billigt, snabbt, gott. Välj alla tre.',
+      'Din mamma hade godkänt det här. Typ.',
     ],
     en: [
       'Throw in what you have. Armin handles dinner.',
@@ -282,21 +307,21 @@
   };
 
   const footerTaglines = {
-    sv: ['Gjord med kärlek, kaos och alldeles för mycket vitlök.', 'Inga kockar skadades. Några ägg däremot.', 'Kodad med kaffe. Testad med hunger.', 'Byggt av någon som googlar "hur kokar man ris" ibland.', 'Made in Sweden. Inspirerad av allt utom husmanskost.', 'Funkar bäst kl 16:55 när paniken slår till.'],
+    sv: ['Lagad med kärlek, kaos och alldeles för mycket vitlök.', 'Inga kockar skadades. Några ägg, dock.', 'Kodad med kaffe. Testad med hunger.', 'Byggt av en kille som googlar "hur kokar man ris" ibland.', 'Made in Sweden. Drivs av panik och pasta.', 'Funkar bäst typ kl 17 när stressen slår till.', 'Testad av studenter. Godkänd av mammor.', 'Recept utan krusiduller. Middag utan drama.'],
     en: ['Made with love, chaos, and way too much garlic.', 'No chefs were harmed. A few eggs, though.', 'Coded with coffee. Tested with hunger.', 'Built by someone who googles "how to boil rice" sometimes.', 'Works best at 4:55 PM when panic kicks in.'],
     es: ['Hecho con amor, caos y demasiado ajo.', 'Ningún chef fue lastimado. Algunos huevos sí.', 'Programado con café. Probado con hambre.', 'Funciona mejor a las 16:55 cuando entra el pánico.'],
     bs: ['Napravljeno s ljubavlju, haosom i previše bijelog luka.', 'Nijedan kuhar nije povrijeđen. Nekoliko jaja jeste.', 'Kodirano uz kafu. Testirano glađu.', 'Najbolje radi u 16:55 kad udari panika.'],
   };
 
   const footerIronies = {
-    sv: ['Ingen mat skadades under utvecklingen. Samma sak kan inte sägas om utvecklaren.', 'Om appen kraschar — skylls på vitlöken.', 'Disclaimer: Vi tar inget ansvar för matlagnings-ambitionen du får kl 23.', 'Denna app ersätter inte en mormor. Men den försöker.', 'AI-genererade recept. Mänsklig panik. Äkta hunger.', 'Eventuella likheter med riktiga kockar är helt oavsiktliga.'],
+    sv: ['Ingen mat skadades. Utvecklaren däremot — den vet vi inte.', 'Om appen krånglar — skylla på vitlöken.', 'Vi tar noll ansvar för matlagningsambitioner kl 23.', 'Den här appen fixar inte disken. Men maten, det kan vi.', 'AI-recept. Mänsklig panik. Riktig hunger.', 'Likheter med riktiga kockar är helt och hållet en slump.', 'Ditt kylskåp dömer dig inte. Det gör vi inte heller.', 'Bättre än att googla "vad ska jag laga" för 45:e gången.'],
     en: ['No food was harmed during development. The developer, however...', 'If the app crashes — blame the garlic.', 'Disclaimer: We take no responsibility for cooking ambitions at 11 PM.', 'This app doesn\'t replace a grandma. But it tries.', 'AI-generated recipes. Human panic. Real hunger.'],
     es: ['Ningún alimento fue dañado. El desarrollador, sin embargo...', 'Si la app falla — culpa al ajo.', 'Esta app no reemplaza a una abuela. Pero lo intenta.', 'Recetas de IA. Pánico humano. Hambre real.'],
     bs: ['Nijedna hrana nije oštećena. Programer, međutim...', 'Ako app padne — kriv je bijeli luk.', 'Ova aplikacija ne zamjenjuje nanu. Ali pokušava.', 'AI recepti. Ljudska panika. Prava glad.'],
   };
 
   const loadingMessages = {
-    sv: ['Armin funderar på vad du ska äta', 'Konsulterar det kulinariska oraklet', 'Mixar ingredienser i molnet', 'Googlar inte — litar på AI:n istället', 'Letar efter recept som inte kräver talang', 'Räknar vitlöksklyftor (aldrig nog)', 'Bläddrar genom tusen recept åt dig'],
+    sv: ['Armin tänker på vad du ska käka...', 'Frågar AI-kocken om råd...', 'Mixar dina grejer i molnet...', 'Bläddrar receptböcker i ljusets hastighet...', 'Letar efter recept som funkar med det du har...', 'Räknar vitlöksklyftor (det räcker aldrig)...', 'Kollar vad man kan trolla fram...', 'Typ som att googla, fast smartare...', 'Hoppas du är hungrig...'],
     en: ['Armin is thinking about what you should eat', 'Consulting the culinary oracle', 'Mixing ingredients in the cloud', 'Not googling — trusting the AI instead', 'Looking for recipes that don\'t require talent', 'Counting garlic cloves (never enough)'],
     es: ['Armin está pensando qué deberías comer', 'Consultando el oráculo culinario', 'Mezclando ingredientes en la nube', 'Buscando recetas que no requieran talento'],
     bs: ['Armin razmišlja šta da jedeš', 'Konsultuje kulinarski orakul', 'Miješa sastojke u oblaku', 'Traži recepte koji ne zahtijevaju talenat'],
@@ -566,6 +591,49 @@
     } else {
       if (signInEl) signInEl.hidden = false;
       if (loggedInEl) loggedInEl.hidden = true;
+    }
+  }
+
+  function showChangelog() {
+    const lastSeen = loadStorage('changelog_seen', '0');
+    const latest = changelog[0];
+
+    modal.innerHTML = `
+      <div class="modal-top">
+        <div class="modal-title">🆕 Nyheter</div>
+        <div class="modal-actions">
+          <button class="modal-action-btn close-btn" id="closeBtn" aria-label="Stäng">${iconClose}</button>
+        </div>
+      </div>
+      <div class="changelog-list">
+        ${changelog.map(entry => `
+          <div class="changelog-entry${entry.version === latest.version ? ' latest' : ''}">
+            <div class="changelog-header">
+              <span class="changelog-version">v${esc(entry.version)}</span>
+              <span class="changelog-date">${esc(entry.date)}</span>
+            </div>
+            <div class="changelog-title">${esc(entry.title)}</div>
+            <ul class="changelog-items">
+              ${entry.items.map(item => `<li>${esc(item)}</li>`).join('')}
+            </ul>
+          </div>
+        `).join('')}
+      </div>
+    `;
+
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    document.getElementById('closeBtn').addEventListener('click', closeModal);
+    localStorage.setItem('changelog_seen', latest.version);
+    updateNewsBadge();
+  }
+
+  function updateNewsBadge() {
+    const lastSeen = loadStorage('changelog_seen', '0');
+    const latest = changelog[0];
+    const badge = document.getElementById('newsBadge');
+    if (badge) {
+      badge.style.display = lastSeen !== latest.version ? 'block' : 'none';
     }
   }
 
@@ -1087,9 +1155,10 @@
   }
 
   async function findRecipes() {
-    if (!ingredients.length) return;
+    const isFreetext = searchMode === 'freetext' && freetextInput?.value.trim();
+    if (!isFreetext && !ingredients.length) return;
 
-    const cacheKey = getCacheKey();
+    const cacheKey = isFreetext ? `freetext:${freetextInput.value.trim()}:${searchPortions}:${[...prefs].sort().join(',')}` : getCacheKey();
     if (recipeCache.has(cacheKey)) {
       const cached = recipeCache.get(cacheKey);
       recipes = sortRecipesByDifficulty(cached.recipes || cached);
@@ -1133,7 +1202,14 @@
         const res = await fetch('/api/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
+          body: JSON.stringify(isFreetext ? {
+            mode: 'freetext',
+            query: freetextInput.value.trim(),
+            portions: searchPortions,
+            prefs: [...prefs],
+            conversationHistory,
+            language: currentLang
+          } : {
             ingredients: [...ingredients],
             portions: searchPortions,
             prefs: [...prefs],
@@ -1219,6 +1295,39 @@
   }
 
   searchBtn.addEventListener('click', () => { haptic('medium'); findRecipes(); });
+
+  // ─── Search Mode Tabs (Ingredients vs Free-text) ───
+  let searchMode = 'ingredients';
+  const searchModeTabs = document.getElementById('searchModeTabs');
+  const ingredientMode = document.getElementById('ingredientMode');
+  const freetextMode = document.getElementById('freetextMode');
+  const freetextInput = document.getElementById('freetextInput');
+
+  if (searchModeTabs) {
+    searchModeTabs.addEventListener('click', e => {
+      const tab = e.target.closest('.search-mode-tab');
+      if (!tab) return;
+      haptic();
+      searchMode = tab.dataset.mode;
+      searchModeTabs.querySelectorAll('.search-mode-tab').forEach(t => t.classList.toggle('active', t === tab));
+      if (ingredientMode) ingredientMode.hidden = searchMode !== 'ingredients';
+      if (freetextMode) freetextMode.hidden = searchMode !== 'freetext';
+      // Enable search button based on mode
+      if (searchMode === 'freetext') {
+        searchBtn.disabled = !freetextInput?.value.trim();
+      } else {
+        searchBtn.disabled = ingredients.length === 0;
+      }
+    });
+  }
+  if (freetextInput) {
+    freetextInput.addEventListener('input', () => {
+      if (searchMode === 'freetext') searchBtn.disabled = !freetextInput.value.trim();
+    });
+    freetextInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); if (freetextInput.value.trim()) findRecipes(); }
+    });
+  }
 
   // ─── Tag helpers ───
   function tagClass(tag) {
@@ -1529,6 +1638,17 @@
       </button>
 
       ${r.leftovers_tip ? `<div class="leftovers-banner">♻️ ${esc(r.leftovers_tip)}</div>` : ''}
+
+      ${r.drink_pairing ? `
+      <div class="drink-pairing">
+        <div class="drink-pairing-title">🍷 Armins dryckestips</div>
+        <div class="drink-pairing-items">
+          ${r.drink_pairing.wine ? `<div class="drink-pairing-item"><span class="drink-pairing-icon">🍷</span> ${esc(r.drink_pairing.wine)}</div>` : ''}
+          ${r.drink_pairing.beer ? `<div class="drink-pairing-item"><span class="drink-pairing-icon">🍺</span> ${esc(r.drink_pairing.beer)}</div>` : ''}
+          ${r.drink_pairing.non_alcoholic ? `<div class="drink-pairing-item"><span class="drink-pairing-icon">🥤</span> ${esc(r.drink_pairing.non_alcoholic)}</div>` : ''}
+        </div>
+      </div>
+      ` : ''}
 
       <div class="rating-row">
         <span class="rating-label">Betygsätt receptet</span>
@@ -2225,12 +2345,50 @@
     });
   }
 
+  // ─── Holiday Recipes Banner ───
+  const holidays = [
+    { name: 'Jul', emoji: '🎄', month: 12, dayStart: 1, dayEnd: 25, query: 'Klassisk svensk julmat med köttbullar, janssons och julskinka', desc: 'Prova klassisk julmat!' },
+    { name: 'Påsk', emoji: '🐣', month: 4, dayStart: 1, dayEnd: 20, query: 'Traditionell svensk påskmat med ägg, sill och lax', desc: 'Dags för påskmat!' },
+    { name: 'Midsommar', emoji: '🌸', month: 6, dayStart: 1, dayEnd: 25, query: 'Svensk midsommarmat med sill, jordgubbar och nubbe', desc: 'Fira midsommar med god mat!' },
+    { name: 'Kräftskiva', emoji: '🦞', month: 8, dayStart: 1, dayEnd: 31, query: 'Kräftskiva med kräftor, västerbottenost och bröd', desc: 'Dags för kräftskiva!' },
+    { name: 'Alla hjärtans dag', emoji: '❤️', month: 2, dayStart: 1, dayEnd: 14, query: 'Romantisk middag för två med fint kött eller fisk', desc: 'Laga romantisk middag!' },
+  ];
+
+  function showHolidayBanner() {
+    const banner = document.getElementById('holidayBanner');
+    if (!banner) return;
+    const now = new Date();
+    const month = now.getMonth() + 1;
+    const day = now.getDate();
+    const holiday = holidays.find(h => h.month === month && day >= h.dayStart && day <= h.dayEnd);
+    if (!holiday) { banner.hidden = true; return; }
+
+    banner.hidden = false;
+    banner.innerHTML = `
+      <span class="holiday-emoji">${holiday.emoji}</span>
+      <div class="holiday-text">
+        <div class="holiday-title">${holiday.name} närmar sig!</div>
+        <div class="holiday-desc">${holiday.desc}</div>
+      </div>
+    `;
+    banner.onclick = () => {
+      // Switch to freetext mode and fill query
+      searchMode = 'freetext';
+      if (searchModeTabs) searchModeTabs.querySelectorAll('.search-mode-tab').forEach(t => t.classList.toggle('active', t.dataset.mode === 'freetext'));
+      if (ingredientMode) ingredientMode.hidden = true;
+      if (freetextMode) freetextMode.hidden = false;
+      if (freetextInput) { freetextInput.value = holiday.query; searchBtn.disabled = false; }
+      haptic('medium');
+    };
+  }
+
   // ─── Init ───
   updateListBadge();
   updateFavBadge();
   renderQuickPicks();
   renderHistory();
   showOnboarding();
+  showHolidayBanner();
 
   // Inject logo into hero
   const heroLogo = document.getElementById('heroLogo');
@@ -2265,6 +2423,27 @@
   const initView = location.hash.replace('#', '') || 'search';
   if (views[initView]) switchView(initView);
   ingInput.focus();
+
+  // Share app button
+  document.getElementById('shareAppBtn')?.addEventListener('click', async () => {
+    haptic('medium');
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: 'Vad ska vi laga?', text: 'Kolla in den här receptappen — AI som fixar middagen åt dig!', url: window.location.origin });
+        return;
+      }
+    } catch (e) { if (e.name === 'AbortError') return; }
+    try {
+      await navigator.clipboard.writeText(window.location.origin);
+      showToast('copied');
+    } catch { showToast('error'); }
+  });
+
+  // Show changelog if new version
+  const lastSeenVersion = loadStorage('changelog_seen', '0');
+  if (changelog.length && lastSeenVersion !== changelog[0].version) {
+    setTimeout(() => showChangelog(), 1500);
+  }
 
   // Scroll animations after initial render
   setTimeout(initScrollAnimations, 300);

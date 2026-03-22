@@ -459,6 +459,102 @@ body {
   color: var(--text-muted);
 }
 
+/* ═══ SEARCH MODE TABS ═══ */
+.search-mode-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.search-mode-tab {
+  flex: 1;
+  padding: 12px 16px;
+  background: var(--bg-surface);
+  border: 1.5px solid var(--border-strong);
+  border-radius: 12px;
+  font-family: var(--font);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  text-align: center;
+}
+.search-mode-tab:hover { border-color: var(--accent); color: var(--accent); }
+.search-mode-tab.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+  box-shadow: 0 4px 14px rgba(192,90,31,0.2);
+}
+
+/* ═══ FREE-TEXT INPUT ═══ */
+.freetext-input {
+  width: 100%;
+  border: 1.5px solid var(--border-strong);
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-family: var(--font);
+  font-size: 15px;
+  color: var(--text-primary);
+  background: var(--bg-subtle);
+  resize: vertical;
+  min-height: 80px;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  line-height: 1.5;
+}
+.freetext-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(192,90,31,0.12);
+  background: var(--bg-surface);
+}
+.freetext-input::placeholder { color: var(--text-muted); font-size: 14px; }
+
+/* ═══ HOLIDAY BANNER ═══ */
+.holiday-banner {
+  background: var(--accent-surface);
+  border: 1px solid rgba(192,90,31,0.15);
+  border-radius: 14px;
+  padding: 14px 18px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  animation: fadeUp 0.4s ease-out;
+}
+.holiday-banner:hover { border-color: var(--accent); transform: translateY(-1px); }
+.holiday-banner[hidden] { display: none; }
+.holiday-emoji { font-size: 28px; flex-shrink: 0; }
+.holiday-text { flex: 1; }
+.holiday-title { font-size: 14px; font-weight: 700; color: var(--text-primary); }
+.holiday-desc { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+
+/* ═══ DRINK PAIRING ═══ */
+.drink-pairing {
+  background: var(--bg-subtle);
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 16px;
+}
+.drink-pairing-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+}
+.drink-pairing-items { display: flex; flex-direction: column; gap: 8px; }
+.drink-pairing-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+.drink-pairing-icon { font-size: 18px; flex-shrink: 0; }
+
 /* ═══ CARD ═══ */
 .card {
   background: var(--bg-surface);
@@ -1848,6 +1944,32 @@ body {
   font-weight: 500;
 }
 .footer-divider { color: var(--text-muted); font-size: 12px; }
+.footer-share-btn {
+  background: none;
+  border: 1px solid var(--border-strong);
+  border-radius: 100px;
+  padding: 8px 18px;
+  font-family: var(--font);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 8px;
+}
+.footer-share-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-surface); }
+
+/* ═══ CHANGELOG ═══ */
+.changelog-list { padding: 8px 0; }
+.changelog-entry { padding: 16px 0; border-bottom: 1px solid var(--border); }
+.changelog-entry:last-child { border-bottom: none; }
+.changelog-entry.latest { }
+.changelog-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.changelog-version { font-size: 12px; font-weight: 700; color: var(--accent); background: var(--accent-surface); padding: 2px 8px; border-radius: 100px; }
+.changelog-date { font-size: 12px; color: var(--text-muted); }
+.changelog-title { font-size: 16px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; letter-spacing: -0.3px; }
+.changelog-items { padding-left: 18px; }
+.changelog-items li { font-size: 13px; color: var(--text-secondary); line-height: 1.7; }
 
 /* ═══ RESPONSIVE ═══ */
 @media (max-width: 520px) {
