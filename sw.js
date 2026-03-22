@@ -1,4 +1,4 @@
-const CACHE_NAME = 'receptappen-v5';
+const CACHE_NAME = 'receptappen-v6.2';
 const STATIC_ASSETS = ['/', '/style.css', '/app.js', '/manifest.json'];
 
 self.addEventListener('install', event => {
@@ -23,8 +23,14 @@ self.addEventListener('fetch', event => {
     event.respondWith(fetch(event.request));
     return;
   }
-  // Cache-first for static assets
+  // Network-first: try network, fall back to cache (so users always get latest version)
   event.respondWith(
-    caches.match(event.request).then(cached => cached || fetch(event.request))
+    fetch(event.request)
+      .then(response => {
+        const clone = response.clone();
+        caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+        return response;
+      })
+      .catch(() => caches.match(event.request))
   );
 });
