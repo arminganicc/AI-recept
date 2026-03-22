@@ -91,10 +91,11 @@
   let shoppingList   = loadStorage('shopping_list', []);
   let ratings        = loadStorage('recipe_ratings', {});
 
-  const quickItems = [
-    'kyckling', 'lax', 'pasta', 'ris', 'lök',
-    'vitlök', 'grädde', 'tomat', 'potatis', 'ägg',
-    'ost', 'bacon', 'paprika', 'morötter', 'spenat'
+  const quickCategories = [
+    { label: '🥩 Sugen på kött?', items: ['kyckling', 'köttfärs', 'bacon', 'fläsk', 'lamm'] },
+    { label: '🐟 Fisk & skaldjur', items: ['lax', 'räkor', 'torsk', 'tonfisk'] },
+    { label: '🥬 Grönsakslådan', items: ['tomat', 'paprika', 'spenat', 'broccoli', 'morötter', 'potatis'] },
+    { label: '🧀 Basics', items: ['pasta', 'ris', 'ägg', 'ost', 'grädde', 'lök', 'vitlök'] },
   ];
 
   // ─── Autocomplete ingredients list ───
@@ -114,12 +115,12 @@
 
   // ─── Toast messages ───
   const toastMessages = {
-    copied: 'Kopierat till urklipp',
-    favAdded: 'Sparat som favorit ❤️',
-    favRemoved: 'Borttaget från favoriter',
-    listSent: 'Inköpslistan är på väg till din mejl',
-    listAdded: 'Lagt till i inköpslistan',
-    emptyList: 'Inga varor kvar att skicka',
+    copied: 'Kopierat! Dela på hälsa.',
+    favAdded: 'Sparad! Den där är en keeper ❤️',
+    favRemoved: 'Borttagen. Vi pratar aldrig om det igen.',
+    listSent: 'Inköpslistan flyger iväg till din mejl ✈️',
+    listAdded: 'Lagt till! Dags att handla snart.',
+    emptyList: 'Listan är tom — inget att skicka!',
     loggedIn: 'Välkommen tillbaka!',
     loggedOut: 'Du är nu utloggad',
     magicSent: 'Kolla din mejl — vi har skickat en länk',
@@ -481,10 +482,17 @@
 
   // ─── Quick picks ───
   function renderQuickPicks() {
-    quickPicks.innerHTML = quickItems.map(item => {
-      const used = ingredients.includes(item) ? ' used' : '';
-      return `<button class="quick-chip${used}" data-ing="${esc(item)}">${esc(item)}</button>`;
-    }).join('');
+    quickPicks.innerHTML = quickCategories.map(cat => `
+      <div class="quick-category">
+        <div class="quick-category-label">${cat.label}</div>
+        <div class="quick-category-chips">
+          ${cat.items.map(item => {
+            const used = ingredients.includes(item) ? ' used' : '';
+            return `<button class="quick-chip${used}" data-ing="${esc(item)}">${esc(item)}</button>`;
+          }).join('')}
+        </div>
+      </div>
+    `).join('');
   }
 
   quickPicks.addEventListener('click', e => {
@@ -873,7 +881,7 @@
           </div>
         `).join('')}
       </div>
-      <div class="loading-label">Magnus kokar ihop förslag<span class="loading-dots"></span></div>
+      <div class="loading-label">Armin funderar på vad du ska äta<span class="loading-dots"></span></div>
     `;
     recipeList.innerHTML = '';
     errBox.style.display = 'none';
