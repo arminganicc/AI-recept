@@ -261,9 +261,18 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
 <section class="view" id="viewInspiration" hidden aria-label="Inspiration">
   <div class="view-header">
     <h2 class="view-title">Inspiration</h2>
-    <p class="view-sub">Vet inte vad du vill laga? Bläddra bland Amkos favoriter och världens kök. Tryck, och receptet genereras direkt.</p>
+    <p class="view-sub">Handplockade recept, s&#228;songens b&#228;sta och v&#228;rldens k&#246;k &#8212; tryck, och receptet genereras direkt.</p>
   </div>
   <div class="view-content">
+
+    <!-- Seasonal banner -->
+    <div class="season-banner" id="seasonBanner" style="display:none"></div>
+
+    <!-- Mood quick picks -->
+    <div class="mood-section" id="moodSection">
+      <div class="mood-title">Vad passar dig ikv&#228;ll?</div>
+      <div class="mood-grid" id="moodGrid"></div>
+    </div>
 
     <!-- Amko rekommenderar -->
     <div class="armin-section">

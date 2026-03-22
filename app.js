@@ -1282,7 +1282,7 @@
     window.scrollTo({ top: 0, behavior: 'instant' });
     history.pushState({ view: name }, '', `#${name}`);
     if (name === 'favorites') renderFavView();
-    if (name === 'inspiration') { renderAmkoPicks(); renderWorldCuisines(); }
+    if (name === 'inspiration') { renderSeasonBanner(); renderMoodSection(); renderAmkoPicks(); renderWorldCuisines(); }
     if (name === 'shopping') renderShoppingView();
   }
   // Expose for inline onclick in HTML
@@ -2510,6 +2510,8 @@
     ` + sorted.map((r, i) => {
       const rating = ratings[r.name] || 0;
       const tag = r.tag || '';
+      const diffLevel = difficultyOrder(r.difficulty);
+      const diffColorClass = diffLevel === 1 ? 'easy' : diffLevel === 2 ? 'medium' : diffLevel === 3 ? 'hard' : 'easy';
       return `
         <div class="recipe-card" data-idx="${i}" role="button" tabindex="0" aria-label="${esc(r.name)} — ${esc(r.difficulty)}, ${esc(r.time)}">
           ${tag ? `<span class="recipe-tag ${tagClass(tag)}">${esc(tag)}</span>` : ''}
@@ -2517,13 +2519,16 @@
             <div class="recipe-name">${esc(r.name)}</div>
             <button class="fav-btn${isFav(r.name) ? ' active' : ''}" data-fav="${i}" aria-label="${t('recipeFav')}">${iconHeart(isFav(r.name))}</button>
           </div>
-          <div class="badges">
-            <span class="badge">${iconClock} ${esc(r.time)}</span>
-            <span class="badge ${difficultyClass(r.difficulty)}">${esc(r.difficulty)}</span>
-            <span class="badge">${(r.ingredients || []).length} ${t('ingredientCount')}</span>
-            ${r.nutrition_per_serving?.highlight ? `<span class="badge nutrition-hl">${esc(r.nutrition_per_serving.highlight)}</span>` : ''}
-            ${rating > 0 ? `<span class="badge rated">${'★'.repeat(rating)}</span>` : ''}
+          <div class="recipe-meta-row">
+            <span class="recipe-meta-item">${iconClock} ${esc(r.time)}</span>
+            <span class="recipe-meta-sep"></span>
+            <span class="recipe-meta-item"><span class="difficulty-indicator"><span class="difficulty-dots">${[1,2,3].map(n => '<span class="difficulty-dot' + (n <= diffLevel ? ' filled ' + diffColorClass : '') + '"></span>').join('')}</span> ${esc(r.difficulty)}</span></span>
+            <span class="recipe-meta-sep"></span>
+            <span class="recipe-meta-item">${(r.ingredients || []).length} ${t('ingredientCount')}</span>
+            <span class="recipe-meta-item portions-meta">${r.servings || 4} ${t('portionLabel')}</span>
           </div>
+          ${r.nutrition_per_serving?.highlight ? `<div class="badges"><span class="badge nutrition-hl">${esc(r.nutrition_per_serving.highlight)}</span></div>` : ''}
+          ${rating > 0 ? `<div class="badges"><span class="badge rated">${'★'.repeat(rating)}</span></div>` : ''}
           <div class="recipe-desc">${esc(r.description)}</div>
           ${r.week_tip ? `<div class="recipe-week-tip">${esc(r.week_tip)}</div>` : ''}
           <div class="see-more">${t('seeRecipe')}</div>
@@ -2835,9 +2840,12 @@
 
       ${r.tag ? `<span class="recipe-tag modal-tag ${tagClass(r.tag)}">${esc(r.tag)}</span>` : ''}
 
-      <div class="badges modal-badges">
-        <span class="badge">${iconClock} ${esc(r.time)}</span>
-        <span class="badge ${difficultyClass(r.difficulty)}">${esc(r.difficulty)}</span>
+      <div class="recipe-meta-row" style="margin-top:16px">
+        <span class="recipe-meta-item">${iconClock} ${esc(r.time)}</span>
+        <span class="recipe-meta-sep"></span>
+        <span class="recipe-meta-item"><span class="difficulty-indicator"><span class="difficulty-dots">${[1,2,3].map(function(n){ const dl=difficultyOrder(r.difficulty); const dc=dl===1?'easy':dl===2?'medium':'hard'; return '<span class="difficulty-dot'+(n<=dl?' filled '+dc:'')+'"></span>'; }).join('')}</span> ${esc(r.difficulty)}</span></span>
+        <span class="recipe-meta-sep"></span>
+        <span class="recipe-meta-item">${(r.ingredients||[]).length} ${t('ingredientCount')}</span>
       </div>
       ${r.difficulty_reason ? `<div class="difficulty-reason">${esc(r.difficulty_reason)}</div>` : ''}
       <div class="recipe-desc">${esc(r.description)}</div>
@@ -2922,15 +2930,15 @@
       catch { showToast(t('toastCantCopy')); }
     });
 
-    // Share
+    // Share — Instagram-worthy format
     document.getElementById('shareBtn').addEventListener('click', async () => {
-      const text = recipeToText(r);
+      const shareText = recipeToShareText(r);
       try {
-        if (navigator.share) { await navigator.share({ title: r.name, text }); return; }
+        if (navigator.share) { await navigator.share({ title: r.name, text: shareText }); return; }
       } catch (e) {
         if (e.name === 'AbortError') return;
       }
-      try { await navigator.clipboard.writeText(text); showToast('copied'); }
+      try { await navigator.clipboard.writeText(shareText); showToast('copied'); }
       catch { showToast(t('toastShareNA')); }
     });
 
@@ -3024,6 +3032,22 @@
     const ingText  = (r.ingredients || []).map(x => `  - ${x}`).join('\n');
     const stepText = (r.steps || []).map((s, i) => `  ${i + 1}. ${typeof s === 'string' ? s : (s.instruction || '')}`).join('\n');
     return `${r.name}\n${r.time} | ${r.difficulty} | ${r.servings || 4} ${t('portionLabel')}\n\n${r.description}\n\n${t('ingredients')}:\n${ingText}\n\n${t('steps')}:\n${stepText}`;
+  }
+
+  // Instagram-worthy share format
+  function recipeToShareText(r) {
+    const d = (r.difficulty || '').toLowerCase();
+    const diffStars = d === 'l\u00e4tt' ? '\u2B50' : d === 'medel' ? '\u2B50\u2B50' : '\u2B50\u2B50\u2B50';
+    const ings = (r.ingredients || []);
+    const ingList = ings.slice(0, 6).map(function(x) { return '\u2022 ' + x; }).join('\n');
+    const moreCount = ings.length - 6;
+    const more = moreCount > 0 ? ('\n  + ' + moreCount + ' till...') : '';
+    return '\uD83C\uDF7D\uFE0F ' + r.name + '\n\n' +
+      '\u23F0 ' + (r.time || '') + ' \u00B7 ' + diffStars + ' ' + (r.difficulty || '') + ' \u00B7 ' + (r.servings || 4) + ' portioner\n\n' +
+      '\u201C' + (r.description || '') + '\u201D\n\n' +
+      '\uD83E\uDDC2 Ingredienser:\n' + ingList + more + '\n\n' +
+      'Hitta hela receptet p\u00e5 vadskavialaga.se \uD83D\uDC68\u200D\uD83C\uDF73\n' +
+      '#vadskavialaga #recept #hemlagat #middag';
   }
 
   function closeModal() {
@@ -3366,6 +3390,81 @@
     return picks;
   }
 
+  // ─── Mood Quick Picks (Inspiration) ───
+  const moodCards = [
+    { emoji: '\u26A1', label: 'Snabbt & enkelt', sub: 'Klart p\u00e5 15 min', query: 'snabb enkel middag klar p\u00e5 15 minuter' },
+    { emoji: '\uD83C\uDF77', label: 'Imponera', sub: 'Festmiddag-level', query: 'imponerande festmiddag f\u00f6r g\u00e4ster' },
+    { emoji: '\uD83C\uDF31', label: 'H\u00e4lsosamt', sub: 'Gr\u00f6nt & gott', query: 'h\u00e4lsosam vegetarisk middag' },
+    { emoji: '\uD83D\uDD25', label: 'Comfort food', sub: 'Mysig tr\u00f6stmat', query: 'comfort food mysig tr\u00f6stmat' },
+  ];
+
+  function renderMoodSection() {
+    const grid = document.getElementById('moodGrid');
+    if (!grid) return;
+    grid.innerHTML = moodCards.map((m, i) => `
+      <div class="mood-card" data-mood-idx="${i}">
+        <span class="mood-emoji">${m.emoji}</span>
+        <div class="mood-label">${m.label}</div>
+        <div class="mood-sub">${m.sub}</div>
+      </div>
+    `).join('');
+  }
+
+  document.getElementById('moodGrid')?.addEventListener('click', e => {
+    const card = e.target.closest('.mood-card');
+    if (!card) return;
+    haptic();
+    const idx = Number(card.dataset.moodIdx);
+    const mood = moodCards[idx];
+    if (!mood) return;
+    switchView('search');
+    const ftInput = document.getElementById('freetextInput');
+    if (ftInput) {
+      const ftTab = document.querySelector('[data-mode="freetext"]');
+      if (ftTab) ftTab.click();
+      ftInput.value = mood.query;
+      ftInput.dispatchEvent(new Event('input'));
+    }
+    setTimeout(() => findRecipes(), 300);
+  });
+
+  // ─── Seasonal Banner ───
+  function renderSeasonBanner() {
+    const banner = document.getElementById('seasonBanner');
+    if (!banner) return;
+    const month = new Date().getMonth();
+    let season = null;
+    if (month >= 2 && month <= 4) season = { emoji: '\uD83C\uDF38', title: 'V\u00e5rens b\u00e4sta smaker', desc: 'Sparris, r\u00e4disor och nypotatis \u2014 laga mat med s\u00e4songens r\u00e5varor', query: 'v\u00e5rens b\u00e4sta recept med sparris och nypotatis' };
+    else if (month >= 5 && month <= 7) season = { emoji: '\u2600\uFE0F', title: 'Sommarmat', desc: 'Grillat, sallader och l\u00e4tta r\u00e4tter f\u00f6r varma dagar', query: 'somriga recept grillat och sallader' };
+    else if (month >= 8 && month <= 10) season = { emoji: '\uD83C\uDF42', title: 'H\u00f6stens grytor', desc: 'Svamp, rotfrukter och l\u00e5ngkok \u2014 m\u00f6rka kv\u00e4llar kr\u00e4ver varm mat', query: 'h\u00f6stiga grytor med svamp och rotfrukter' };
+    else season = { emoji: '\u2744\uFE0F', title: 'Vinterv\u00e4rme', desc: 'Soppor, grat\u00e4nger och allt som v\u00e4rmer \u2014 f\u00f6r m\u00f6rka kv\u00e4llar', query: 'v\u00e4rmande vintermat soppor och grat\u00e4nger' };
+    banner.innerHTML = `
+      <span class="season-banner-emoji">${season.emoji}</span>
+      <div class="season-banner-text">
+        <div class="season-banner-title">${season.title}</div>
+        <div class="season-banner-desc">${season.desc}</div>
+      </div>
+      <span class="season-banner-cta">Utforska \u2192</span>
+    `;
+    banner.style.display = '';
+    banner.dataset.query = season.query;
+  }
+
+  document.getElementById('seasonBanner')?.addEventListener('click', () => {
+    const banner = document.getElementById('seasonBanner');
+    if (!banner) return;
+    haptic();
+    switchView('search');
+    const ftInput = document.getElementById('freetextInput');
+    if (ftInput) {
+      const ftTab = document.querySelector('[data-mode="freetext"]');
+      if (ftTab) ftTab.click();
+      ftInput.value = banner.dataset.query || '';
+      ftInput.dispatchEvent(new Event('input'));
+    }
+    setTimeout(() => findRecipes(), 300);
+  });
+
   function renderAmkoPicks() {
     const container = document.getElementById('arminPicks');
     if (!container) return;
@@ -3542,6 +3641,7 @@
         <div class="world-card-top">
           <span class="world-flag">${c.flag}</span>
           <span class="world-country">${esc(translateCountry(c.country))}</span>
+          <span class="world-dish-count">${c.dishes.length} recept</span>
         </div>
         <div class="world-dishes">
           ${c.dishes.map(d => `
