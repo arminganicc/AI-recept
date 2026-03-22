@@ -1,13 +1,16 @@
 {
   "name": "Vad ska vi laga?",
   "short_name": "Recepthjälpen",
-  "description": "AI-driven recepthjälp baserad på dina ingredienser. Fota kylskåpet eller skriv in vad du har — få 8 recept direkt.",
+  "description": "AI-driven recepthjälp baserad på dina ingredienser. Fota kylskåpet eller skriv in vad du har \u2014 f\u00e5 8 recept direkt.",
   "start_url": "/",
+  "id": "/",
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#F7F4EF",
   "theme_color": "#F7F4EF",
   "lang": "sv",
-  "categories": ["food", "lifestyle", "utilities"],
+  "dir": "ltr",
+  "categories": ["food", "lifestyle", "utilities", "health"],
   "icons": [
     {
       "src": "/icon-192.png",
@@ -26,24 +29,62 @@
       "purpose": "maskable"
     }
   ],
+  "screenshots": [
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "S\u00f6k recept med dina ingredienser"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Hitta recept baserat p\u00e5 vad du har hemma"
+    }
+  ],
   "shortcuts": [
     {
-      "name": "Sök recept",
-      "short_name": "Sök",
+      "name": "S\u00f6k recept",
+      "short_name": "S\u00f6k",
+      "description": "S\u00f6k recept baserat p\u00e5 dina ingredienser",
       "url": "/?view=search",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Inspiration",
+      "short_name": "Inspiration",
+      "description": "Utforska v\u00e4rldens k\u00f6k och Amkos favoriter",
+      "url": "/?view=inspiration",
       "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
     },
     {
       "name": "Favoriter",
       "short_name": "Favoriter",
+      "description": "Dina sparade favoritrecept",
       "url": "/?view=favorites",
       "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
     },
     {
-      "name": "Inköpslista",
+      "name": "Ink\u00f6pslista",
       "short_name": "Lista",
+      "description": "Din ink\u00f6pslista med ingredienser",
       "url": "/?view=shopping",
       "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
     }
-  ]
+  ],
+  "share_target": {
+    "action": "/",
+    "method": "GET",
+    "params": {
+      "text": "ings"
+    }
+  },
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  },
+  "handle_links": "preferred",
+  "scope": "/"
 }

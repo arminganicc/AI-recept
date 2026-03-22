@@ -3,32 +3,42 @@ const rateLimitMap = new Map();
 const RATE_LIMIT_WINDOW = 60000; // 1 minute
 const RATE_LIMIT_MAX = 15; // max requests per window per IP
 
-// Periodic cleanup to prevent memory leaks
-const CLEANUP_INTERVAL = 5 * 60000; // 5 minutes
-let lastCleanup = Date.now();
-
-function cleanupRateLimitMap() {
+// Cleanup stale rate limit entries every 5 minutes to prevent memory leaks
+setInterval(() => {
   const now = Date.now();
-  if (now - lastCleanup < CLEANUP_INTERVAL) return;
-  lastCleanup = now;
   for (const [ip, entry] of rateLimitMap) {
-    if (now - entry.start > RATE_LIMIT_WINDOW) rateLimitMap.delete(ip);
+    if (now - entry.start > RATE_LIMIT_WINDOW * 2) rateLimitMap.delete(ip);
   }
-}
+}, 300000);
 
-function getRateLimitInfo(ip) {
-  cleanupRateLimitMap();
+function isRateLimited(ip) {
   const now = Date.now();
   const entry = rateLimitMap.get(ip);
   if (!entry || now - entry.start > RATE_LIMIT_WINDOW) {
     rateLimitMap.set(ip, { start: now, count: 1 });
-    return { limited: false, remaining: RATE_LIMIT_MAX - 1, resetMs: RATE_LIMIT_WINDOW };
+    return false;
   }
   entry.count++;
-  const remaining = Math.max(0, RATE_LIMIT_MAX - entry.count);
-  const resetMs = Math.max(0, RATE_LIMIT_WINDOW - (now - entry.start));
-  if (entry.count > RATE_LIMIT_MAX) return { limited: true, remaining: 0, resetMs };
-  return { limited: false, remaining, resetMs };
+  if (entry.count > RATE_LIMIT_MAX) return true;
+  return false;
+}
+
+// Sanitize string input: strip control chars and limit length
+function sanitizeString(str, maxLen = 200) {
+  if (typeof str !== 'string') return '';
+  // Remove control characters (except newline/tab), trim, and limit length
+  return str.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '').trim().slice(0, maxLen);
+}
+
+// Validate request body size (max 50KB)
+const MAX_BODY_SIZE = 50 * 1024;
+
+function isBodyTooLarge(body) {
+  try {
+    return JSON.stringify(body).length > MAX_BODY_SIZE;
+  } catch {
+    return true;
+  }
 }
 
 // Allowed origins for CORS
@@ -50,43 +60,23 @@ function getCorsHeaders(origin) {
   return headers;
 }
 
-function setRateLimitHeaders(res, info) {
-  res.setHeader('X-RateLimit-Limit', RATE_LIMIT_MAX);
-  res.setHeader('X-RateLimit-Remaining', info.remaining);
-  res.setHeader('X-RateLimit-Reset', Math.ceil(info.resetMs / 1000));
-}
-
 export default async function handler(req, res) {
   const origin = req.headers.origin || '';
   const corsHeaders = getCorsHeaders(origin);
   Object.entries(corsHeaders).forEach(([k, v]) => res.setHeader(k, v));
 
-  // Security headers
-  res.setHeader('X-Content-Type-Options', 'nosniff');
-  res.setHeader('Cache-Control', 'no-store');
-
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  // Validate API key is configured
-  if (!process.env.ANTHROPIC_API_KEY) {
-    console.error('ANTHROPIC_API_KEY is not configured');
-    return res.status(500).json({ error: 'Tjänsten är tillfälligt otillgänglig.' });
-  }
-
-  // Rate limiting with headers
+  // Rate limiting
   const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.socket?.remoteAddress || 'unknown';
-  const rateLimitInfo = getRateLimitInfo(ip);
-  setRateLimitHeaders(res, rateLimitInfo);
-
-  if (rateLimitInfo.limited) {
-    res.setHeader('Retry-After', Math.ceil(rateLimitInfo.resetMs / 1000));
+  if (isRateLimited(ip)) {
     return res.status(429).json({ error: 'För många förfrågningar. Vänta en stund och försök igen.' });
   }
 
-  // Validate request body exists
-  if (!req.body || typeof req.body !== 'object') {
-    return res.status(400).json({ error: 'Ogiltig förfrågan.' });
+  // Validate request body size
+  if (isBodyTooLarge(req.body)) {
+    return res.status(413).json({ error: 'Förfrågan är för stor.' });
   }
 
   const { ingredients, portions, prefs, conversationHistory, language, mode, query } = req.body;
@@ -96,17 +86,25 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Missing ingredients or query' });
   }
 
-  // Input validation
+  // Input validation and sanitization
   const validLangs = ['sv', 'en', 'es', 'bs'];
   const safeLang = validLangs.includes(language) ? language : 'sv';
   const parsedPortions = parseInt(portions);
   const safePortion = Math.min(Math.max(Number.isNaN(parsedPortions) ? 4 : parsedPortions, 1), 50);
   const safeIngredients = Array.isArray(ingredients)
-    ? ingredients.slice(0, 30).filter(i => typeof i === 'string' && i.length > 0 && i.length < 100).map(i => i.trim())
+    ? ingredients.slice(0, 30)
+        .filter(i => typeof i === 'string' && i.length > 0 && i.length < 100)
+        .map(i => sanitizeString(i, 100))
+        .filter(i => i.length > 0)
     : [];
-  const safeHistory = Array.isArray(conversationHistory) ? conversationHistory.slice(0, 5) : [];
-  const safeQuery = typeof query === 'string' ? query.slice(0, 500) : '';
-  const safePrefs = Array.isArray(prefs) ? prefs.slice(0, 10) : [];
+  const safeHistory = Array.isArray(conversationHistory)
+    ? conversationHistory.slice(0, 5).filter(h => h && typeof h.feedback === 'string')
+        .map(h => ({ ...h, feedback: sanitizeString(h.feedback, 300) }))
+    : [];
+  const safeQuery = sanitizeString(typeof query === 'string' ? query : '', 500);
+  const safePrefs = Array.isArray(prefs)
+    ? prefs.slice(0, 10).filter(p => typeof p === 'string' && p.length < 50).map(p => sanitizeString(p, 50))
+    : [];
 
   const prefText = safePrefs.length > 0 ? safePrefs.join(', ') : 'inga';
   const historyText = safeHistory.length > 0
@@ -157,34 +155,32 @@ VIKTIGT: Svara ENBART med giltig JSON. Inga kodblock, inga kommentarer utanför 
     });
     clearTimeout(timeoutId);
 
-    if (!response.ok) {
-      let data;
-      try { data = await response.json(); } catch { data = {}; }
-      console.error('Anthropic API error:', response.status, data);
-
-      // Map specific error codes to user-friendly responses
-      const status = response.status;
-      if (status === 401) {
-        return res.status(500).json({ error: 'Tjänsten är tillfälligt otillgänglig.' });
-      }
-      if (status === 429) {
-        res.setHeader('Retry-After', '30');
-        return res.status(503).json({ error: 'Recepttjänsten är överbelastad. Försök igen om en stund.' });
-      }
-      if (status === 529) {
-        return res.status(503).json({ error: 'Recepttjänsten är tillfälligt överbelastad. Försök igen om en stund.' });
-      }
-      return res.status(status >= 500 ? 502 : status).json({ error: 'Receptsökning misslyckades. Försök igen.' });
+    const rawText = await response.text();
+    // Guard against oversized responses (max 500KB)
+    if (rawText.length > 500 * 1024) {
+      console.error('Anthropic response too large:', rawText.length);
+      return res.status(502).json({ error: 'Svaret var för stort. Försök igen.' });
     }
-
-    const data = await response.json();
+    let data;
+    try {
+      data = JSON.parse(rawText);
+    } catch {
+      console.error('Invalid JSON from Anthropic');
+      return res.status(502).json({ error: 'Ogiltigt svar från AI. Försök igen.' });
+    }
+    if (!response.ok) {
+      console.error('Anthropic API error:', response.status, data);
+      return res.status(response.status >= 500 ? 502 : response.status).json({ error: 'Receptsökning misslyckades. Försök igen.' });
+    }
+    // Set security headers
+    res.setHeader('X-Content-Type-Options', 'nosniff');
     return res.status(200).json(data);
   } catch (error) {
     clearTimeout(timeoutId);
     if (error.name === 'AbortError') {
       return res.status(504).json({ error: 'Receptsökning tog för lång tid. Försök igen.' });
     }
-    console.error('Chat API error:', error.message || error);
+    console.error('Chat API error:', error);
     return res.status(500).json({ error: 'Internal server error' });
   }
 }

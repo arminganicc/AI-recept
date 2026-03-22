@@ -4029,4 +4029,69 @@
 
   // Scroll animations after initial render
   setTimeout(initScrollAnimations, 300);
+
+  // ═══ PWA: Install banner ═══
+  let deferredPrompt = null;
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    const dismissed = localStorage.getItem('install_dismissed');
+    if (dismissed) return;
+    const banner = document.getElementById('installBanner');
+    if (banner) banner.hidden = false;
+  });
+  const installBtn = document.getElementById('installBtn');
+  if (installBtn) {
+    installBtn.addEventListener('click', async () => {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      deferredPrompt = null;
+      const banner = document.getElementById('installBanner');
+      if (banner) banner.hidden = true;
+    });
+  }
+  const installDismiss = document.getElementById('installDismiss');
+  if (installDismiss) {
+    installDismiss.addEventListener('click', () => {
+      const banner = document.getElementById('installBanner');
+      if (banner) banner.hidden = true;
+      localStorage.setItem('install_dismissed', 'true');
+    });
+  }
+
+  // ═══ PWA: Offline banner ═══
+  window.addEventListener('online', () => {
+    const banner = document.getElementById('offlineBanner');
+    if (banner) banner.hidden = true;
+  });
+  window.addEventListener('offline', () => {
+    const banner = document.getElementById('offlineBanner');
+    if (banner) banner.hidden = false;
+  });
+  if (!navigator.onLine) {
+    const banner = document.getElementById('offlineBanner');
+    if (banner) banner.hidden = false;
+  }
+
+  // ═══ Legal pages navigation ═══
+  // Extend switchView to handle legal pages
+  const origSwitchView = window.__switchView;
+  window.__switchView = function(view) {
+    const legalViews = ['privacy', 'terms', 'cookies'];
+    if (legalViews.includes(view)) {
+      // Hide all views
+      document.querySelectorAll('.view').forEach(v => v.hidden = true);
+      const target = document.getElementById('view' + view.charAt(0).toUpperCase() + view.slice(1));
+      if (target) {
+        target.hidden = false;
+        target.scrollTo(0, 0);
+        window.scrollTo(0, 0);
+      }
+      // Deactivate nav items
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      return;
+    }
+    if (origSwitchView) origSwitchView(view);
+  };
 })();

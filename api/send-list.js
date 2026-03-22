@@ -2,11 +2,61 @@ function escapeHtml(str) {
   return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
+// Rate limiter for email sending (stricter: 5 per minute)
+const emailRateMap = new Map();
+function isEmailRateLimited(ip) {
+  const now = Date.now();
+  const entry = emailRateMap.get(ip);
+  if (!entry || now - entry.start > 60000) {
+    emailRateMap.set(ip, { start: now, count: 1 });
+    return false;
+  }
+  entry.count++;
+  return entry.count > 5;
+}
+
+const ALLOWED_ORIGINS = [
+  'https://vadskavialaga.se',
+  'https://www.vadskavialaga.se',
+  'https://receptappen.vercel.app',
+];
+
+// Simple email format validation
+function isValidEmail(email) {
+  return typeof email === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && email.length <= 254;
+}
+
 export default async function handler(req, res) {
+  // CORS
+  const origin = req.headers.origin || '';
+  if (ALLOWED_ORIGINS.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+
+  if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).end();
+
+  // Rate limiting
+  const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.socket?.remoteAddress || 'unknown';
+  if (isEmailRateLimited(ip)) {
+    return res.status(429).json({ error: 'För många förfrågningar. Vänta en stund.' });
+  }
 
   const { email, items, recipeName } = req.body;
   if (!email || !items) return res.status(400).json({ error: 'Missing fields' });
+
+  // Validate email format
+  if (!isValidEmail(email)) {
+    return res.status(400).json({ error: 'Ogiltig e-postadress.' });
+  }
+
+  // Validate items array
+  if (!Array.isArray(items) || items.length === 0 || items.length > 200) {
+    return res.status(400).json({ error: 'Ogiltig inköpslista.' });
+  }
 
   const resendKey = process.env.RESEND_API_KEY;
   if (!resendKey) {

@@ -79,6 +79,26 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
 <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
+<!-- PWA: Offline indicator -->
+<div class="offline-banner" id="offlineBanner" hidden aria-live="polite">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="23" y2="23"/><path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"/><path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"/><path d="M10.71 5.05A16 16 0 0 1 22.56 9"/><path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
+  <span>Du är offline. Favoriter och lista fungerar fortfarande.</span>
+</div>
+
+<!-- PWA: Install app banner -->
+<div class="install-banner" id="installBanner" hidden>
+  <div class="install-banner-inner">
+    <div class="install-banner-text">
+      <strong>Installera appen</strong>
+      <span>Snabbare, fungerar offline, och känns som en riktig app.</span>
+    </div>
+    <div class="install-banner-actions">
+      <button class="install-banner-btn" id="installBtn">Installera</button>
+      <button class="install-banner-dismiss" id="installDismiss" aria-label="Stäng">&times;</button>
+    </div>
+  </div>
+</div>
+
 <a href="#mainContent" class="skip-link">Hoppa till innehåll</a>
 
 <!-- ═══ VIEW: SÖK ═══ -->
@@ -366,6 +386,64 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
   </div>
 </section>
 
+<!-- ═══ VIEW: INTEGRITETSPOLICY ═══ -->
+<section class="view legal-page" id="viewPrivacy" hidden aria-label="Integritetspolicy">
+  <div class="legal-header">
+    <button class="legal-back-btn" onclick="window.__switchView && window.__switchView('search')" aria-label="Tillbaka">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Tillbaka
+    </button>
+    <h1 class="legal-title">Integritetspolicy</h1>
+    <p class="legal-updated">Senast uppdaterad: 22 mars 2026</p>
+  </div>
+  <div class="legal-body">
+    <section><h2>1. Inledning</h2><p>Denna integritetspolicy beskriver hur "Vad ska vi laga?" behandlar dina personuppgifter i enlighet med GDPR samt tillämplig svensk lagstiftning.</p></section>
+    <section><h2>2. Personuppgiftsansvarig</h2><div class="legal-info-box"><p><strong>Armin Ganic</strong></p><p>E-post: <a href="mailto:info@vadskavialaga.se">info@vadskavialaga.se</a></p></div></section>
+    <section><h2>3. Vilka uppgifter vi samlar in</h2><p>Kontouppgifter (e-post), användarinnehåll (ingredienser, preferenser, favoriter), teknisk data (enhetstyp, webbläsare) samt prenumerationsstatus.</p></section>
+    <section><h2>4. Hur vi använder dina uppgifter</h2><p>Vi genererar receptförslag, hanterar konto/prenumeration, sparar favoriter/inköpslistor, förbättrar tjänsten och kommunicerar viktiga uppdateringar.</p></section>
+    <section><h2>5. Tredjepartstjänster</h2><p>Supabase (autentisering, EU), Anthropic Claude AI (receptgenerering, USA), Vercel (hosting, EU/USA), Google Fonts (typsnitt, USA). Vid USA-överföring säkerställs skydd via EU-kommissionens standardavtalsklausuler.</p></section>
+    <section><h2>6. Dina rättigheter enligt GDPR</h2><p>Du har rätt till tillgång, rättelse, radering, begränsning, dataportabilitet och invändning. Kontakta <a href="mailto:info@vadskavialaga.se">info@vadskavialaga.se</a>. Du kan även klaga till <a href="https://www.imy.se" target="_blank" rel="noopener">IMY</a>.</p></section>
+    <section><h2>7. Kontakt</h2><div class="legal-info-box"><p>E-post: <a href="mailto:info@vadskavialaga.se">info@vadskavialaga.se</a></p></div></section>
+  </div>
+</section>
+
+<!-- ═══ VIEW: ANVÄNDARVILLKOR ═══ -->
+<section class="view legal-page" id="viewTerms" hidden aria-label="Användarvillkor">
+  <div class="legal-header">
+    <button class="legal-back-btn" onclick="window.__switchView && window.__switchView('search')" aria-label="Tillbaka">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Tillbaka
+    </button>
+    <h1 class="legal-title">Användarvillkor</h1>
+    <p class="legal-updated">Senast uppdaterade: 22 mars 2026</p>
+  </div>
+  <div class="legal-body">
+    <section><h2>1. Allmänt</h2><p>Dessa villkor reglerar din användning av "Vad ska vi laga?" som tillhandahålls av Armin Ganic.</p></section>
+    <section><h2>2. Tjänstebeskrivning</h2><p>AI-driven recepttjänst med ingrediensigenkänning, favoriter, inköpslistor och kokläge.</p></section>
+    <section><h2>3. Prenumeration</h2><p>Månadsplan: 49 kr/mån. Årsplan: 399 kr/år. Förnyas automatiskt. 14 dagars ångerrätt.</p></section>
+    <section><h2>4. Ansvarsbegränsning</h2><p>AI-genererade recept är förslag. Kontrollera alltid ingredienser vid allergier. Tjänsten ersätter inte professionell kostrådgivning.</p></section>
+    <section><h2>5. Kontakt</h2><div class="legal-info-box"><p><strong>Armin Ganic</strong> — <a href="mailto:info@vadskavialaga.se">info@vadskavialaga.se</a></p></div></section>
+  </div>
+</section>
+
+<!-- ═══ VIEW: COOKIE-POLICY ═══ -->
+<section class="view legal-page" id="viewCookies" hidden aria-label="Cookie-policy">
+  <div class="legal-header">
+    <button class="legal-back-btn" onclick="window.__switchView && window.__switchView('search')" aria-label="Tillbaka">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Tillbaka
+    </button>
+    <h1 class="legal-title">Cookie-policy</h1>
+    <p class="legal-updated">Senast uppdaterad: 22 mars 2026</p>
+  </div>
+  <div class="legal-body">
+    <section><h2>1. Cookies och lokal lagring</h2><p>"Vad ska vi laga?" använder inga tredjepartsspårningscookies. Vi använder localStorage för inställningar och data lokalt.</p></section>
+    <section><h2>2. Lagrade nycklar</h2><p>fav_recipes (favoriter), search_history (sökhistorik), shopping_list (inköpslista), recipe_ratings (betyg), dark_mode (tema).</p></section>
+    <section><h2>3. Service Worker</h2><p>Appen använder en Service Worker för offlinefunktionalitet. Cachen innehåller inga personuppgifter.</p></section>
+    <section><h2>4. Kontakt</h2><div class="legal-info-box"><p>E-post: <a href="mailto:info@vadskavialaga.se">info@vadskavialaga.se</a></p></div></section>
+  </div>
+</section>
+
 <!-- ═══ BOTTOM NAV ═══ -->
 <nav class="bottom-nav" role="navigation" aria-label="Huvudnavigation">
   <button class="nav-item active" data-view="search" aria-label="Sök recept">
@@ -582,6 +660,13 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
     <span class="footer-brand">Vad ska vi laga?</span>
     <button class="footer-help-btn" id="helpBtn">❓ Hur funkar det?</button>
     <button class="footer-share-btn" id="shareAppBtn">Dela med en vän 📤</button>
+    <div class="footer-legal">
+      <button class="footer-legal-link" onclick="window.__switchView && window.__switchView('privacy')">Integritetspolicy</button>
+      <span class="footer-divider">·</span>
+      <button class="footer-legal-link" onclick="window.__switchView && window.__switchView('terms')">Villkor</button>
+      <span class="footer-divider">·</span>
+      <button class="footer-legal-link" onclick="window.__switchView && window.__switchView('cookies')">Cookies</button>
+    </div>
   </div>
 </footer>
 

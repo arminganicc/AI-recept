@@ -3,32 +3,24 @@ const rateLimitMap = new Map();
 const RATE_LIMIT_WINDOW = 60000;
 const RATE_LIMIT_MAX = 10;
 
-// Periodic cleanup to prevent memory leaks
-const CLEANUP_INTERVAL = 5 * 60000;
-let lastCleanup = Date.now();
-
-function cleanupRateLimitMap() {
+// Cleanup stale entries every 5 minutes
+setInterval(() => {
   const now = Date.now();
-  if (now - lastCleanup < CLEANUP_INTERVAL) return;
-  lastCleanup = now;
   for (const [ip, entry] of rateLimitMap) {
-    if (now - entry.start > RATE_LIMIT_WINDOW) rateLimitMap.delete(ip);
+    if (now - entry.start > RATE_LIMIT_WINDOW * 2) rateLimitMap.delete(ip);
   }
-}
+}, 300000);
 
-function getRateLimitInfo(ip) {
-  cleanupRateLimitMap();
+function isRateLimited(ip) {
   const now = Date.now();
   const entry = rateLimitMap.get(ip);
   if (!entry || now - entry.start > RATE_LIMIT_WINDOW) {
     rateLimitMap.set(ip, { start: now, count: 1 });
-    return { limited: false, remaining: RATE_LIMIT_MAX - 1, resetMs: RATE_LIMIT_WINDOW };
+    return false;
   }
   entry.count++;
-  const remaining = Math.max(0, RATE_LIMIT_MAX - entry.count);
-  const resetMs = Math.max(0, RATE_LIMIT_WINDOW - (now - entry.start));
-  if (entry.count > RATE_LIMIT_MAX) return { limited: true, remaining: 0, resetMs };
-  return { limited: false, remaining, resetMs };
+  if (entry.count > RATE_LIMIT_MAX) return true;
+  return false;
 }
 
 const ALLOWED_ORIGINS = [
@@ -49,12 +41,6 @@ function getCorsHeaders(origin) {
   return headers;
 }
 
-function setRateLimitHeaders(res, info) {
-  res.setHeader('X-RateLimit-Limit', RATE_LIMIT_MAX);
-  res.setHeader('X-RateLimit-Remaining', info.remaining);
-  res.setHeader('X-RateLimit-Reset', Math.ceil(info.resetMs / 1000));
-}
-
 const VALID_MEDIA_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
 const MAX_IMAGE_SIZE = 10 * 1024 * 1024; // 10 MB base64
 
@@ -63,45 +49,27 @@ export default async function handler(req, res) {
   const corsHeaders = getCorsHeaders(origin);
   Object.entries(corsHeaders).forEach(([k, v]) => res.setHeader(k, v));
 
-  // Security headers
-  res.setHeader('X-Content-Type-Options', 'nosniff');
-  res.setHeader('Cache-Control', 'no-store');
-
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  // Validate API key is configured
-  if (!process.env.ANTHROPIC_API_KEY) {
-    console.error('ANTHROPIC_API_KEY is not configured');
-    return res.status(500).json({ error: 'Tjänsten är tillfälligt otillgänglig.' });
-  }
-
-  // Rate limiting with headers
+  // Rate limiting
   const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.socket?.remoteAddress || 'unknown';
-  const rateLimitInfo = getRateLimitInfo(ip);
-  setRateLimitHeaders(res, rateLimitInfo);
-
-  if (rateLimitInfo.limited) {
-    res.setHeader('Retry-After', Math.ceil(rateLimitInfo.resetMs / 1000));
+  if (isRateLimited(ip)) {
     return res.status(429).json({ error: 'För många förfrågningar. Vänta en stund och försök igen.' });
-  }
-
-  // Validate request body exists
-  if (!req.body || typeof req.body !== 'object') {
-    return res.status(400).json({ error: 'Ogiltig förfrågan.' });
   }
 
   const { image, mediaType, language } = req.body;
   if (!image) return res.status(400).json({ error: 'Missing image' });
-
-  // Validate image is a string
-  if (typeof image !== 'string') {
-    return res.status(400).json({ error: 'Ogiltigt bildformat.' });
-  }
+  if (typeof image !== 'string') return res.status(400).json({ error: 'Ogiltigt bildformat.' });
 
   // Validate image size
   if (image.length > MAX_IMAGE_SIZE) {
     return res.status(413).json({ error: 'Bilden är för stor. Max 10 MB.' });
+  }
+
+  // Validate base64 format — reject obviously non-base64 payloads
+  if (!/^[A-Za-z0-9+/\n\r]+=*$/.test(image.slice(0, 1000))) {
+    return res.status(400).json({ error: 'Ogiltig bilddata.' });
   }
 
   // Validate media type
@@ -167,30 +135,29 @@ Inga andra ord, förklaringar eller kommentarer — bara JSON-arrayen. ${langIns
     });
     clearTimeout(timeoutId);
 
-    if (!response.ok) {
-      let data;
-      try { data = await response.json(); } catch { data = {}; }
-      console.error('Anthropic Vision API error:', response.status, data);
-
-      const status = response.status;
-      if (status === 401) {
-        return res.status(500).json({ error: 'Tjänsten är tillfälligt otillgänglig.' });
-      }
-      if (status === 429 || status === 529) {
-        res.setHeader('Retry-After', '30');
-        return res.status(503).json({ error: 'Bildanalystjänsten är överbelastad. Försök igen om en stund.' });
-      }
-      return res.status(status >= 500 ? 502 : status).json({ error: 'Bildanalys misslyckades. Försök igen.' });
+    const rawText = await response.text();
+    // Guard against oversized responses
+    if (rawText.length > 100 * 1024) {
+      return res.status(502).json({ error: 'Svaret var för stort. Försök igen.' });
     }
-
-    const data = await response.json();
+    let data;
+    try {
+      data = JSON.parse(rawText);
+    } catch {
+      return res.status(502).json({ error: 'Ogiltigt svar från AI. Försök igen.' });
+    }
+    if (!response.ok) {
+      console.error('Anthropic Vision API error:', response.status, data);
+      return res.status(response.status >= 500 ? 502 : response.status).json({ error: 'Bildanalys misslyckades. Försök igen.' });
+    }
+    res.setHeader('X-Content-Type-Options', 'nosniff');
     return res.status(200).json(data);
   } catch (error) {
     clearTimeout(timeoutId);
     if (error.name === 'AbortError') {
       return res.status(504).json({ error: 'Bildanalys tog för lång tid. Försök igen.' });
     }
-    console.error('Recognize-ingredients API error:', error.message || error);
+    console.error('Recognize-ingredients API error:', error);
     return res.status(500).json({ error: 'Internal server error' });
   }
 }
