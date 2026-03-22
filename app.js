@@ -107,7 +107,7 @@
       onboardingStep3Title: 'Laga, spara, handla',
       onboardingStep3Desc: 'Följ receptet steg-för-steg i kokläge, spara favoriter, och skicka inköpslistan till dig själv. Resten sköter du.',
       onboardingCta: 'Okej, jag är hungrig — kör!',
-      onboardingHint: 'Gratis. Inget konto krävs. Inga konstigheter. Bara mat.',
+      onboardingHint: 'Din AI-kock. Dina favoriter. Din inköpslista — allt synkat.',
       // Toast
       toastCopied: 'Kopierat! Dela på hälsa.',
       toastListSent: 'Inköpslistan flyger iväg till din mejl ✈️',
@@ -294,7 +294,7 @@
       onboardingStep3Title: 'Save, cook & shop',
       onboardingStep3Desc: 'Save favorites, follow step-by-step in cook mode, and send the shopping list to your email.',
       onboardingCta: 'Let\'s go!',
-      onboardingHint: 'Free. No account required. Just food.',
+      onboardingHint: 'Your AI chef. Your favorites. Your shopping list — all synced.',
       toastCopied: 'Copied! Share away.',
       toastListSent: 'Shopping list sent to your email ✈️',
       toastListAdded: 'Added! Time to shop soon.',
@@ -463,7 +463,7 @@
       onboardingStep3Title: 'Guarda, cocina y compra',
       onboardingStep3Desc: 'Guarda favoritos, sigue paso a paso y envía la lista de compras.',
       onboardingCta: '¡Vamos!',
-      onboardingHint: 'Gratis. Sin cuenta. Solo comida.',
+      onboardingHint: 'Tu chef IA. Tus favoritos. Tu lista de compras — todo sincronizado.',
       toastCopied: '¡Copiado! Compártelo.',
       toastListSent: 'Lista de compras enviada ✈️',
       toastListAdded: '¡Añadido! Hora de comprar.',
@@ -632,7 +632,7 @@
       onboardingStep3Title: 'Sačuvaj, kuhaj i kupuj',
       onboardingStep3Desc: 'Sačuvaj favorite, prati korak po korak i pošalji listu za kupovinu.',
       onboardingCta: 'Idemo!',
-      onboardingHint: 'Besplatno. Bez računa. Samo hrana.',
+      onboardingHint: 'Tvoj AI kuhar. Tvoji favoriti. Tvoja lista — sve sinhronizovano.',
       toastCopied: 'Kopirano! Podijeli.',
       toastListSent: 'Lista poslana na email ✈️',
       toastListAdded: 'Dodano! Vrijeme za kupovinu.',
@@ -1009,14 +1009,26 @@
   let portions = 4;
   let searchPortions = 4;
   let prefs = new Set();
-  const recipeCache = new Map();
   const CACHE_MAX = 20;
+  const CACHE_STORAGE_KEY = 'recipe_cache';
+  // Restore cache from localStorage
+  const recipeCache = (() => {
+    try {
+      const stored = JSON.parse(localStorage.getItem(CACHE_STORAGE_KEY) || '[]');
+      return new Map(stored.slice(-CACHE_MAX));
+    } catch { return new Map(); }
+  })();
   function cacheSet(key, value) {
     if (recipeCache.size >= CACHE_MAX) {
       const oldest = recipeCache.keys().next().value;
       recipeCache.delete(oldest);
     }
     recipeCache.set(key, value);
+    // Persist to localStorage
+    try {
+      const entries = [...recipeCache.entries()].slice(-CACHE_MAX);
+      localStorage.setItem(CACHE_STORAGE_KEY, JSON.stringify(entries));
+    } catch {}
   }
   let conversationHistory = [];
   let lastChefComment = '';
@@ -1369,10 +1381,10 @@
     haptic();
     if (isDark()) {
       document.documentElement.removeAttribute('data-theme');
-      localStorage.setItem('dark_mode', 'false');
+      try { localStorage.setItem('dark_mode', 'false'); } catch {}
     } else {
       document.documentElement.setAttribute('data-theme', 'dark');
-      localStorage.setItem('dark_mode', 'true');
+      try { localStorage.setItem('dark_mode', 'true'); } catch {}
     }
     updateDarkModeIcon();
     updateThemeColor();
@@ -1397,7 +1409,7 @@
       document.getElementById('onboardingClose')?.addEventListener('click', () => {
         overlay.hidden = true;
         document.body.style.overflow = '';
-        localStorage.setItem('onboarding_seen', 'true');
+        try { localStorage.setItem('onboarding_seen', 'true'); } catch {}
       });
     }
   }
@@ -1469,7 +1481,7 @@
     document.body.style.overflow = 'hidden';
     document.getElementById('closeBtn').addEventListener('click', closeModal);
     document.getElementById('closeChangelogBtn').addEventListener('click', closeModal);
-    localStorage.setItem('changelog_seen', latest.version);
+    try { localStorage.setItem('changelog_seen', latest.version); } catch {}
     updateNewsBadge();
   }
 
@@ -1847,7 +1859,7 @@
     };
     searchHistory.unshift(entry);
     if (searchHistory.length > 10) searchHistory = searchHistory.slice(0, 10);
-    localStorage.setItem('search_history', JSON.stringify(searchHistory));
+    saveStorage('search_history', searchHistory);
     renderHistory();
   }
 
@@ -1899,7 +1911,7 @@
 
   // ─── Shopping List ───
   function saveShoppingList() {
-    localStorage.setItem('shopping_list', JSON.stringify(shoppingList));
+    saveStorage('shopping_list', shoppingList);
     updateListBadge();
   }
 
@@ -2425,7 +2437,7 @@
       const rating = ratings[r.name] || 0;
       const tag = r.tag || '';
       return `
-        <div class="recipe-card" data-idx="${i}">
+        <div class="recipe-card" data-idx="${i}" role="button" tabindex="0" aria-label="${esc(r.name)} — ${esc(r.difficulty)}, ${esc(r.time)}">
           ${tag ? `<span class="recipe-tag ${tagClass(tag)}">${esc(tag)}</span>` : ''}
           <div class="recipe-top">
             <div class="recipe-name">${esc(r.name)}</div>
@@ -2497,6 +2509,19 @@
 
   recipeList.addEventListener('click', handleRecipeListClick);
   if (resultsBody) resultsBody.addEventListener('click', handleRecipeListClick);
+
+  // Keyboard support for recipe cards (Enter/Space)
+  function handleRecipeListKeydown(e) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      const card = e.target.closest('.recipe-card');
+      if (card && e.target === card) {
+        e.preventDefault();
+        card.click();
+      }
+    }
+  }
+  recipeList.addEventListener('keydown', handleRecipeListKeydown);
+  if (resultsBody) resultsBody.addEventListener('keydown', handleRecipeListKeydown);
 
   // ─── Favorites ───
   function toggleFavorite(recipe) {
@@ -2857,7 +2882,7 @@
       haptic();
       const star = Number(btn.dataset.star);
       ratings[r.name] = star;
-      localStorage.setItem('recipe_ratings', JSON.stringify(ratings));
+      saveStorage('recipe_ratings', ratings);
       starsEl.querySelectorAll('.star-btn').forEach((s, i) => s.classList.toggle('active', i < star));
       showToast(star === 5 ? t('ratingTopScore') : t('ratingScore').replace('{score}', star));
       renderRecipes();
