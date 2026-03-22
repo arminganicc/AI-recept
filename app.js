@@ -54,12 +54,12 @@
     sv: {
       heroEyebrow: 'Kvällens eviga dilemma', heroTitle: 'Vad ska vi laga?',
       yourIngredients: 'Dina råvaror', scanFood: 'Fota dina råvaror',
-      orManual: 'eller skriv manuellt', inputHint: 'Tryck + för att lägga till. Komma separerar.',
+      orManual: 'eller skriv manuellt', inputHint: 'Enter lägger till. Komma separerar. Lägg till minst 2-3 ingredienser för bäst resultat.',
       whatDoYouHave: 'Vad har du hemma?', howPicky: 'Hur kräsen är du?',
       portions: 'Portioner', showRecipes: 'Visa recept',
-      savedRecipes: 'Sparade recept', noSavedRecipes: 'Inga sparade recept ännu',
-      noSavedDesc: 'Tryck på hjärtat på ett recept för att spara det här.',
-      findRecipes: 'Hitta recept →', shoppingList: 'Inköpslista',
+      savedRecipes: 'Sparade recept', noSavedRecipes: 'Din receptsamling väntar',
+      noSavedDesc: 'Hitta ett recept du gillar och tryck på hjärtat. Nästa gång slipper du fundera — dina favoriter finns här, redo att lagas.',
+      findRecipes: 'Hitta ditt första favoritrecept →', shoppingList: 'Inköpslista',
       clear: 'Rensa', shareList: 'Dela lista 📤',
       navSearch: 'Sök', navInspiration: 'Inspiration', navFavorites: 'Favoriter', navList: 'Lista',
       vegetariskt: 'Vegetariskt', veganskt: 'Veganskt', glutenfritt: 'Glutenfritt',
@@ -75,12 +75,12 @@
       searchBtnHint: 'Lägg till minst en ingrediens för att söka',
       // Inspiration
       inspirationTitle: 'Inspiration',
-      inspirationSub: 'Amkos favoriter och världens kök — allt på ett ställe',
+      inspirationSub: 'Vet inte vad du vill laga? Bläddra bland Amkos favoriter och världens kök. Tryck, och receptet genereras direkt.',
       arminSub: 'Handplockade favoriter. Ingen jäv, bara bra mat. (Okej, lite jäv.)',
       // Inköpslista
-      listEmpty: 'Listan är tom',
-      listEmptyDesc: 'Öppna ett recept och tryck "Lägg till i inköpslistan" för att samla ingredienser här.',
-      listEmptyCta: 'Hitta recept →',
+      listEmpty: 'Handla smartare, inte mer',
+      listEmptyDesc: 'Välj ett recept, tryck "Lägg till i inköpslistan" — och allt du behöver handla samlas här. Dela listan med dig själv eller familjen.',
+      listEmptyCta: 'Hitta recept och bygg din lista →',
       // Auth
       authTitle: 'Logga in eller skapa konto',
       authDesc: 'Logga in för att spara dina favoritrecept och synka dem överallt. Välj ditt sätt.',
@@ -107,7 +107,7 @@
       onboardingStep3Title: 'Laga, spara, handla',
       onboardingStep3Desc: 'Följ receptet steg-för-steg i kokläge, spara favoriter, och skicka inköpslistan till dig själv. Resten sköter du.',
       onboardingCta: 'Okej, jag är hungrig — kör!',
-      onboardingHint: 'Din AI-kock. Dina favoriter. Din inköpslista — allt synkat.',
+      onboardingHint: 'Gratis att börja. Inget konto krävs. Över 2 400 recept skapade av matlagare som du.',
       // Toast
       toastCopied: 'Kopierat! Dela på hälsa.',
       toastListSent: 'Inköpslistan flyger iväg till din mejl ✈️',
@@ -249,9 +249,9 @@
       orManual: 'or type manually', inputHint: 'Enter to add. Comma separates.',
       whatDoYouHave: 'What do you have at home?', howPicky: 'How picky are you?',
       portions: 'Servings', showRecipes: 'Show recipes',
-      savedRecipes: 'Saved recipes', noSavedRecipes: 'No saved recipes yet',
-      noSavedDesc: 'Tap the heart on a recipe to save it here.',
-      findRecipes: 'Find recipes →', shoppingList: 'Shopping list',
+      savedRecipes: 'Saved recipes', noSavedRecipes: 'Your recipe collection awaits',
+      noSavedDesc: 'Find a recipe you love and tap the heart. Next time, no more guessing — your favorites will be right here.',
+      findRecipes: 'Find your first favorite →', shoppingList: 'Shopping list',
       clear: 'Clear', shareList: 'Share list 📤',
       navSearch: 'Search', navInspiration: 'Inspiration', navFavorites: 'Favorites', navList: 'List',
       vegetariskt: 'Vegetarian', veganskt: 'Vegan', glutenfritt: 'Gluten-free',
@@ -265,11 +265,11 @@
       freetextHint: 'Write freely — Amko gets it.',
       searchBtnHint: 'Add at least one ingredient to search',
       inspirationTitle: 'Inspiration',
-      inspirationSub: 'Amko\'s favorites and world cuisines — all in one place',
+      inspirationSub: 'Not sure what to cook? Browse Amko\'s picks and world cuisines. Tap any dish and get the recipe instantly.',
       arminSub: 'Hand-picked favorites. No bias, just good food. (Okay, some bias.)',
-      listEmpty: 'List is empty',
-      listEmptyDesc: 'Open a recipe and tap "Add to shopping list" to collect ingredients here.',
-      listEmptyCta: 'Find recipes →',
+      listEmpty: 'Shop smarter, not more',
+      listEmptyDesc: 'Pick a recipe, tap "Add to shopping list" — and everything you need is collected here. Share with yourself or the family.',
+      listEmptyCta: 'Find recipes and build your list →',
       authTitle: 'Sign in or create account',
       authDesc: 'Sign in to save your favorite recipes and sync them everywhere.',
       authGoogle: 'Continue with Google', authApple: 'Continue with Apple',
@@ -294,7 +294,7 @@
       onboardingStep3Title: 'Save, cook & shop',
       onboardingStep3Desc: 'Save favorites, follow step-by-step in cook mode, and send the shopping list to your email.',
       onboardingCta: 'Let\'s go!',
-      onboardingHint: 'Your AI chef. Your favorites. Your shopping list — all synced.',
+      onboardingHint: 'Free to start. No account needed. Over 2,400 recipes created by cooks like you.',
       toastCopied: 'Copied! Share away.',
       toastListSent: 'Shopping list sent to your email ✈️',
       toastListAdded: 'Added! Time to shop soon.',
@@ -418,9 +418,9 @@
       orManual: 'o escribe manualmente', inputHint: 'Enter para añadir. Coma separa.',
       whatDoYouHave: '¿Qué tienes en casa?', howPicky: '¿Qué tan exigente eres?',
       portions: 'Porciones', showRecipes: 'Mostrar recetas',
-      savedRecipes: 'Recetas guardadas', noSavedRecipes: 'No hay recetas guardadas',
-      noSavedDesc: 'Toca el corazón en una receta para guardarla aquí.',
-      findRecipes: 'Buscar recetas →', shoppingList: 'Lista de compras',
+      savedRecipes: 'Recetas guardadas', noSavedRecipes: 'Tu colección de recetas te espera',
+      noSavedDesc: 'Encuentra una receta que te guste y toca el corazón. La próxima vez, tus favoritas estarán aquí.',
+      findRecipes: 'Encuentra tu primera favorita →', shoppingList: 'Lista de compras',
       clear: 'Borrar', shareList: 'Compartir lista 📤',
       navSearch: 'Buscar', navInspiration: 'Inspiración', navFavorites: 'Favoritos', navList: 'Lista',
       vegetariskt: 'Vegetariano', veganskt: 'Vegano', glutenfritt: 'Sin gluten',
@@ -434,11 +434,11 @@
       freetextHint: 'Escribe libremente — Amko entiende.',
       searchBtnHint: 'Añade al menos un ingrediente para buscar',
       inspirationTitle: 'Inspiración',
-      inspirationSub: 'Los favoritos de Amko y las cocinas del mundo — todo en un lugar',
+      inspirationSub: '¿No sabes qué cocinar? Explora las recomendaciones de Amko y cocinas del mundo. Toca cualquier plato y obtén la receta al instante.',
       arminSub: 'Favoritos seleccionados. Sin sesgo, solo buena comida. (Bueno, un poco.)',
-      listEmpty: 'La lista está vacía',
-      listEmptyDesc: 'Abre una receta y pulsa "Añadir a la lista" para recoger ingredientes aquí.',
-      listEmptyCta: 'Buscar recetas →',
+      listEmpty: 'Compra inteligente',
+      listEmptyDesc: 'Elige una receta, toca "Añadir a la lista" — y todo lo que necesitas se reúne aquí. Comparte con tu familia.',
+      listEmptyCta: 'Buscar recetas y armar tu lista →',
       authTitle: 'Inicia sesión o crea una cuenta',
       authDesc: 'Inicia sesión para guardar tus recetas favoritas y sincronizarlas.',
       authGoogle: 'Continuar con Google', authApple: 'Continuar con Apple',
@@ -463,7 +463,7 @@
       onboardingStep3Title: 'Guarda, cocina y compra',
       onboardingStep3Desc: 'Guarda favoritos, sigue paso a paso y envía la lista de compras.',
       onboardingCta: '¡Vamos!',
-      onboardingHint: 'Tu chef IA. Tus favoritos. Tu lista de compras — todo sincronizado.',
+      onboardingHint: 'Gratis para empezar. Sin cuenta necesaria. Más de 2.400 recetas creadas por cocineros como tú.',
       toastCopied: '¡Copiado! Compártelo.',
       toastListSent: 'Lista de compras enviada ✈️',
       toastListAdded: '¡Añadido! Hora de comprar.',
@@ -587,9 +587,9 @@
       orManual: 'ili piši ručno', inputHint: 'Enter za dodavanje. Zarez odvaja.',
       whatDoYouHave: 'Šta imaš kod kuće?', howPicky: 'Koliko si izbirljiv/a?',
       portions: 'Porcije', showRecipes: 'Prikaži recepte',
-      savedRecipes: 'Sačuvani recepti', noSavedRecipes: 'Nema sačuvanih recepata',
-      noSavedDesc: 'Pritisni srce na receptu da ga sačuvaš ovdje.',
-      findRecipes: 'Pronađi recepte →', shoppingList: 'Lista za kupovinu',
+      savedRecipes: 'Sačuvani recepti', noSavedRecipes: 'Tvoja kolekcija recepata čeka',
+      noSavedDesc: 'Pronađi recept koji ti se sviđa i pritisni srce. Sljedeći put, tvoji favoriti su ovdje.',
+      findRecipes: 'Pronađi prvi favorit →', shoppingList: 'Lista za kupovinu',
       clear: 'Obriši', shareList: 'Podijeli listu 📤',
       navSearch: 'Traži', navInspiration: 'Inspiracija', navFavorites: 'Favoriti', navList: 'Lista',
       vegetariskt: 'Vegetarijansko', veganskt: 'Vegansko', glutenfritt: 'Bez glutena',
@@ -603,11 +603,11 @@
       freetextHint: 'Piši slobodno — Amko razumije.',
       searchBtnHint: 'Dodaj barem jedan sastojak za pretragu',
       inspirationTitle: 'Inspiracija',
-      inspirationSub: 'Amkovi favoriti i kuhinje svijeta — sve na jednom mjestu',
+      inspirationSub: 'Ne znaš šta da kuhaš? Pregledaj Amkove preporuke i kuhinje svijeta. Pritisni jelo i dobij recept odmah.',
       arminSub: 'Ručno odabrani favoriti. Bez pristrasnosti, samo dobra hrana. (Dobro, malo.)',
-      listEmpty: 'Lista je prazna',
-      listEmptyDesc: 'Otvori recept i pritisni "Dodaj na listu" da sakupiš sastojke ovdje.',
-      listEmptyCta: 'Pronađi recepte →',
+      listEmpty: 'Kupuj pametnije',
+      listEmptyDesc: 'Odaberi recept, pritisni "Dodaj na listu" — i sve što trebaš kupiti se sakupi ovdje. Podijeli s porodicom.',
+      listEmptyCta: 'Pronađi recepte i napravi listu →',
       authTitle: 'Prijavi se ili kreiraj račun',
       authDesc: 'Prijavi se da sačuvaš favorite i sinhronizuješ ih svuda.',
       authGoogle: 'Nastavi s Googleom', authApple: 'Nastavi s Appleom',
@@ -632,7 +632,7 @@
       onboardingStep3Title: 'Sačuvaj, kuhaj i kupuj',
       onboardingStep3Desc: 'Sačuvaj favorite, prati korak po korak i pošalji listu za kupovinu.',
       onboardingCta: 'Idemo!',
-      onboardingHint: 'Tvoj AI kuhar. Tvoji favoriti. Tvoja lista — sve sinhronizovano.',
+      onboardingHint: 'Besplatno za početak. Bez računa. Preko 2.400 recepata kreiranih od kuhara poput tebe.',
       toastCopied: 'Kopirano! Podijeli.',
       toastListSent: 'Lista poslana na email ✈️',
       toastListAdded: 'Dodano! Vrijeme za kupovinu.',
@@ -1914,12 +1914,17 @@
 
   function renderHistory() {
     if (!searchHistory.length) { historySection.innerHTML = ''; return; }
+    const count = searchHistory.length;
+    const historyLabel = count === 1
+      ? 'Du har sökt 1 gång — tryck för att återskapa ditt recept'
+      : `Du har sökt ${count} gånger — Amko minns allt`;
     historySection.innerHTML = `
       <div class="history-section">
         <div class="history-header">
           <div class="history-title">${iconClock} ${t('historyTitle')}</div>
           <button class="history-clear-btn" id="historyClearBtn">${t('historyClear')}</button>
         </div>
+        <p class="history-section-label">${historyLabel}</p>
         ${searchHistory.slice(0, 5).map(entry => `
           <div class="history-item" data-hid="${entry.id}">
             <div class="history-ings">${entry.ingredients.map(i => esc(translateIng(i))).join(', ')}</div>
@@ -3892,6 +3897,36 @@
       if (logoContainer) logoContainer.innerHTML = appLogoSVG(64);
     }
   });
+
+  // Premium info toggle in footer
+  const premiumToggle = document.getElementById('premiumInfoToggle');
+  const premiumDetails = document.getElementById('premiumDetails');
+  if (premiumToggle && premiumDetails) {
+    premiumToggle.addEventListener('click', () => {
+      const isOpen = !premiumDetails.hidden;
+      premiumDetails.hidden = isOpen;
+      premiumToggle.classList.toggle('open', !isOpen);
+    });
+  }
+
+  // First-time user hint (shown once after onboarding is dismissed)
+  if (!localStorage.getItem('first_hint_seen') && localStorage.getItem('onboarding_seen')) {
+    const card = document.querySelector('#viewSearch .card');
+    if (card) {
+      const hint = document.createElement('div');
+      hint.className = 'first-time-hint';
+      hint.innerHTML = `
+        <span class="first-time-hint-icon">💡</span>
+        <span class="first-time-hint-text">Tips: Lägg till 2-3 ingredienser du har hemma, välj en preferens, och tryck "Visa recept". Amko gör resten!</span>
+        <button class="first-time-hint-close" aria-label="Stäng tips">&times;</button>
+      `;
+      card.insertBefore(hint, card.firstChild);
+      hint.querySelector('.first-time-hint-close').addEventListener('click', () => {
+        hint.remove();
+        try { localStorage.setItem('first_hint_seen', 'true'); } catch {}
+      });
+    }
+  }
 
   // Show changelog if new version
   const lastSeenVersion = loadStorage('changelog_seen', '0');

@@ -314,6 +314,42 @@ body {
   margin: 0 auto;
   line-height: 1.5;
 }
+
+/* ═══ SOCIAL PROOF ═══ */
+.social-proof {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 20px;
+  animation: fadeDown 0.5s ease-out 0.24s both;
+}
+.social-proof-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.social-proof-num {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--accent);
+  letter-spacing: -0.5px;
+}
+.social-proof-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.social-proof-divider {
+  width: 1px;
+  height: 28px;
+  background: var(--border-strong);
+  opacity: 0.5;
+}
+
 .theme-toggle {
   background: rgba(255,255,255,0.07);
   border: 1px solid rgba(255,255,255,0.12);
@@ -468,6 +504,29 @@ body {
   font-size: 13px;
   color: var(--text-secondary);
   line-height: 1.5;
+}
+/* Onboarding value props */
+.onboarding-value {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+  padding: 12px 16px;
+  background: var(--accent-surface, rgba(192,90,31,0.06));
+  border-radius: 12px;
+  border: 1px solid rgba(192,90,31,0.1);
+}
+.onboarding-value-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+.onboarding-value-icon {
+  font-size: 16px;
+  flex-shrink: 0;
 }
 .onboarding-cta {
   width: 100%;
@@ -2217,6 +2276,116 @@ body {
 }
 .footer-help-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-surface); }
 
+/* ═══ FOOTER PREMIUM SECTION ═══ */
+.footer-premium {
+  margin-bottom: 12px;
+}
+.footer-premium-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: 1px solid var(--border-strong);
+  border-radius: 100px;
+  padding: 8px 18px;
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.footer-premium-toggle:hover {
+  background: var(--accent-surface);
+  border-color: var(--accent);
+}
+.premium-chevron {
+  transition: transform 0.25s ease;
+}
+.footer-premium-toggle.open .premium-chevron {
+  transform: rotate(180deg);
+}
+.footer-premium-details {
+  margin-top: 12px;
+  text-align: left;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px 20px;
+  animation: fadeUp 0.25s ease-out;
+}
+.premium-feature-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.premium-feature {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.premium-feature-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.premium-feature div {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.premium-feature strong {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.1px;
+}
+.premium-feature span {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* ═══ HISTORY SECTION ENHANCED ═══ */
+.history-section-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  font-style: italic;
+}
+
+/* ═══ NEW USER TOOLTIP ═══ */
+.first-time-hint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: var(--accent-surface, rgba(192,90,31,0.06));
+  border: 1px solid rgba(192,90,31,0.12);
+  border-radius: 10px;
+  margin-bottom: 12px;
+  animation: fadeUp 0.3s ease-out;
+}
+.first-time-hint-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+.first-time-hint-text {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+.first-time-hint-close {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 16px;
+  padding: 4px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
 @keyframes inputPulse {
   0%, 100% { box-shadow: 0 0 0 0 rgba(192,90,31,0); }
   50% { box-shadow: 0 0 0 6px rgba(192,90,31,0.15); }
@@ -2292,6 +2461,9 @@ body {
 @media (max-width: 520px) {
   .hero-inner { padding: 48px 20px 36px; }
   .hero-title { font-size: 38px; letter-spacing: -1.5px; }
+  .social-proof { gap: 12px; margin-top: 16px; }
+  .social-proof-num { font-size: 16px; }
+  .social-proof-label { font-size: 10px; }
   .card { padding: 20px; border-radius: 14px; }
   .modal { padding: 12px 20px 48px; }
   .view-header { padding: 40px 16px 20px; }

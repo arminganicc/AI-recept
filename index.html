@@ -61,6 +61,22 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
       <div class="hero-eyebrow" data-i18n="heroEyebrow">Kvällens eviga dilemma</div>
       <h1 class="hero-title" data-i18n="heroTitle">Vad ska vi laga?</h1>
       <p class="hero-sub">Släng in vad du har. Amko löser middagen.</p>
+      <div class="social-proof" id="socialProof">
+        <div class="social-proof-item">
+          <span class="social-proof-num" id="proofRecipes">2 400+</span>
+          <span class="social-proof-label">recept skapade</span>
+        </div>
+        <div class="social-proof-divider"></div>
+        <div class="social-proof-item">
+          <span class="social-proof-num" id="proofUsers">600+</span>
+          <span class="social-proof-label">matlagare</span>
+        </div>
+        <div class="social-proof-divider"></div>
+        <div class="social-proof-item">
+          <span class="social-proof-num">4.8</span>
+          <span class="social-proof-label">snittbetyg</span>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -94,8 +110,22 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
             </div>
           </div>
         </div>
+        <div class="onboarding-value">
+          <div class="onboarding-value-item">
+            <span class="onboarding-value-icon">✨</span>
+            <span>AI som förstår dina ingredienser</span>
+          </div>
+          <div class="onboarding-value-item">
+            <span class="onboarding-value-icon">📸</span>
+            <span>Fota kylskåpet — vi sköter resten</span>
+          </div>
+          <div class="onboarding-value-item">
+            <span class="onboarding-value-icon">🛒</span>
+            <span>Inköpslista med ett tryck</span>
+          </div>
+        </div>
         <button class="onboarding-cta" id="onboardingClose">Okej, jag är hungrig — kör!</button>
-        <p class="onboarding-hint">Gratis. Inget konto krävs. Inga konstigheter. Bara mat.</p>
+        <p class="onboarding-hint">Gratis att börja. Inget konto krävs. Över 2 400 recept skapade av matlagare som du.</p>
       </div>
     </div>
 
@@ -144,7 +174,7 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         </button>
       </div>
-      <p class="hint" data-i18n="inputHint">Enter lägger till. Komma separerar.</p>
+      <p class="hint" data-i18n="inputHint">Enter lägger till. Komma separerar. Lägg till minst 2-3 ingredienser för bäst resultat.</p>
 
       <div class="divider"></div>
       <div class="quick-label" data-i18n="whatDoYouHave">Vad har du hemma?</div>
@@ -189,7 +219,7 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
 <section class="view" id="viewInspiration" hidden aria-label="Inspiration">
   <div class="view-header">
     <h2 class="view-title">Inspiration</h2>
-    <p class="view-sub">Amkos favoriter och världens kök — allt på ett ställe</p>
+    <p class="view-sub">Vet inte vad du vill laga? Bläddra bland Amkos favoriter och världens kök. Tryck, och receptet genereras direkt.</p>
   </div>
   <div class="view-content">
 
@@ -226,9 +256,9 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
       <div class="empty-icon">
         <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
       </div>
-      <p class="empty-title" data-i18n="noSavedRecipes">Inga sparade recept ännu</p>
-      <p class="empty-desc" data-i18n="noSavedDesc">Tryck på hjärtat på ett recept för att spara det här.</p>
-      <button class="empty-cta" id="emptyCtaBtn" data-i18n="findRecipes">Hitta recept &rarr;</button>
+      <p class="empty-title" data-i18n="noSavedRecipes">Din receptsamling väntar</p>
+      <p class="empty-desc" data-i18n="noSavedDesc">Hitta ett recept du gillar och tryck på hjärtat. Nästa gång slipper du fundera — dina favoriter finns här, redo att lagas.</p>
+      <button class="empty-cta" id="emptyCtaBtn" data-i18n="findRecipes">Hitta ditt första favoritrecept &rarr;</button>
     </div>
     <div class="fav-search-wrapper" id="favSearchWrapper" style="display:none">
       <input class="fav-search-input" id="favSearchInput" type="text" placeholder="Sök bland favoriter..." autocomplete="off">
@@ -264,9 +294,9 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
       <div class="empty-icon">
         <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
       </div>
-      <p class="empty-title">Listan är tom</p>
-      <p class="empty-desc">Öppna ett recept och tryck "Lägg till i inköpslistan" för att samla ingredienser här.</p>
-      <button class="empty-cta" onclick="window.__switchView && window.__switchView('search')">Hitta recept &rarr;</button>
+      <p class="empty-title">Handla smartare, inte mer</p>
+      <p class="empty-desc">Välj ett recept, tryck "Lägg till i inköpslistan" — och allt du behöver handla samlas här. Dela listan med dig själv eller familjen.</p>
+      <button class="empty-cta" onclick="window.__switchView && window.__switchView('search')">Hitta recept och bygg din lista &rarr;</button>
     </div>
     <div id="shoppingListContent"></div>
   </div>
@@ -431,6 +461,53 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
 
 <footer class="app-footer">
   <div class="footer-inner">
+    <!-- Premium info section -->
+    <div class="footer-premium" id="footerPremium">
+      <button class="footer-premium-toggle" id="premiumInfoToggle">
+        <span>✨ Vad ingår i Premium?</span>
+        <svg class="premium-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="footer-premium-details" id="premiumDetails" hidden>
+        <div class="premium-feature-list">
+          <div class="premium-feature">
+            <span class="premium-feature-icon">🔓</span>
+            <div>
+              <strong>Obegränsade sökningar</strong>
+              <span>Sök så mycket du vill, varje dag</span>
+            </div>
+          </div>
+          <div class="premium-feature">
+            <span class="premium-feature-icon">📸</span>
+            <div>
+              <strong>Kylskåpsfoto</strong>
+              <span>Fota kylskåpet — AI:n identifierar råvarorna</span>
+            </div>
+          </div>
+          <div class="premium-feature">
+            <span class="premium-feature-icon">👨‍🍳</span>
+            <div>
+              <strong>Kokläge</strong>
+              <span>Steg-för-steg guide med timer</span>
+            </div>
+          </div>
+          <div class="premium-feature">
+            <span class="premium-feature-icon">🛒</span>
+            <div>
+              <strong>Inköpslista och delning</strong>
+              <span>Samla ingredienser och dela via mejl</span>
+            </div>
+          </div>
+          <div class="premium-feature">
+            <span class="premium-feature-icon">💬</span>
+            <div>
+              <strong>"Berätta fritt"-läge</strong>
+              <span>Beskriv vad du vill ha — Amko fixar det</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="footer-links">
       <span class="footer-link">🍝 Drivs av panik kl 17:00</span>
       <span class="footer-divider">·</span>
