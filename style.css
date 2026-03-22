@@ -1134,6 +1134,243 @@ body {
   margin-top: 8px;
 }
 
+/* ═══ CHEF COMMENT ═══ */
+.chef-comment {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: var(--accent-surface);
+  border: 1px solid rgba(192,90,31,0.12);
+  border-radius: 14px;
+  padding: 16px 18px;
+  margin-bottom: 14px;
+  animation: fadeUp 0.3s ease-out;
+}
+.chef-icon { font-size: 24px; flex-shrink: 0; margin-top: 2px; }
+.chef-comment p {
+  font-size: 14px;
+  font-style: italic;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ═══ MISSING GLOBALLY ═══ */
+.missing-globally {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 10px 14px;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 14px;
+}
+.missing-icon { color: var(--text-muted); display: flex; align-items: center; }
+.missing-label { font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+.missing-chip {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-strong);
+  border-radius: 100px;
+  padding: 4px 12px;
+  font-size: 13px;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+/* ═══ SUGGESTED SWAPS ═══ */
+.suggested-swaps {
+  display: flex;
+  overflow-x: auto;
+  gap: 8px;
+  padding-bottom: 4px;
+  margin-bottom: 14px;
+  scrollbar-width: none;
+}
+.suggested-swaps::-webkit-scrollbar { display: none; }
+.swap-chip {
+  flex-shrink: 0;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+/* ═══ RECIPE TAG ═══ */
+.recipe-tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+.tag-fast { background: rgba(59,130,246,0.1); color: #2563EB; }
+.tag-ambitious { background: rgba(139,92,246,0.1); color: #7C3AED; }
+.tag-unexpected { background: rgba(245,158,11,0.1); color: #D97706; }
+.tag-zerowaste { background: rgba(16,185,129,0.1); color: #059669; }
+[data-theme="dark"] .tag-fast { background: rgba(96,165,250,0.12); color: #93C5FD; }
+[data-theme="dark"] .tag-ambitious { background: rgba(167,139,250,0.12); color: #C4B5FD; }
+[data-theme="dark"] .tag-unexpected { background: rgba(251,191,36,0.12); color: #FCD34D; }
+[data-theme="dark"] .tag-zerowaste { background: rgba(52,211,153,0.12); color: #6EE7B7; }
+.modal-tag { margin-bottom: 12px; }
+
+/* ═══ RECIPE WEEK TIP ═══ */
+.recipe-week-tip {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-bottom: 10px;
+  padding-left: 2px;
+}
+
+/* ═══ DIFFICULTY REASON ═══ */
+.difficulty-reason {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: -4px;
+  margin-bottom: 8px;
+}
+
+/* ═══ MISSING INGREDIENTS ROW ═══ */
+.missing-ing-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 12px 0;
+}
+.missing-ing-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+.missing-ing-chip {
+  background: rgba(196,64,64,0.08);
+  border: 1px solid rgba(196,64,64,0.15);
+  border-radius: 100px;
+  padding: 3px 10px;
+  font-size: 12px;
+  color: #C44040;
+  font-weight: 500;
+}
+[data-theme="dark"] .missing-ing-chip {
+  background: rgba(240,112,112,0.1);
+  border-color: rgba(240,112,112,0.2);
+  color: #F07070;
+}
+
+/* ═══ NUTRITION PILLS ═══ */
+.nutrition-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 16px 0;
+}
+.nutrition-pill {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+.nutrition-pill.highlight {
+  background: rgba(16,185,129,0.1);
+  border-color: rgba(16,185,129,0.2);
+  color: #059669;
+}
+[data-theme="dark"] .nutrition-pill.highlight {
+  background: rgba(52,211,153,0.1);
+  border-color: rgba(52,211,153,0.15);
+  color: #6EE7B7;
+}
+
+/* ═══ SUBSTITUTIONS ═══ */
+.substitutions-section {
+  margin: 16px 0;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.substitutions-toggle {
+  padding: 12px 16px;
+  font-family: var(--font);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  list-style: none;
+  transition: color 0.15s;
+}
+.substitutions-toggle::-webkit-details-marker { display: none; }
+.substitutions-toggle:hover { color: var(--accent); }
+.substitutions-list {
+  padding: 0 16px 12px;
+}
+.substitution-item {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  padding: 4px 0;
+}
+
+/* ═══ STEP TIP ═══ */
+.step-tip {
+  background: rgba(59,130,246,0.06);
+  border: 1px solid rgba(59,130,246,0.1);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: #2563EB;
+  margin: -8px 0 16px 44px;
+  line-height: 1.5;
+}
+[data-theme="dark"] .step-tip {
+  background: rgba(96,165,250,0.08);
+  border-color: rgba(96,165,250,0.12);
+  color: #93C5FD;
+}
+.step-duration {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  margin-left: 6px;
+}
+.cook-mode-tip {
+  font-size: 16px;
+  color: var(--text-secondary);
+  margin-top: 16px;
+  font-style: italic;
+}
+
+/* ═══ LEFTOVERS BANNER ═══ */
+.leftovers-banner {
+  background: rgba(16,185,129,0.08);
+  border: 1px solid rgba(16,185,129,0.15);
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-size: 13px;
+  color: #059669;
+  margin-top: 16px;
+  line-height: 1.5;
+}
+[data-theme="dark"] .leftovers-banner {
+  background: rgba(52,211,153,0.08);
+  border-color: rgba(52,211,153,0.12);
+  color: #6EE7B7;
+}
+
 /* ═══ EMAIL PICKER ═══ */
 .email-picker-overlay {
   position: fixed; inset: 0;

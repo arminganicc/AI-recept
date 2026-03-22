@@ -76,6 +76,10 @@
   let searchPortions = 4;
   let prefs = new Set();
   const recipeCache = new Map();
+  let conversationHistory = [];
+  let lastChefComment = '';
+  let lastMissingGlobally = [];
+  let lastSuggestedSwaps = [];
 
   function loadStorage(key, fallback) {
     try { return JSON.parse(localStorage.getItem(key) || 'null') ?? fallback; }
@@ -846,7 +850,11 @@
 
     const cacheKey = getCacheKey();
     if (recipeCache.has(cacheKey)) {
-      recipes = recipeCache.get(cacheKey);
+      const cached = recipeCache.get(cacheKey);
+      recipes = cached.recipes || cached;
+      lastChefComment = cached.chef_comment || '';
+      lastMissingGlobally = cached.missing_globally || [];
+      lastSuggestedSwaps = cached.suggested_swaps || [];
       renderRecipes();
       showToast('Hämtat från cache');
       setTimeout(() => recipeList.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
@@ -865,40 +873,22 @@
           </div>
         `).join('')}
       </div>
-      <div class="loading-label">Kokar ihop förslag<span class="loading-dots"></span></div>
+      <div class="loading-label">Magnus kokar ihop förslag<span class="loading-dots"></span></div>
     `;
     recipeList.innerHTML = '';
     errBox.style.display = 'none';
     searchBtn.disabled = true;
 
-    let prefText = '';
-    if (prefs.size > 0) {
-      const labels = [];
-      if (prefs.has('vegetariskt')) labels.push('vegetariska');
-      if (prefs.has('veganskt'))    labels.push('veganska');
-      if (prefs.has('glutenfritt')) labels.push('glutenfria');
-      if (prefs.has('snabbt'))      labels.push('snabba (under 30 minuter)');
-      prefText = `\nRecepten MÅSTE vara ${labels.join(' och ')}.`;
-    }
-
-    const prompt = `Du är en erfaren svensk receptskribent. Ge mig exakt 4 OLIKA receptförslag baserade på dessa ingredienser: ${ingredients.join(', ')}.
-
-Regler:
-- Basvaror som salt, peppar, olja, smör, vatten är ok att använda
-- Recepten ska vara för ${searchPortions} portioner
-- Ange exakta mängder i ingredienslistan (t.ex. "300g kycklingfilé", "2 dl vispgrädde", "1 stor lök")
-- Stegen ska vara detaljerade med minst 4-6 steg per recept
-- Svårighetsgrad: ENBART "Lätt", "Medel" eller "Avancerad"
-- Ge varierade förslag — olika kök och tillagningssätt${prefText}
-
-Svara ENBART med giltig JSON (inga kodblock, inga backticks, ingen annan text):
-{"recipes":[{"name":"Receptnamn","time":"30 min","difficulty":"Lätt","servings":${searchPortions},"description":"En lockande beskrivning.","ingredients":["300g kyckling","2 dl grädde"],"steps":["Detaljerat steg 1.","Detaljerat steg 2."]}]}`;
-
     try {
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt })
+        body: JSON.stringify({
+          ingredients: [...ingredients],
+          portions: searchPortions,
+          prefs: [...prefs],
+          conversationHistory
+        })
       });
 
       if (!res.ok) {
@@ -921,7 +911,11 @@ Svara ENBART med giltig JSON (inga kodblock, inga backticks, ingen annan text):
       recipes = parsed.recipes || [];
       if (!recipes.length) throw new Error('Inga recept returnerades — försök med andra ingredienser.');
 
-      recipeCache.set(cacheKey, recipes);
+      lastChefComment = parsed.chef_comment || '';
+      lastMissingGlobally = parsed.missing_globally || [];
+      lastSuggestedSwaps = parsed.suggested_swaps || [];
+
+      recipeCache.set(cacheKey, parsed);
       renderRecipes();
       initTilt(recipeList);
       saveToHistory(ingredients, recipes);
@@ -940,18 +934,64 @@ Svara ENBART med giltig JSON (inga kodblock, inga backticks, ingen annan text):
 
   searchBtn.addEventListener('click', () => { haptic('medium'); findRecipes(); });
 
+  // ─── Tag helpers ───
+  function tagClass(tag) {
+    const t = (tag || '').toLowerCase();
+    if (t.includes('snabbaste')) return 'tag-fast';
+    if (t.includes('ambitiösa')) return 'tag-ambitious';
+    if (t.includes('oväntat')) return 'tag-unexpected';
+    if (t.includes('svinn')) return 'tag-zerowaste';
+    return 'tag-fast';
+  }
+
   // ─── Render Recipes ───
   function renderRecipes() {
     if (!recipes.length) { recipeList.innerHTML = ''; return; }
+
+    let headerHTML = '';
+
+    // Chef comment
+    if (lastChefComment) {
+      headerHTML += `
+        <div class="chef-comment">
+          <span class="chef-icon">👨‍🍳</span>
+          <p>${esc(lastChefComment)}</p>
+        </div>
+      `;
+    }
+
+    // Missing globally
+    if (lastMissingGlobally.length) {
+      headerHTML += `
+        <div class="missing-globally">
+          <span class="missing-icon">${iconShop}</span>
+          <span class="missing-label">Köp även:</span>
+          ${lastMissingGlobally.map(m => `<span class="missing-chip">${esc(m)}</span>`).join('')}
+        </div>
+      `;
+    }
+
+    // Suggested swaps
+    if (lastSuggestedSwaps.length) {
+      headerHTML += `
+        <div class="suggested-swaps">
+          ${lastSuggestedSwaps.map(s => `<span class="swap-chip">💡 ${esc(s)}</span>`).join('')}
+        </div>
+      `;
+    }
+
     recipeList.innerHTML = `
       <div class="recipes-header">
         <div class="recipes-title">Här är ${recipes.length} förslag</div>
         <div class="recipes-subtitle">Öppna för fullständigt recept</div>
       </div>
+      ${headerHTML}
     ` + recipes.map((r, i) => {
       const rating = ratings[r.name] || 0;
+      const tag = r.tag || '';
       return `
         <div class="recipe-card" data-idx="${i}">
+          ${tag ? `<span class="recipe-tag ${tagClass(tag)}">${esc(tag)}</span>` : ''}
           <div class="recipe-top">
             <div class="recipe-name">${esc(r.name)}</div>
             <button class="fav-btn${isFav(r.name) ? ' active' : ''}" data-fav="${i}" aria-label="Spara favorit">${iconHeart(isFav(r.name))}</button>
@@ -960,9 +1000,11 @@ Svara ENBART med giltig JSON (inga kodblock, inga backticks, ingen annan text):
             <span class="badge">${iconClock} ${esc(r.time)}</span>
             <span class="badge ${difficultyClass(r.difficulty)}">${esc(r.difficulty)}</span>
             <span class="badge">${(r.ingredients || []).length} ingredienser</span>
+            ${r.nutrition_per_serving?.highlight ? `<span class="badge nutrition-hl">${esc(r.nutrition_per_serving.highlight)}</span>` : ''}
             ${rating > 0 ? `<span class="badge rated">${'★'.repeat(rating)}</span>` : ''}
           </div>
           <div class="recipe-desc">${esc(r.description)}</div>
+          ${r.week_tip ? `<div class="recipe-week-tip">${esc(r.week_tip)}</div>` : ''}
           <div class="see-more">Visa recept &rarr;</div>
         </div>
       `;
@@ -1085,6 +1127,39 @@ Svara ENBART med giltig JSON (inga kodblock, inga backticks, ingen annan text):
       ).join('');
     }
 
+    // Handle both old format (string steps) and new format (object steps)
+    const steps = (r.steps || []).map(s => typeof s === 'string' ? { instruction: s } : s);
+
+    // Nutrition pills
+    const nutrition = r.nutrition_per_serving;
+    const nutritionHTML = nutrition ? `
+      <div class="nutrition-pills">
+        <span class="nutrition-pill">${nutrition.calories || '—'} kcal</span>
+        <span class="nutrition-pill">P: ${nutrition.protein_g || '—'}g</span>
+        <span class="nutrition-pill">K: ${nutrition.carbs_g || '—'}g</span>
+        <span class="nutrition-pill">F: ${nutrition.fat_g || '—'}g</span>
+        ${nutrition.highlight ? `<span class="nutrition-pill highlight">${esc(nutrition.highlight)}</span>` : ''}
+      </div>
+    ` : '';
+
+    // Substitutions
+    const subsHTML = (r.substitutions && r.substitutions.length) ? `
+      <details class="substitutions-section">
+        <summary class="substitutions-toggle">💡 Saknar du något?</summary>
+        <div class="substitutions-list">
+          ${r.substitutions.map(s => `<p class="substitution-item">${esc(s)}</p>`).join('')}
+        </div>
+      </details>
+    ` : '';
+
+    // Missing ingredients
+    const missingHTML = (r.missing_ingredients && r.missing_ingredients.length && r.missing_ingredients[0] !== 'Du har allt!') ? `
+      <div class="missing-ing-row">
+        <span class="missing-ing-label">Saknas:</span>
+        ${r.missing_ingredients.map(m => `<span class="missing-ing-chip">${esc(m)}</span>`).join('')}
+      </div>
+    ` : '';
+
     modal.innerHTML = `
       <div class="modal-top">
         <div class="modal-title">${esc(r.name)}</div>
@@ -1104,11 +1179,16 @@ Svara ENBART med giltig JSON (inga kodblock, inga backticks, ingen annan text):
         </div>
       </div>
 
+      ${r.tag ? `<span class="recipe-tag modal-tag ${tagClass(r.tag)}">${esc(r.tag)}</span>` : ''}
+
       <div class="badges modal-badges">
         <span class="badge">${iconClock} ${esc(r.time)}</span>
         <span class="badge ${difficultyClass(r.difficulty)}">${esc(r.difficulty)}</span>
       </div>
+      ${r.difficulty_reason ? `<div class="difficulty-reason">${esc(r.difficulty_reason)}</div>` : ''}
       <div class="recipe-desc">${esc(r.description)}</div>
+
+      ${missingHTML}
 
       <div class="portions-row">
         <span class="portions-label">Portioner</span>
@@ -1124,12 +1204,19 @@ Svara ENBART med giltig JSON (inga kodblock, inga backticks, ingen annan text):
         ${(r.ingredients || []).map(ing => `<div class="ing-item"><span class="dot"></span>${esc(ing)}</div>`).join('')}
       </div>
 
+      ${nutritionHTML}
+      ${subsHTML}
+
       <div class="section-lbl">Gör så här</div>
-      ${(r.steps || []).map((s, i) => `
+      ${steps.map((s, i) => `
         <div class="step-row">
           <div class="step-num">${i + 1}</div>
-          <div class="step-text">${esc(s)}</div>
+          <div class="step-text">
+            ${esc(s.instruction || s)}
+            ${s.duration_minutes ? `<span class="step-duration">⏱ ${s.duration_minutes} min</span>` : ''}
+          </div>
         </div>
+        ${s.tip ? `<div class="step-tip">💡 ${esc(s.tip)}</div>` : ''}
       `).join('')}
 
       <button class="add-to-shop-btn" id="addToShopBtn">
@@ -1139,6 +1226,8 @@ Svara ENBART med giltig JSON (inga kodblock, inga backticks, ingen annan text):
       <button class="cook-mode-start-btn" id="startCookMode">
         🍳 Starta kokläge
       </button>
+
+      ${r.leftovers_tip ? `<div class="leftovers-banner">♻️ ${esc(r.leftovers_tip)}</div>` : ''}
 
       <div class="rating-row">
         <span class="rating-label">Betygsätt receptet</span>
@@ -1276,9 +1365,14 @@ Svara ENBART med giltig JSON (inga kodblock, inga backticks, ingen annan text):
 
     indicator.textContent = `Steg ${cookModeStep + 1} av ${steps.length}`;
 
+    const step = steps[cookModeStep];
+    const stepText = typeof step === 'string' ? step : (step?.instruction || '');
+    const stepTip = typeof step === 'object' ? step?.tip : '';
+
     body.innerHTML = `
       <div class="step-number">${cookModeStep + 1}</div>
-      <div class="step-content">${esc(steps[cookModeStep] || '')}</div>
+      <div class="step-content">${esc(stepText)}</div>
+      ${stepTip ? `<div class="cook-mode-tip">💡 ${esc(stepTip)}</div>` : ''}
     `;
 
     prevBtn.disabled = cookModeStep === 0;
