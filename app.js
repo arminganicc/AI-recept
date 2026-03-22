@@ -919,8 +919,8 @@
     showToast('Inköpslistan rensad');
   });
 
-  // Send list by email
-  document.getElementById('sendList')?.addEventListener('click', () => sendShoppingList());
+  // Share shopping list
+  document.getElementById('sendList')?.addEventListener('click', () => shareShoppingList());
 
   function getListText() {
     const unchecked = shoppingList.filter(i => !i.checked);
@@ -935,85 +935,25 @@
     ).join('\n\n');
   }
 
-  function sendViaGmail(body, subject) {
-    const email = currentUser?.email || '';
-    window.open(`https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(email)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`, '_blank');
-  }
-
-  function sendViaOutlook(body, subject) {
-    const email = currentUser?.email || '';
-    window.open(`https://outlook.live.com/mail/0/deeplink/compose?to=${encodeURIComponent(email)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`, '_blank');
-  }
-
-  function sendViaMailto(body, subject) {
-    const email = currentUser?.email || '';
-    window.open(`mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`);
-  }
-
-  function showEmailPicker() {
+  async function shareShoppingList() {
     const unchecked = shoppingList.filter(i => !i.checked);
     if (!unchecked.length) { showToast('emptyList'); return; }
 
-    const body = getListText();
-    const subject = 'Inköpslista från Vad ska vi laga?';
+    const text = getListText();
+    haptic('medium');
 
-    // Create picker overlay
-    const picker = document.createElement('div');
-    picker.className = 'email-picker-overlay';
-    picker.innerHTML = `
-      <div class="email-picker">
-        <div class="email-picker-title">Skicka via</div>
-        <button class="email-picker-option" data-method="gmail">
-          <span class="email-picker-icon">📧</span>
-          <span>Gmail</span>
-        </button>
-        <button class="email-picker-option" data-method="outlook">
-          <span class="email-picker-icon">📬</span>
-          <span>Outlook</span>
-        </button>
-        <button class="email-picker-option" data-method="mailto">
-          <span class="email-picker-icon">✉️</span>
-          <span>Standard e-post</span>
-        </button>
-        <button class="email-picker-option" data-method="copy">
-          <span class="email-picker-icon">📋</span>
-          <span>Kopiera listan</span>
-        </button>
-        <button class="email-picker-cancel">Avbryt</button>
-      </div>
-    `;
-
-    picker.addEventListener('click', async (e) => {
-      const option = e.target.closest('.email-picker-option');
-      const cancel = e.target.closest('.email-picker-cancel');
-
-      if (cancel || e.target === picker) {
-        picker.remove();
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: 'Inköpslista', text });
         return;
       }
-
-      if (!option) return;
-      const method = option.dataset.method;
-
-      if (method === 'gmail') sendViaGmail(body, subject);
-      else if (method === 'outlook') sendViaOutlook(body, subject);
-      else if (method === 'mailto') sendViaMailto(body, subject);
-      else if (method === 'copy') {
-        try {
-          await navigator.clipboard.writeText(body);
-          showToast('copied');
-        } catch { showToast('Kunde inte kopiera'); }
-      }
-
-      haptic('medium');
-      picker.remove();
-    });
-
-    document.body.appendChild(picker);
-  }
-
-  async function sendShoppingList() {
-    showEmailPicker();
+    } catch (e) {
+      if (e.name === 'AbortError') return;
+    }
+    try {
+      await navigator.clipboard.writeText(text);
+      showToast('copied');
+    } catch { showToast('Kunde inte dela'); }
   }
 
   // ─── Find Recipes ───
