@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Vad ska vi laga?</title>
-<meta name="description" content="Vad ska vi laga? Skriv in dina ingredienser eller fota kylskåpet, så föreslår vår AI fyra recept du kan laga direkt. Gratis, ingen inloggning krävs. Spara favoriter, skapa inköpslistor och följ steg-för-steg i kokläge.">
+<meta name="description" content="Vad ska vi laga? Din AI-receptassistent Amko. Skriv in ingredienser eller fota kylskåpet — få 8 skräddarsydda recept på sekunder. Kokläge steg-för-steg, smart inköpslista och favoriter som synkas överallt.">
 <meta name="theme-color" content="#F7F4EF">
 <link rel="manifest" href="/manifest.json">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -15,7 +15,7 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
 </script>
 <!-- SEO: Open Graph -->
 <meta property="og:title" content="Vad ska vi laga?">
-<meta property="og:description" content="Skriv in dina ingredienser eller fota kylskåpet — AI:n föreslår 8 recept du kan laga direkt. Gratis, ingen inloggning krävs.">
+<meta property="og:description" content="Berätta vad du har hemma — Amko ger dig 8 recept på sekunder. Fota kylskåpet, följ kokläge steg-för-steg och handla smartare med inköpslistan.">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="sv_SE">
 <meta property="og:image" content="/og-image.jpg">
@@ -23,7 +23,7 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
 <!-- SEO: Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Vad ska vi laga?">
-<meta name="twitter:description" content="AI-driven recepthjälp. Släng in vad du har hemma — få 8 recept direkt.">
+<meta name="twitter:description" content="Berätta vad du har hemma — Amko ger dig 8 recept på sekunder. Din AI-receptassistent med kokläge och smart inköpslista.">
 <!-- SEO: Canonical -->
 <link rel="canonical" href="https://vadskavialaga.se/">
 <!-- Performance: preconnect to Google Fonts -->
@@ -58,9 +58,9 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
         </div>
       </div>
       <div class="hero-logo" id="heroLogo"></div>
-      <div class="hero-eyebrow" data-i18n="heroEyebrow">Kvällens eviga dilemma</div>
+      <div class="hero-eyebrow" data-i18n="heroEyebrow">Din AI-receptassistent</div>
       <h1 class="hero-title" data-i18n="heroTitle">Vad ska vi laga?</h1>
-      <p class="hero-sub">Släng in vad du har. Amko löser middagen.</p>
+      <p class="hero-sub">Berätta vad du har hemma. Amko ger dig recept på sekunder.</p>
     </div>
   </header>
 
@@ -69,33 +69,33 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
     <div class="onboarding-overlay" id="onboardingOverlay" hidden role="dialog" aria-modal="true" aria-label="Välkomstguide">
       <div class="onboarding-modal">
         <div class="onboarding-logo" id="onboardingLogo"></div>
-        <h2 class="onboarding-title">Välkommen! Middagsstressen slutar här.</h2>
-        <p class="onboarding-subtitle">Tre steg. Ingen kokskola krävs. Så här funkar det:</p>
+        <h2 class="onboarding-title">Välkommen till Amko</h2>
+        <p class="onboarding-subtitle">Från ingredienser till färdig middag i tre enkla steg:</p>
         <div class="onboarding-steps">
           <div class="onboarding-step">
             <div class="onboarding-step-num">1</div>
             <div class="onboarding-step-text">
               <strong>Berätta vad du har hemma</strong>
-              <span>Skriv in dina ingredienser eller fota kylskåpet — vi identifierar råvarorna. Ja, även den där ensamma paprikans i bakre hörnet.</span>
+              <span>Skriv in dina ingredienser eller fota kylskåpet — Amko identifierar råvarorna automatiskt.</span>
             </div>
           </div>
           <div class="onboarding-step">
             <div class="onboarding-step-num">2</div>
             <div class="onboarding-step-text">
-              <strong>Få 8 recept direkt</strong>
-              <span>Amko föreslår allt från "klart på 15 min" till "imponera på middagsgästerna". Du väljer ambitionsnivå.</span>
+              <strong>Få 8 skräddarsydda recept</strong>
+              <span>Amko anpassar recepten efter dina ingredienser och önskemål — från snabba vardagsrätter till festmiddagar.</span>
             </div>
           </div>
           <div class="onboarding-step">
             <div class="onboarding-step-num">3</div>
             <div class="onboarding-step-text">
               <strong>Laga, spara, handla</strong>
-              <span>Följ receptet steg-för-steg i kokläge, spara favoriter, och skicka inköpslistan till dig själv. Resten sköter du.</span>
+              <span>Följ receptet steg-för-steg i kokläge, spara favoriter och skicka inköpslistan till din mejl.</span>
             </div>
           </div>
         </div>
-        <button class="onboarding-cta" id="onboardingClose">Okej, jag är hungrig — kör!</button>
-        <p class="onboarding-hint">Gratis. Inget konto krävs. Inga konstigheter. Bara mat.</p>
+        <button class="onboarding-cta" id="onboardingClose">Kom igång</button>
+        <p class="onboarding-hint">Din AI-kock. Dina favoriter. Din inköpslista — allt synkat.</p>
       </div>
     </div>
 
@@ -113,7 +113,7 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
       <div id="freetextMode" hidden role="tabpanel" aria-labelledby="tabFreetext">
         <label class="card-label" for="freetextInput">Berätta vad du är sugen på</label>
         <textarea class="freetext-input" id="freetextInput" rows="3" maxlength="500" placeholder="T.ex. 'Planera 5 middagar för en student under 200 kr', 'Sugen på Balkan', 'Barnvänlig veckomeny', 'Festmiddag för 8 pers', 'Proteinrik lunch som mättar hela dan'..."></textarea>
-        <p class="hint">Skriv fritt — Amko fattar vad du menar.</p>
+        <p class="hint">Skriv fritt — Amko förstår vad du menar.</p>
       </div>
 
       <!-- Ingredient mode (default) -->
@@ -153,7 +153,7 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
       </div><!-- /ingredientMode -->
 
       <div class="divider"></div>
-      <div class="quick-label" data-i18n="howPicky">Hur kräsen är du?</div>
+      <div class="quick-label" data-i18n="howPicky">Anpassa dina recept</div>
       <div class="pref-chips" id="prefChips">
         <button class="pref-chip" data-pref="vegetariskt" aria-pressed="false">Vegetariskt</button>
         <button class="pref-chip" data-pref="veganskt" aria-pressed="false">Veganskt</button>
@@ -189,7 +189,7 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
 <section class="view" id="viewInspiration" hidden aria-label="Inspiration">
   <div class="view-header">
     <h2 class="view-title">Inspiration</h2>
-    <p class="view-sub">Amkos favoriter och världens kök — allt på ett ställe</p>
+    <p class="view-sub">Amkos bästa rekommendationer och världens kök — samlat åt dig</p>
   </div>
   <div class="view-content">
 
@@ -199,7 +199,7 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
         <span class="armin-emoji">👨‍🍳</span>
         <div>
           <h3 class="armin-title">Amko rekommenderar</h3>
-          <p class="armin-sub">Handplockade favoriter. Ingen jäv, bara bra mat. (Okej, lite jäv.)</p>
+          <p class="armin-sub">Handplockade recept som alltid levererar. Testat och godkänt.</p>
         </div>
       </div>
       <div class="armin-picks" id="arminPicks"></div>
@@ -306,8 +306,8 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
         <div class="auth-icon">
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         </div>
-        <h2 class="auth-title">Logga in eller skapa konto</h2>
-        <p class="auth-desc">Logga in för att spara dina favoritrecept och synka dem överallt. Välj ditt sätt.</p>
+        <h2 class="auth-title">Ditt konto, dina recept</h2>
+        <p class="auth-desc">Skapa ett konto för att synka favoriter, inköpslistor och recept mellan alla dina enheter.</p>
 
         <!-- OAuth providers -->
         <div class="auth-oauth-btns">
@@ -326,15 +326,15 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
         <div class="auth-benefits">
           <div class="benefit-item">
             <span class="benefit-icon">❤️</span>
-            <span>Favoriter synkas på alla enheter</span>
+            <span>Favoriter och inställningar synkas automatiskt</span>
           </div>
           <div class="benefit-item">
             <span class="benefit-icon">🛒</span>
-            <span>Skicka inköpslistan till din mejl</span>
+            <span>Skicka inköpslistan direkt till din mejl</span>
           </div>
           <div class="benefit-item">
             <span class="benefit-icon">🔁</span>
-            <span>Kom tillbaka till dina recept var som helst</span>
+            <span>Tillgång till dina recept var du än är</span>
           </div>
         </div>
         <label for="authEmail" class="visually-hidden">E-postadress</label>
@@ -343,7 +343,7 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
         <input type="password" id="authPassword" class="auth-input" placeholder="Lösenord (minst 6 tecken)" autocomplete="current-password">
         <button class="auth-btn" id="authSubmit">Logga in</button>
         <button class="auth-toggle-mode" id="authToggleMode">Har inget konto? <strong>Skapa ett här</strong></button>
-        <p class="auth-privacy">Vi lagrar bara din e-postadress. Ingen spam, inga nyhetsbrev, bara recept.</p>
+        <p class="auth-privacy">Vi värnar om din integritet. Ingen spam, inga nyhetsbrev — bara dina recept.</p>
       </div>
 
       <!-- Inloggad -->
@@ -431,16 +431,20 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
 
 <footer class="app-footer">
   <div class="footer-inner">
-    <div class="footer-links">
-      <span class="footer-link">🍝 Drivs av panik kl 17:00</span>
-      <span class="footer-divider">·</span>
-      <span class="footer-link">🤖 AI som faktiskt lagar mat (nåja)</span>
-    </div>
-    <p class="footer-tagline">Gjord med kärlek, kaos och alldeles för mycket vitlök.</p>
-    <p class="footer-tagline footer-irony">Ingen mat skadades under utvecklingen. Samma sak kan inte sägas om utvecklaren.</p>
     <span class="footer-brand">Vad ska vi laga?</span>
-    <button class="footer-help-btn" id="helpBtn">❓ Hur funkar det?</button>
-    <button class="footer-share-btn" id="shareAppBtn">Dela med en vän 📤</button>
+    <p class="footer-tagline">Smarta recept med AI — anpassade efter det du har hemma.</p>
+    <p class="footer-tagline footer-irony"></p>
+    <div class="footer-links">
+      <span class="footer-link">&copy; 2025 Vad ska vi laga?</span>
+      <span class="footer-divider">&middot;</span>
+      <span class="footer-link">Villkor</span>
+      <span class="footer-divider">&middot;</span>
+      <span class="footer-link">Integritet</span>
+      <span class="footer-divider">&middot;</span>
+      <span class="footer-link">Kontakt</span>
+    </div>
+    <button class="footer-help-btn" id="helpBtn">Hur funkar det?</button>
+    <button class="footer-share-btn" id="shareAppBtn">Dela med en vän</button>
   </div>
 </footer>
 
