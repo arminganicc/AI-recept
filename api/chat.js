@@ -5,7 +5,6 @@ export default async function handler(req, res) {
 
   const { ingredients, portions, prefs, conversationHistory, language, mode, query } = req.body;
 
-  // Support both ingredient mode and free-text mode
   const isFreetext = mode === 'freetext' && query;
   if (!isFreetext && (!ingredients || !ingredients.length)) {
     return res.status(400).json({ error: 'Missing ingredients or query' });
@@ -19,37 +18,26 @@ export default async function handler(req, res) {
   const langNames = { sv: 'svenska', en: 'English', es: 'español', bs: 'bosanski' };
   const lang = langNames[language] || 'svenska';
   const langInstruction = language && language !== 'sv'
-    ? `\nSPRÅK: Svara på ${lang}. Alla receptnamn, beskrivningar, ingredienser, steg, tips och kommentarer ska vara på ${lang}.`
+    ? `\nSPRÅK: Svara på ${lang}. Alla fält ska vara på ${lang}.`
     : '';
 
-  // Budget/family-specific prompt additions
   const prefArray = Array.isArray(prefs) ? prefs : [];
   let prefBoost = '';
-  if (prefArray.includes('budgetvänligt')) prefBoost += '\nBUDGET: Håll recepten billiga med basvaror. Ange ca-pris per portion i description (t.ex. "~35 kr/portion").';
-  if (prefArray.includes('barnvänligt')) prefBoost += '\nBARN: Milda smaker, inga starka kryddor, barnanpassade portioner.';
+  if (prefArray.includes('budgetvänligt')) prefBoost += ' Budget: billiga basvaror, ange ca-pris i description.';
+  if (prefArray.includes('barnvänligt')) prefBoost += ' Barn: milda smaker, inga starka kryddor.';
 
-  const systemPrompt = `Du är Armin — jordnära hemkock med humor och värme. Ge exakt 4 riktiga receptförslag som JSON.
+  const systemPrompt = `Du är Armin — hemkock med humor. Ge exakt 4 receptförslag som JSON.
+Regler: namn max 40tkn, beskrivning max 100tkn, tag: Snabbaste/Mest ambitiösa/Oväntat/Minst svinn, difficulty: Lätt/Medel/Avancerad, tid: "X min", ingredienser med mängder, 4-6 steg, kort chef_comment, drink_pairing med vin+öl+alkoholfritt.${prefBoost}
+Variation: 1)Snabbaste<30min 2)Ambitiösa 45-60min 3)Oväntat 4)Minst svinn.
+VIKTIGT: Svara ENBART med giltig JSON. Inga kodblock, inga kommentarer utanför JSON.${langInstruction}`;
 
-REGLER: Receptnamn max 40 tkn. Beskrivning max 120 tkn. Tag: "Snabbaste"/"Mest ambitiösa"/"Oväntat"/"Minst svinn". Svårighetsgrad: "Lätt"/"Medel"/"Avancerad". Tid: "X min"/"X–Y min". Ingredienser med mängder. Minst 5 steg. chef_comment: personlig kort kommentar.
-drink_pairing: rekommendera vin, öl och alkoholfritt som passar till rätten.
-
-VARIATION: 1) Snabbaste <30min 2) Mest ambitiösa 45–60min 3) Oväntat kök 4) Minst svinn.
-
-Svara ENBART med giltig JSON, inga kodblock.${prefBoost}${langInstruction}`;
+  const schema = `{"chef_comment":"","recipes":[{"name":"","time":"","difficulty":"","servings":${portions || 4},"tag":"","description":"","ingredients":[""],"steps":[{"instruction":"","tip":""}],"substitutions":[""],"nutrition_per_serving":{"calories":0,"protein_g":0,"carbs_g":0,"fat_g":0},"drink_pairing":{"wine":"","beer":"","non_alcoholic":""}}]}`;
 
   let userPrompt;
   if (isFreetext) {
-    userPrompt = `Användaren beskriver vad de är sugna på: "${query}"
-Portioner: ${portions || 4}
-Pref: ${prefText}
-${historyText ? `Feedback: ${historyText}` : ''}
-Ge 4 recept som matchar. JSON: {"chef_comment":"..","missing_globally":[],"suggested_swaps":[],"recipes":[{"name":"..","time":"..","difficulty":"..","difficulty_reason":"..","servings":${portions || 4},"tag":"..","description":"..","missing_ingredients":[],"substitutions":[],"ingredients":[".."],"steps":[{"instruction":"..","duration_minutes":0,"tip":".."}],"leftovers_tip":"..","nutrition_per_serving":{"calories":0,"protein_g":0,"carbs_g":0,"fat_g":0,"highlight":".."},"week_tip":"..","drink_pairing":{"wine":"..","beer":"..","non_alcoholic":".."}}]}`;
+    userPrompt = `Önskemål: "${query}"\nPortioner: ${portions || 4}\nPref: ${prefText}\n${historyText ? `Feedback: ${historyText}\n` : ''}JSON: ${schema}`;
   } else {
-    userPrompt = `Råvaror: ${ingredients.join(', ')}
-Portioner: ${portions || 4}
-Pref: ${prefText}
-${historyText ? `Feedback: ${historyText}` : ''}
-JSON: {"chef_comment":"..","missing_globally":[],"suggested_swaps":[],"recipes":[{"name":"..","time":"..","difficulty":"..","difficulty_reason":"..","servings":${portions || 4},"tag":"..","description":"..","missing_ingredients":[],"substitutions":[],"ingredients":[".."],"steps":[{"instruction":"..","duration_minutes":0,"tip":".."}],"leftovers_tip":"..","nutrition_per_serving":{"calories":0,"protein_g":0,"carbs_g":0,"fat_g":0,"highlight":".."},"week_tip":"..","drink_pairing":{"wine":"..","beer":"..","non_alcoholic":".."}}]}`;
+    userPrompt = `Råvaror: ${ingredients.join(', ')}\nPortioner: ${portions || 4}\nPref: ${prefText}\n${historyText ? `Feedback: ${historyText}\n` : ''}JSON: ${schema}`;
   }
 
   try {
@@ -62,8 +50,7 @@ JSON: {"chef_comment":"..","missing_globally":[],"suggested_swaps":[],"recipes":
       },
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001',
-        max_tokens: 2500,
-        temperature: 0.7,
+        max_tokens: 4000,
         system: [{ type: 'text', text: systemPrompt, cache_control: { type: 'ephemeral' } }],
         messages: [{ role: 'user', content: userPrompt }],
       }),

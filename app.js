@@ -1230,21 +1230,24 @@
 
         const text = (data.content || []).map(b => b.text || '').join('');
         let clean = text.replace(/```json|```/g, '').trim();
+        // Remove any text before first { or [
+        const jsonStart = clean.search(/[\[{]/);
+        if (jsonStart > 0) clean = clean.substring(jsonStart);
 
         // Try to fix truncated JSON by closing brackets
         let parsed;
         try {
           parsed = JSON.parse(clean);
         } catch {
-          // Attempt to salvage truncated JSON
           let fixed = clean;
-          // Count open/close braces and brackets
+          // Remove trailing incomplete strings (truncated mid-value)
+          fixed = fixed.replace(/,\s*"[^"]*$/, '');
+          fixed = fixed.replace(/,\s*$/, '');
+          // Count and close open brackets/braces
           const openBraces = (fixed.match(/\{/g) || []).length;
           const closeBraces = (fixed.match(/\}/g) || []).length;
           const openBrackets = (fixed.match(/\[/g) || []).length;
           const closeBrackets = (fixed.match(/\]/g) || []).length;
-
-          // Add missing closing brackets/braces
           for (let b = 0; b < openBrackets - closeBrackets; b++) fixed += ']';
           for (let b = 0; b < openBraces - closeBraces; b++) fixed += '}';
 

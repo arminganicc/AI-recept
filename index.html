@@ -8,7 +8,11 @@
 <meta name="theme-color" content="#F7F4EF">
 <link rel="manifest" href="/manifest.json">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<script>try{if(localStorage.getItem('dark_mode')==='true')document.documentElement.setAttribute('data-theme','dark')}catch(e){}</script>
+<script>
+try{if(localStorage.getItem('dark_mode')==='true')document.documentElement.setAttribute('data-theme','dark')}catch(e){}
+// Force clear old service worker cache on version mismatch
+if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(function(regs){regs.forEach(function(r){r.unregister()})});caches.keys().then(function(k){k.forEach(function(n){if(n!=='receptappen-v6.2')caches.delete(n)})})}
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
