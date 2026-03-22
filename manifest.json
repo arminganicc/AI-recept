@@ -1,12 +1,13 @@
 {
   "name": "Vad ska vi laga?",
   "short_name": "Recepthjälpen",
-  "description": "AI-driven recepthjälp baserad på dina ingredienser",
+  "description": "AI-driven recepthjälp baserad på dina ingredienser. Fota kylskåpet eller skriv in vad du har — få 4 recept direkt.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#faf7f2",
-  "theme_color": "#2c1f14",
+  "background_color": "#F7F4EF",
+  "theme_color": "#F7F4EF",
   "lang": "sv",
+  "categories": ["food", "lifestyle", "utilities"],
   "icons": [
     {
       "src": "/icon-192.png",
@@ -17,6 +18,32 @@
       "src": "/icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Sök recept",
+      "short_name": "Sök",
+      "url": "/?view=search",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Favoriter",
+      "short_name": "Favoriter",
+      "url": "/?view=favorites",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Inköpslista",
+      "short_name": "Lista",
+      "url": "/?view=shopping",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
     }
   ]
 }

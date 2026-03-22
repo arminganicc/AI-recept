@@ -4,18 +4,36 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Vad ska vi laga?</title>
-<meta name="description" content="Töm kylskåpet. Vi fixar resten. AI-driven recepthjälp.">
+<meta name="description" content="Vad ska vi laga? Skriv in dina ingredienser eller fota kylskåpet, så föreslår vår AI fyra recept du kan laga direkt. Gratis, ingen inloggning krävs. Spara favoriter, skapa inköpslistor och följ steg-för-steg i kokläge.">
 <meta name="theme-color" content="#F7F4EF">
 <link rel="manifest" href="/manifest.json">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <script>
 try{if(localStorage.getItem('dark_mode')==='true')document.documentElement.setAttribute('data-theme','dark')}catch(e){}
-// Force clear old service worker cache on version mismatch
-if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(function(regs){regs.forEach(function(r){r.unregister()})});caches.keys().then(function(k){k.forEach(function(n){if(n!=='receptappen-v6.2')caches.delete(n)})})}
+// Register service worker + clean old caches
+if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(function(){});caches.keys().then(function(k){k.forEach(function(n){if(n!=='receptappen-v7.0')caches.delete(n)})})}
 </script>
+<!-- SEO: Open Graph -->
+<meta property="og:title" content="Vad ska vi laga?">
+<meta property="og:description" content="Skriv in dina ingredienser eller fota kylskåpet — AI:n föreslår 4 recept du kan laga direkt. Gratis, ingen inloggning krävs.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="sv_SE">
+<meta property="og:image" content="/og-image.jpg">
+<!-- SEO: Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Vad ska vi laga?">
+<meta name="twitter:description" content="AI-driven recepthjälp. Släng in vad du har hemma — få 4 recept direkt.">
+<!-- SEO: Canonical -->
+<link rel="canonical" href="https://vadskavialaga.se/">
+<!-- Performance: preconnect to Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- PWA: Apple touch icon -->
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<!-- Supabase: defer to avoid render-blocking -->
+<script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -23,20 +41,24 @@ if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then
 <section class="view" id="viewSearch">
   <header class="hero">
     <div class="hero-inner">
-      <button class="account-btn" id="accountBtn" aria-label="Mitt konto">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-      </button>
+      <div class="hero-toolbar">
+        <button class="account-btn" id="accountBtn" aria-label="Mitt konto">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </button>
+        <div class="hero-toolbar-right">
+          <select class="lang-select" id="langSelect" aria-label="Välj språk">
+            <option value="sv">🇸🇪 SV</option>
+            <option value="en">🇬🇧 EN</option>
+            <option value="es">🇪🇸 ES</option>
+            <option value="bs">🇧🇦 BS</option>
+          </select>
+          <button class="theme-toggle" id="settingsToggle" aria-label="Växla tema"></button>
+        </div>
+      </div>
       <div class="hero-logo" id="heroLogo"></div>
       <div class="hero-eyebrow" data-i18n="heroEyebrow">Kvällens eviga dilemma</div>
       <h1 class="hero-title" data-i18n="heroTitle">Vad ska vi laga?</h1>
-      <p class="hero-sub">Släng in vad du har. Armin löser middagen.</p>
-      <button class="theme-toggle" id="settingsToggle" aria-label="Växla tema"></button>
-      <select class="lang-select" id="langSelect">
-        <option value="sv">🇸🇪 SV</option>
-        <option value="en">🇬🇧 EN</option>
-        <option value="es">🇪🇸 ES</option>
-        <option value="bs">🇧🇦 BS</option>
-      </select>
+      <p class="hero-sub">Släng in vad du har. Amko löser middagen.</p>
     </div>
   </header>
 
@@ -45,33 +67,33 @@ if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then
     <div class="onboarding-overlay" id="onboardingOverlay" hidden>
       <div class="onboarding-modal">
         <div class="onboarding-logo" id="onboardingLogo"></div>
-        <h2 class="onboarding-title">Välkommen till Vad ska vi laga?</h2>
-        <p class="onboarding-subtitle">Din AI-drivna recepthjälp. Så här funkar det:</p>
+        <h2 class="onboarding-title">Välkommen! Middagsstressen slutar här.</h2>
+        <p class="onboarding-subtitle">Tre steg. Ingen kokskola krävs. Så här funkar det:</p>
         <div class="onboarding-steps">
           <div class="onboarding-step">
             <div class="onboarding-step-num">1</div>
             <div class="onboarding-step-text">
-              <strong>Lägg till ingredienser</strong>
-              <span>Skriv in vad du har hemma, eller fota ditt kylskåp — AI:n identifierar råvarorna åt dig.</span>
+              <strong>Berätta vad du har hemma</strong>
+              <span>Skriv in dina ingredienser eller fota kylskåpet — vi identifierar råvarorna. Ja, även den där ensamma paprikans i bakre hörnet.</span>
             </div>
           </div>
           <div class="onboarding-step">
             <div class="onboarding-step-num">2</div>
             <div class="onboarding-step-text">
-              <strong>Få skräddarsydda recept</strong>
-              <span>Armin föreslår 4 recept baserat på just dina ingredienser, med allt från snabba vardagsrätter till mer ambitiösa projekt.</span>
+              <strong>Få 4 recept direkt</strong>
+              <span>Amko föreslår allt från "klart på 15 min" till "imponera på middagsgästerna". Du väljer ambitionsnivå.</span>
             </div>
           </div>
           <div class="onboarding-step">
             <div class="onboarding-step-num">3</div>
             <div class="onboarding-step-text">
-              <strong>Spara, laga & handla</strong>
-              <span>Spara favoriter, följ steg-för-steg i kokläge och skicka inköpslistan direkt till din mejl.</span>
+              <strong>Laga, spara, handla</strong>
+              <span>Följ receptet steg-för-steg i kokläge, spara favoriter, och skicka inköpslistan till dig själv. Resten sköter du.</span>
             </div>
           </div>
         </div>
-        <button class="onboarding-cta" id="onboardingClose">Kör igång!</button>
-        <p class="onboarding-hint">Gratis. Inget konto krävs. Bara mat.</p>
+        <button class="onboarding-cta" id="onboardingClose">Okej, jag är hungrig — kör!</button>
+        <p class="onboarding-hint">Gratis. Inget konto krävs. Inga konstigheter. Bara mat.</p>
       </div>
     </div>
 
@@ -79,17 +101,17 @@ if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then
     <div class="holiday-banner" id="holidayBanner" hidden></div>
 
     <!-- Search mode tabs -->
-    <div class="search-mode-tabs" id="searchModeTabs">
-      <button class="search-mode-tab active" data-mode="ingredients">🥕 Ingredienser</button>
-      <button class="search-mode-tab" data-mode="freetext">💬 Berätta fritt</button>
+    <div class="search-mode-tabs" id="searchModeTabs" role="tablist">
+      <button class="search-mode-tab active" data-mode="ingredients" role="tab" aria-selected="true">🥕 Ingredienser</button>
+      <button class="search-mode-tab" data-mode="freetext" role="tab" aria-selected="false">💬 Berätta fritt</button>
     </div>
 
     <section class="card">
       <!-- Free-text mode (hidden by default) -->
       <div id="freetextMode" hidden>
         <label class="card-label">Berätta vad du är sugen på</label>
-        <textarea class="freetext-input" id="freetextInput" rows="3" placeholder="T.ex. 'Planera 5 middagar för en student under 200 kr', 'Sugen på Balkan', 'Barnvänlig veckomeny', 'Festmiddag för 8 pers', 'Proteinrik lunch som mättar hela dan'..."></textarea>
-        <p class="hint">Skriv fritt — Armin fattar vad du menar.</p>
+        <textarea class="freetext-input" id="freetextInput" rows="3" maxlength="500" placeholder="T.ex. 'Planera 5 middagar för en student under 200 kr', 'Sugen på Balkan', 'Barnvänlig veckomeny', 'Festmiddag för 8 pers', 'Proteinrik lunch som mättar hela dan'..."></textarea>
+        <p class="hint">Skriv fritt — Amko fattar vad du menar.</p>
       </div>
 
       <!-- Ingredient mode (default) -->
@@ -100,7 +122,7 @@ if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then
         <input type="file" id="fridgeInput" accept="image/*" hidden>
         <button class="fridge-btn" id="fridgeBtn" aria-label="Fota dina råvaror">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-          <span data-i18n="scanFood">📸 Fota dina råvaror</span>
+          <span data-i18n="scanFood">Fota dina råvaror</span>
         </button>
         <div class="fridge-preview" id="fridgePreview" style="display:none">
           <img id="fridgeImg" alt="Kylskåpsbild">
@@ -144,19 +166,20 @@ if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then
       <div class="search-portions">
         <span class="search-portions-label" data-i18n="portions">Portioner</span>
         <div class="search-portions-ctrl">
-          <button id="spMinus">-</button>
+          <button id="spMinus" aria-label="Minska portioner">-</button>
           <span class="search-portions-num" id="spNum">4</span>
-          <button id="spPlus">+</button>
+          <button id="spPlus" aria-label="Öka portioner">+</button>
         </div>
       </div>
 
       <button class="search-btn" id="searchBtn" disabled data-i18n="showRecipes">Visa recept</button>
+      <p class="search-btn-hint" id="searchBtnHint">Lägg till minst en ingrediens för att söka</p>
       <div class="error" id="errBox" style="display:none"></div>
     </section>
 
     <div id="historySection"></div>
     <div id="loadingEl" style="display:none"></div>
-    <div id="recipeList"></div>
+    <div id="recipeList" aria-live="polite"></div>
   </div>
 </section>
 
@@ -164,16 +187,16 @@ if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then
 <section class="view" id="viewInspiration" hidden>
   <div class="view-header">
     <h2 class="view-title">Inspiration</h2>
-    <p class="view-sub">Armins favoriter och världens kök — allt på ett ställe</p>
+    <p class="view-sub">Amkos favoriter och världens kök — allt på ett ställe</p>
   </div>
   <div class="view-content">
 
-    <!-- Armin rekommenderar -->
+    <!-- Amko rekommenderar -->
     <div class="armin-section">
       <div class="armin-header">
         <span class="armin-emoji">👨‍🍳</span>
         <div>
-          <h3 class="armin-title">Armin rekommenderar</h3>
+          <h3 class="armin-title">Amko rekommenderar</h3>
           <p class="armin-sub">Handplockade favoriter. Ingen jäv, bara bra mat. (Okej, lite jäv.)</p>
         </div>
       </div>
@@ -223,6 +246,14 @@ if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then
     </div>
   </div>
   <div class="view-content">
+    <div class="shopping-manual-add">
+      <div class="input-row">
+        <input class="ing-input" id="manualListInput" type="text" placeholder="Lägg till vara..." autocomplete="off">
+        <button class="add-btn" id="manualListAddBtn" aria-label="Lägg till">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </button>
+      </div>
+    </div>
     <div id="listEmpty" class="empty-state">
       <div class="empty-icon">
         <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>

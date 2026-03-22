@@ -53,8 +53,8 @@
   const translations = {
     sv: {
       heroEyebrow: 'Kvällens eviga dilemma', heroTitle: 'Vad ska vi laga?',
-      yourIngredients: 'Dina råvaror', scanFood: '📸 Fota dina råvaror',
-      orManual: 'eller skriv manuellt', inputHint: 'Enter lägger till. Komma separerar.',
+      yourIngredients: 'Dina råvaror', scanFood: 'Fota dina råvaror',
+      orManual: 'eller skriv manuellt', inputHint: 'Tryck + för att lägga till. Komma separerar.',
       whatDoYouHave: 'Vad har du hemma?', howPicky: 'Hur kräsen är du?',
       portions: 'Portioner', showRecipes: 'Visa recept',
       savedRecipes: 'Sparade recept', noSavedRecipes: 'Inga sparade recept ännu',
@@ -66,12 +66,98 @@
       snabbt: 'Under 30 min', laktosfritt: 'Laktosfritt', nötfritt: 'Nötfritt',
       barnvänligt: 'Barnvänligt', budgetvänligt: 'Budgetvänligt',
       ingredients: 'Ingredienser', steps: 'Gör så här',
-      arminTitle: 'Armin rekommenderar', worldKitchens: 'Världens kök',
+      arminTitle: 'Amko rekommenderar', worldKitchens: 'Världens kök',
       surpriseMe: '🎲 Överraska mig', inspiration: 'Inspiration',
+      // Sökläge
+      modeIngredients: '🥕 Ingredienser', modeFreetext: '💬 Berätta fritt',
+      freetextLabel: 'Berätta vad du är sugen på',
+      freetextHint: 'Skriv fritt — Amko fattar vad du menar.',
+      searchBtnHint: 'Lägg till minst en ingrediens för att söka',
+      // Inspiration
+      inspirationTitle: 'Inspiration',
+      inspirationSub: 'Amkos favoriter och världens kök — allt på ett ställe',
+      arminSub: 'Handplockade favoriter. Ingen jäv, bara bra mat. (Okej, lite jäv.)',
+      // Inköpslista
+      listEmpty: 'Listan är tom',
+      listEmptyDesc: 'Öppna ett recept och tryck "Lägg till i inköpslistan" för att samla ingredienser här.',
+      listEmptyCta: 'Hitta recept →',
+      // Auth
+      authTitle: 'Logga in eller skapa konto',
+      authDesc: 'Logga in för att spara dina favoritrecept och synka dem överallt. Välj ditt sätt.',
+      authGoogle: 'Fortsätt med Google', authApple: 'Fortsätt med Apple',
+      authOrEmail: 'eller med e-post', authLogin: 'Logga in',
+      authNoAccount: 'Har inget konto?', authCreateHere: 'Skapa ett här',
+      authPrivacy: 'Vi lagrar bara din e-postadress. Ingen spam, inga nyhetsbrev, bara recept.',
+      authBenefitSync: 'Favoriter synkas på alla enheter',
+      authBenefitShop: 'Skicka inköpslistan till din mejl',
+      authBenefitReturn: 'Kom tillbaka till dina recept var som helst',
+      authMyAccount: 'Mitt konto', authManage: 'Hantera konto',
+      authMethod: 'Inloggningsmetod', authEmail: 'E-post',
+      authSavedFavs: 'Sparade favoriter', authChangePassword: 'Ändra lösenord',
+      authDeleteAccount: 'Radera konto', authSignOut: 'Logga ut',
+      authCreateAccount: 'Skapa konto', authCreating: 'Skapar konto...',
+      authLoggingIn: 'Loggar in...',
+      // Onboarding
+      onboardingTitle: 'Välkommen! Middagsstressen slutar här.',
+      onboardingSub: 'Tre steg. Ingen kokskola krävs. Så här funkar det:',
+      onboardingStep1Title: 'Berätta vad du har hemma',
+      onboardingStep1Desc: 'Skriv in dina ingredienser eller fota kylskåpet — vi identifierar råvarorna. Ja, även den där ensamma paprikans i bakre hörnet.',
+      onboardingStep2Title: 'Få 4 recept direkt',
+      onboardingStep2Desc: 'Amko föreslår allt från "klart på 15 min" till "imponera på middagsgästerna". Du väljer ambitionsnivå.',
+      onboardingStep3Title: 'Laga, spara, handla',
+      onboardingStep3Desc: 'Följ receptet steg-för-steg i kokläge, spara favoriter, och skicka inköpslistan till dig själv. Resten sköter du.',
+      onboardingCta: 'Okej, jag är hungrig — kör!',
+      onboardingHint: 'Gratis. Inget konto krävs. Inga konstigheter. Bara mat.',
+      // Toast
+      toastCopied: 'Kopierat! Dela på hälsa.',
+      toastListSent: 'Inköpslistan flyger iväg till din mejl ✈️',
+      toastListAdded: 'Lagt till! Dags att handla snart.',
+      toastEmptyList: 'Listan är tom — inget att skicka!',
+      toastLoggedIn: 'Välkommen tillbaka!',
+      toastLoggedOut: 'Du är nu utloggad',
+      toastMagicSent: 'Kolla din mejl — vi har skickat en länk',
+      toastError: 'Något gick snett — försök igen om en stund',
+      toastListCleared: 'Inköpslistan rensad',
+      toastAlreadyInList: 'Ingredienserna finns redan i listan',
+      toastCantShare: 'Kunde inte dela',
+      toastCantCopy: 'Kunde inte kopiera',
+      toastShareNA: 'Dela ej tillgängligt',
+      toastNoIngs: 'Hittade inga ingredienser',
+      toastBonAppetit: 'Smaklig måltid! 🍽️',
+      toastFromCache: 'Hämtat från tidigare sökning',
+      toastAuthEmail: 'Ange e-post och lösenord',
+      toastAuthShort: 'Lösenordet måste vara minst 6 tecken',
+      toastAuthWrong: 'Fel e-post eller lösenord',
+      toastAuthExists: 'Det finns redan ett konto med den e-posten',
+      toastAuthConfirm: 'Kontrollera din e-post för verifieringslänk',
+      toastAuthRate: 'För många försök — vänta en stund',
+      // Footer
+      footerPanic: '🍝 Drivs av panik kl 17:00',
+      footerAI: '🤖 AI som faktiskt lagar mat (nåja)',
+      footerHelp: '❓ Hur funkar det?',
+      footerShare: 'Dela med en vän 📤',
+      // Kokläge
+      cookModePrev: '← Föregående',
+      cookModeNext: 'Nästa →',
+      cookModeTimer: '⏱ Starta timer',
+      // Quick categories
+      quickMeat: '🥩 Sugen på kött', quickFish: '🐟 Fisk & skaldjur',
+      quickVeg: '🥬 Grönsakslådan', quickBasics: '🧀 Basics',
+      // Recept
+      recipeDrinks: 'Dryckestips', recipeNutrition: 'Näring per portion',
+      recipeSubstitutions: 'Alternativ', recipeFav: 'Spara favorit',
+      recipeUnfav: 'Ta bort favorit', recipeCopy: 'Kopiera', recipeShare: 'Dela',
+      recipePrint: 'Skriv ut', recipeAddToList: '🛒 Lägg till i inköpslistan',
+      recipeCookMode: '👨‍🍳 Starta kokläge',
+      // Historik
+      historyTitle: 'Sökhistorik', historyClear: 'Rensa',
+      // Favoriter
+      favRecipeCount: 'recept sparade',
+      filterAll: 'Alla',
     },
     en: {
       heroEyebrow: "Tonight's eternal dilemma", heroTitle: 'What should we cook?',
-      yourIngredients: 'Your ingredients', scanFood: '📸 Snap your ingredients',
+      yourIngredients: 'Your ingredients', scanFood: 'Snap your ingredients',
       orManual: 'or type manually', inputHint: 'Enter to add. Comma separates.',
       whatDoYouHave: 'What do you have at home?', howPicky: 'How picky are you?',
       portions: 'Servings', showRecipes: 'Show recipes',
@@ -84,12 +170,86 @@
       snabbt: 'Under 30 min', laktosfritt: 'Lactose-free', nötfritt: 'Nut-free',
       barnvänligt: 'Kid-friendly', budgetvänligt: 'Budget-friendly',
       ingredients: 'Ingredients', steps: 'Instructions',
-      arminTitle: 'Armin recommends', worldKitchens: 'World cuisines',
+      arminTitle: 'Amko recommends', worldKitchens: 'World cuisines',
       surpriseMe: '🎲 Surprise me', inspiration: 'Inspiration',
+      modeIngredients: '🥕 Ingredients', modeFreetext: '💬 Tell me freely',
+      freetextLabel: 'Tell me what you\'re craving',
+      freetextHint: 'Write freely — Amko gets it.',
+      searchBtnHint: 'Add at least one ingredient to search',
+      inspirationTitle: 'Inspiration',
+      inspirationSub: 'Amko\'s favorites and world cuisines — all in one place',
+      arminSub: 'Hand-picked favorites. No bias, just good food. (Okay, some bias.)',
+      listEmpty: 'List is empty',
+      listEmptyDesc: 'Open a recipe and tap "Add to shopping list" to collect ingredients here.',
+      listEmptyCta: 'Find recipes →',
+      authTitle: 'Sign in or create account',
+      authDesc: 'Sign in to save your favorite recipes and sync them everywhere.',
+      authGoogle: 'Continue with Google', authApple: 'Continue with Apple',
+      authOrEmail: 'or with email', authLogin: 'Sign in',
+      authNoAccount: 'No account?', authCreateHere: 'Create one here',
+      authPrivacy: 'We only store your email. No spam, no newsletters, just recipes.',
+      authBenefitSync: 'Favorites sync across all devices',
+      authBenefitShop: 'Send shopping list to your email',
+      authBenefitReturn: 'Access your recipes from anywhere',
+      authMyAccount: 'My account', authManage: 'Manage account',
+      authMethod: 'Sign-in method', authEmail: 'Email',
+      authSavedFavs: 'Saved favorites', authChangePassword: 'Change password',
+      authDeleteAccount: 'Delete account', authSignOut: 'Sign out',
+      authCreateAccount: 'Create account', authCreating: 'Creating account...',
+      authLoggingIn: 'Signing in...',
+      onboardingTitle: 'Welcome to What should we cook?',
+      onboardingSub: 'Your AI-powered recipe helper. Here\'s how it works:',
+      onboardingStep1Title: 'Add ingredients',
+      onboardingStep1Desc: 'Type what you have at home, or snap your fridge — AI identifies the ingredients for you.',
+      onboardingStep2Title: 'Get tailored recipes',
+      onboardingStep2Desc: 'Amko suggests 4 recipes based on your ingredients, from quick weeknight meals to ambitious projects.',
+      onboardingStep3Title: 'Save, cook & shop',
+      onboardingStep3Desc: 'Save favorites, follow step-by-step in cook mode, and send the shopping list to your email.',
+      onboardingCta: 'Let\'s go!',
+      onboardingHint: 'Free. No account required. Just food.',
+      toastCopied: 'Copied! Share away.',
+      toastListSent: 'Shopping list sent to your email ✈️',
+      toastListAdded: 'Added! Time to shop soon.',
+      toastEmptyList: 'List is empty — nothing to send!',
+      toastLoggedIn: 'Welcome back!',
+      toastLoggedOut: 'You\'re now signed out',
+      toastMagicSent: 'Check your email — we sent a link',
+      toastError: 'Something went wrong — try again in a moment',
+      toastListCleared: 'Shopping list cleared',
+      toastAlreadyInList: 'Ingredients already in the list',
+      toastCantShare: 'Could not share',
+      toastCantCopy: 'Could not copy',
+      toastShareNA: 'Sharing not available',
+      toastNoIngs: 'No ingredients found',
+      toastBonAppetit: 'Bon appétit! 🍽️',
+      toastFromCache: 'Loaded from cache',
+      toastAuthEmail: 'Enter email and password',
+      toastAuthShort: 'Password must be at least 6 characters',
+      toastAuthWrong: 'Wrong email or password',
+      toastAuthExists: 'An account with that email already exists',
+      toastAuthConfirm: 'Check your email for the verification link',
+      toastAuthRate: 'Too many attempts — wait a moment',
+      footerPanic: '🍝 Powered by 5 PM panic',
+      footerAI: '🤖 AI that actually cooks (sort of)',
+      footerHelp: '❓ How does it work?',
+      footerShare: 'Share with a friend 📤',
+      cookModePrev: '← Previous',
+      cookModeNext: 'Next →',
+      cookModeTimer: '⏱ Start timer',
+      quickMeat: '🥩 Craving meat', quickFish: '🐟 Fish & seafood',
+      quickVeg: '🥬 Veggie drawer', quickBasics: '🧀 Basics',
+      recipeDrinks: 'Drink pairing', recipeNutrition: 'Nutrition per serving',
+      recipeSubstitutions: 'Substitutions', recipeFav: 'Save favorite',
+      recipeUnfav: 'Remove favorite', recipeCopy: 'Copy', recipeShare: 'Share',
+      recipePrint: 'Print', recipeAddToList: '🛒 Add to shopping list',
+      recipeCookMode: '👨‍🍳 Start cook mode',
+      historyTitle: 'Search history', historyClear: 'Clear',
+      favRecipeCount: 'recipes saved',
+      filterAll: 'All',
     },
     es: {
       heroEyebrow: 'El eterno dilema de la cena', heroTitle: '¿Qué cocinamos?',
-      yourIngredients: 'Tus ingredientes', scanFood: '📸 Fotografía tus ingredientes',
+      yourIngredients: 'Tus ingredientes', scanFood: 'Fotografía tus ingredientes',
       orManual: 'o escribe manualmente', inputHint: 'Enter para añadir. Coma separa.',
       whatDoYouHave: '¿Qué tienes en casa?', howPicky: '¿Qué tan exigente eres?',
       portions: 'Porciones', showRecipes: 'Mostrar recetas',
@@ -102,12 +262,86 @@
       snabbt: 'Menos de 30 min', laktosfritt: 'Sin lactosa', nötfritt: 'Sin frutos secos',
       barnvänligt: 'Para niños', budgetvänligt: 'Económico',
       ingredients: 'Ingredientes', steps: 'Preparación',
-      arminTitle: 'Armin recomienda', worldKitchens: 'Cocinas del mundo',
+      arminTitle: 'Amko recomienda', worldKitchens: 'Cocinas del mundo',
       surpriseMe: '🎲 Sorpréndeme', inspiration: 'Inspiración',
+      modeIngredients: '🥕 Ingredientes', modeFreetext: '💬 Cuéntame',
+      freetextLabel: 'Cuéntame qué se te antoja',
+      freetextHint: 'Escribe libremente — Amko entiende.',
+      searchBtnHint: 'Añade al menos un ingrediente para buscar',
+      inspirationTitle: 'Inspiración',
+      inspirationSub: 'Los favoritos de Amko y las cocinas del mundo — todo en un lugar',
+      arminSub: 'Favoritos seleccionados. Sin sesgo, solo buena comida. (Bueno, un poco.)',
+      listEmpty: 'La lista está vacía',
+      listEmptyDesc: 'Abre una receta y pulsa "Añadir a la lista" para recoger ingredientes aquí.',
+      listEmptyCta: 'Buscar recetas →',
+      authTitle: 'Inicia sesión o crea una cuenta',
+      authDesc: 'Inicia sesión para guardar tus recetas favoritas y sincronizarlas.',
+      authGoogle: 'Continuar con Google', authApple: 'Continuar con Apple',
+      authOrEmail: 'o con correo', authLogin: 'Iniciar sesión',
+      authNoAccount: '¿Sin cuenta?', authCreateHere: 'Crea una aquí',
+      authPrivacy: 'Solo almacenamos tu correo. Sin spam, sin newsletters, solo recetas.',
+      authBenefitSync: 'Favoritos sincronizados en todos los dispositivos',
+      authBenefitShop: 'Envía la lista de compras a tu correo',
+      authBenefitReturn: 'Accede a tus recetas desde cualquier lugar',
+      authMyAccount: 'Mi cuenta', authManage: 'Gestionar cuenta',
+      authMethod: 'Método de inicio', authEmail: 'Correo',
+      authSavedFavs: 'Favoritos guardados', authChangePassword: 'Cambiar contraseña',
+      authDeleteAccount: 'Eliminar cuenta', authSignOut: 'Cerrar sesión',
+      authCreateAccount: 'Crear cuenta', authCreating: 'Creando cuenta...',
+      authLoggingIn: 'Iniciando sesión...',
+      onboardingTitle: '¡Bienvenido a ¿Qué cocinamos?',
+      onboardingSub: 'Tu asistente de recetas con IA. Así funciona:',
+      onboardingStep1Title: 'Añade ingredientes',
+      onboardingStep1Desc: 'Escribe lo que tienes o fotografía tu nevera — la IA identifica los ingredientes.',
+      onboardingStep2Title: 'Recibe recetas personalizadas',
+      onboardingStep2Desc: 'Amko sugiere 4 recetas basadas en tus ingredientes.',
+      onboardingStep3Title: 'Guarda, cocina y compra',
+      onboardingStep3Desc: 'Guarda favoritos, sigue paso a paso y envía la lista de compras.',
+      onboardingCta: '¡Vamos!',
+      onboardingHint: 'Gratis. Sin cuenta. Solo comida.',
+      toastCopied: '¡Copiado! Compártelo.',
+      toastListSent: 'Lista de compras enviada ✈️',
+      toastListAdded: '¡Añadido! Hora de comprar.',
+      toastEmptyList: 'Lista vacía — ¡nada que enviar!',
+      toastLoggedIn: '¡Bienvenido de vuelta!',
+      toastLoggedOut: 'Sesión cerrada',
+      toastMagicSent: 'Revisa tu correo — te enviamos un enlace',
+      toastError: 'Algo salió mal — inténtalo de nuevo',
+      toastListCleared: 'Lista borrada',
+      toastAlreadyInList: 'Los ingredientes ya están en la lista',
+      toastCantShare: 'No se pudo compartir',
+      toastCantCopy: 'No se pudo copiar',
+      toastShareNA: 'Compartir no disponible',
+      toastNoIngs: 'No se encontraron ingredientes',
+      toastBonAppetit: '¡Buen provecho! 🍽️',
+      toastFromCache: 'Cargado desde caché',
+      toastAuthEmail: 'Ingresa correo y contraseña',
+      toastAuthShort: 'La contraseña debe tener al menos 6 caracteres',
+      toastAuthWrong: 'Correo o contraseña incorrectos',
+      toastAuthExists: 'Ya existe una cuenta con ese correo',
+      toastAuthConfirm: 'Revisa tu correo para el enlace de verificación',
+      toastAuthRate: 'Demasiados intentos — espera un momento',
+      footerPanic: '🍝 Impulsado por el pánico de las 17:00',
+      footerAI: '🤖 IA que cocina (más o menos)',
+      footerHelp: '❓ ¿Cómo funciona?',
+      footerShare: 'Comparte con un amigo 📤',
+      cookModePrev: '← Anterior',
+      cookModeNext: 'Siguiente →',
+      cookModeTimer: '⏱ Iniciar temporizador',
+      quickMeat: '🥩 Antojo de carne', quickFish: '🐟 Pescado y mariscos',
+      quickVeg: '🥬 Cajón de verduras', quickBasics: '🧀 Básicos',
+      recipeDrinks: 'Maridaje', recipeNutrition: 'Nutrición por porción',
+      recipeSubstitutions: 'Sustituciones', recipeFav: 'Guardar favorito',
+      recipeUnfav: 'Quitar favorito', recipeCopy: 'Copiar', recipeShare: 'Compartir',
+      recipePrint: 'Imprimir', recipeAddToList: '🛒 Añadir a la lista',
+      recipeCookMode: '👨‍🍳 Modo cocina',
+      historyTitle: 'Historial', historyClear: 'Borrar',
+      favRecipeCount: 'recetas guardadas',
+      filterAll: 'Todos',
     },
     bs: {
       heroEyebrow: 'Vječna dilema večere', heroTitle: 'Šta da kuhamo?',
-      yourIngredients: 'Tvoji sastojci', scanFood: '📸 Slikaj svoje namirnice',
+      yourIngredients: 'Tvoji sastojci', scanFood: 'Slikaj svoje namirnice',
       orManual: 'ili piši ručno', inputHint: 'Enter za dodavanje. Zarez odvaja.',
       whatDoYouHave: 'Šta imaš kod kuće?', howPicky: 'Koliko si izbirljiv/a?',
       portions: 'Porcije', showRecipes: 'Prikaži recepte',
@@ -120,8 +354,82 @@
       snabbt: 'Ispod 30 min', laktosfritt: 'Bez laktoze', nötfritt: 'Bez orašastih',
       barnvänligt: 'Za djecu', budgetvänligt: 'Povoljno',
       ingredients: 'Sastojci', steps: 'Priprema',
-      arminTitle: 'Armin preporučuje', worldKitchens: 'Kuhinje svijeta',
+      arminTitle: 'Amko preporučuje', worldKitchens: 'Kuhinje svijeta',
       surpriseMe: '🎲 Iznenadi me', inspiration: 'Inspiracija',
+      modeIngredients: '🥕 Sastojci', modeFreetext: '💬 Reci slobodno',
+      freetextLabel: 'Reci šta želiš jesti',
+      freetextHint: 'Piši slobodno — Amko razumije.',
+      searchBtnHint: 'Dodaj barem jedan sastojak za pretragu',
+      inspirationTitle: 'Inspiracija',
+      inspirationSub: 'Amkovi favoriti i kuhinje svijeta — sve na jednom mjestu',
+      arminSub: 'Ručno odabrani favoriti. Bez pristrasnosti, samo dobra hrana. (Dobro, malo.)',
+      listEmpty: 'Lista je prazna',
+      listEmptyDesc: 'Otvori recept i pritisni "Dodaj na listu" da sakupiš sastojke ovdje.',
+      listEmptyCta: 'Pronađi recepte →',
+      authTitle: 'Prijavi se ili kreiraj račun',
+      authDesc: 'Prijavi se da sačuvaš favorite i sinhronizuješ ih svuda.',
+      authGoogle: 'Nastavi s Googleom', authApple: 'Nastavi s Appleom',
+      authOrEmail: 'ili s emailom', authLogin: 'Prijavi se',
+      authNoAccount: 'Nemaš račun?', authCreateHere: 'Kreiraj ovdje',
+      authPrivacy: 'Čuvamo samo tvoj email. Bez spama, bez newslettera, samo recepti.',
+      authBenefitSync: 'Favoriti sinhronizovani na svim uređajima',
+      authBenefitShop: 'Pošalji listu za kupovinu na email',
+      authBenefitReturn: 'Pristupi receptima s bilo kojeg mjesta',
+      authMyAccount: 'Moj račun', authManage: 'Upravljaj računom',
+      authMethod: 'Metoda prijave', authEmail: 'Email',
+      authSavedFavs: 'Sačuvani favoriti', authChangePassword: 'Promijeni lozinku',
+      authDeleteAccount: 'Obriši račun', authSignOut: 'Odjavi se',
+      authCreateAccount: 'Kreiraj račun', authCreating: 'Kreiranje računa...',
+      authLoggingIn: 'Prijava...',
+      onboardingTitle: 'Dobrodošli u Šta da kuhamo?',
+      onboardingSub: 'Tvoj AI pomoćnik za recepte. Evo kako radi:',
+      onboardingStep1Title: 'Dodaj sastojke',
+      onboardingStep1Desc: 'Piši šta imaš ili slikaj frižider — AI prepoznaje namirnice.',
+      onboardingStep2Title: 'Dobij prilagođene recepte',
+      onboardingStep2Desc: 'Amko predlaže 4 recepta na osnovu tvojih sastojaka.',
+      onboardingStep3Title: 'Sačuvaj, kuhaj i kupuj',
+      onboardingStep3Desc: 'Sačuvaj favorite, prati korak po korak i pošalji listu za kupovinu.',
+      onboardingCta: 'Idemo!',
+      onboardingHint: 'Besplatno. Bez računa. Samo hrana.',
+      toastCopied: 'Kopirano! Podijeli.',
+      toastListSent: 'Lista poslana na email ✈️',
+      toastListAdded: 'Dodano! Vrijeme za kupovinu.',
+      toastEmptyList: 'Lista prazna — nema šta slati!',
+      toastLoggedIn: 'Dobrodošli nazad!',
+      toastLoggedOut: 'Odjavljen/a si',
+      toastMagicSent: 'Provjeri email — poslali smo link',
+      toastError: 'Nešto je pošlo po zlu — pokušaj ponovo',
+      toastListCleared: 'Lista obrisana',
+      toastAlreadyInList: 'Sastojci su već na listi',
+      toastCantShare: 'Dijeljenje nije uspjelo',
+      toastCantCopy: 'Kopiranje nije uspjelo',
+      toastShareNA: 'Dijeljenje nije dostupno',
+      toastNoIngs: 'Nisu pronađeni sastojci',
+      toastBonAppetit: 'Prijatno! 🍽️',
+      toastFromCache: 'Učitano iz keša',
+      toastAuthEmail: 'Unesi email i lozinku',
+      toastAuthShort: 'Lozinka mora imati najmanje 6 znakova',
+      toastAuthWrong: 'Pogrešan email ili lozinka',
+      toastAuthExists: 'Račun s tim emailom već postoji',
+      toastAuthConfirm: 'Provjeri email za verifikacijski link',
+      toastAuthRate: 'Previše pokušaja — pričekaj malo',
+      footerPanic: '🍝 Pokretano panikom u 17:00',
+      footerAI: '🤖 AI koji kuha (nekako)',
+      footerHelp: '❓ Kako radi?',
+      footerShare: 'Podijeli s prijateljem 📤',
+      cookModePrev: '← Prethodno',
+      cookModeNext: 'Sljedeće →',
+      cookModeTimer: '⏱ Pokreni tajmer',
+      quickMeat: '🥩 Želja za mesom', quickFish: '🐟 Riba i plodovi mora',
+      quickVeg: '🥬 Ladica s povrćem', quickBasics: '🧀 Osnovno',
+      recipeDrinks: 'Preporuka pića', recipeNutrition: 'Nutritivna vrijednost',
+      recipeSubstitutions: 'Zamjene', recipeFav: 'Sačuvaj favorit',
+      recipeUnfav: 'Ukloni favorit', recipeCopy: 'Kopiraj', recipeShare: 'Podijeli',
+      recipePrint: 'Štampaj', recipeAddToList: '🛒 Dodaj na listu',
+      recipeCookMode: '👨‍🍳 Pokreni kuhanje',
+      historyTitle: 'Historija pretraga', historyClear: 'Obriši',
+      favRecipeCount: 'recepata sačuvano',
+      filterAll: 'Svi',
     },
   };
 
@@ -135,7 +443,7 @@
     ]},
     { version: '6.1', date: '2026-03-22', title: 'Språkstöd & mer inspiration', items: [
       'Välj språk: Svenska, Engelska, Spanska eller Bosniska',
-      '20 Armin-rekommendationer som roterar varje vecka',
+      '20 Amko-rekommendationer som roterar varje vecka',
       '74 världsrätter från 19 länder (inkl. Vietnam & Peru)',
     ]},
     { version: '6.0', date: '2026-03-22', title: 'Ny design & funktioner', items: [
@@ -169,6 +477,107 @@
       const placeholders = { sv: 'kyckling, tomat, grädde...', en: 'chicken, tomato, cream...', es: 'pollo, tomate, nata...', bs: 'piletina, paradajz, pavlaka...' };
       ingInput.placeholder = placeholders[currentLang] || placeholders.sv;
     }
+    // Search mode tabs
+    const modeTabIngs = document.querySelector('.search-mode-tab[data-mode="ingredients"]');
+    const modeTabFree = document.querySelector('.search-mode-tab[data-mode="freetext"]');
+    if (modeTabIngs) modeTabIngs.textContent = t('modeIngredients');
+    if (modeTabFree) modeTabFree.textContent = t('modeFreetext');
+    // Freetext
+    const ftLabel = document.querySelector('#freetextMode .card-label');
+    if (ftLabel) ftLabel.textContent = t('freetextLabel');
+    const ftHint = document.querySelector('#freetextMode .hint');
+    if (ftHint) ftHint.textContent = t('freetextHint');
+    const ftInput = document.getElementById('freetextInput');
+    if (ftInput) {
+      const ftPlaceholders = {
+        sv: "T.ex. 'Planera 5 middagar för en student under 200 kr', 'Sugen på Balkan', 'Barnvänlig veckomeny'...",
+        en: "E.g. 'Plan 5 student dinners under $20', 'Craving Balkan food', 'Kid-friendly weekly menu'...",
+        es: "Ej. 'Planifica 5 cenas de estudiante', 'Antojo de comida balcánica', 'Menú semanal para niños'...",
+        bs: "Npr. 'Planiraj 5 studentskih večera', 'Želja za balkanskom hranom', 'Sedmični meni za djecu'...",
+      };
+      ftInput.placeholder = ftPlaceholders[currentLang] || ftPlaceholders.sv;
+    }
+    // Search btn hint
+    const sbHint = document.getElementById('searchBtnHint');
+    if (sbHint) sbHint.textContent = t('searchBtnHint');
+    // Inspiration section
+    const inspTitle = document.querySelector('#viewInspiration .view-title');
+    if (inspTitle) inspTitle.textContent = t('inspirationTitle');
+    const inspSub = document.querySelector('#viewInspiration .view-sub');
+    if (inspSub) inspSub.textContent = t('inspirationSub');
+    const arminTitleEl = document.querySelector('.armin-title');
+    if (arminTitleEl) arminTitleEl.textContent = t('arminTitle');
+    const arminSubEl = document.querySelector('.armin-sub');
+    if (arminSubEl) arminSubEl.textContent = t('arminSub');
+    const sectionDiv = document.querySelector('.section-divider span');
+    if (sectionDiv) sectionDiv.textContent = t('worldKitchens');
+    const surpriseBtn = document.getElementById('surpriseBtn');
+    if (surpriseBtn) surpriseBtn.innerHTML = `<span class="dice">🎲</span> ${t('surpriseMe').replace('🎲 ', '')}`;
+    // Shopping list empty state
+    const listEmptyTitle = document.querySelector('#viewShopping .empty-title');
+    if (listEmptyTitle) listEmptyTitle.textContent = t('listEmpty');
+    const listEmptyDesc = document.querySelector('#viewShopping .empty-desc');
+    if (listEmptyDesc) listEmptyDesc.textContent = t('listEmptyDesc');
+    const listEmptyCta = document.querySelector('#viewShopping .empty-cta');
+    if (listEmptyCta) listEmptyCta.innerHTML = t('listEmptyCta');
+    // Footer
+    const footerLinks = document.querySelectorAll('.footer-link');
+    if (footerLinks[0]) footerLinks[0].textContent = t('footerPanic');
+    if (footerLinks[1]) footerLinks[1].textContent = t('footerAI');
+    const helpBtn = document.getElementById('helpBtn');
+    if (helpBtn) helpBtn.textContent = t('footerHelp');
+    const shareAppBtn = document.getElementById('shareAppBtn');
+    if (shareAppBtn) shareAppBtn.textContent = t('footerShare');
+    // Auth modal
+    const authTitleEl = document.querySelector('#authSignIn .auth-title');
+    if (authTitleEl) authTitleEl.textContent = t('authTitle');
+    const authDescEl = document.querySelector('#authSignIn .auth-desc');
+    if (authDescEl) authDescEl.textContent = t('authDesc');
+    const authGoogleBtn = document.getElementById('authGoogle');
+    if (authGoogleBtn) { const svg = authGoogleBtn.querySelector('svg')?.outerHTML || ''; authGoogleBtn.innerHTML = svg + ' ' + t('authGoogle'); }
+    const authAppleBtn = document.getElementById('authApple');
+    if (authAppleBtn) { const svg = authAppleBtn.querySelector('svg')?.outerHTML || ''; authAppleBtn.innerHTML = svg + ' ' + t('authApple'); }
+    const authDivider = document.querySelector('.auth-divider span');
+    if (authDivider) authDivider.textContent = t('authOrEmail');
+    const authPrivacy = document.querySelector('.auth-privacy');
+    if (authPrivacy) authPrivacy.textContent = t('authPrivacy');
+    const authToggle = document.getElementById('authToggleMode');
+    if (authToggle) authToggle.innerHTML = t('authNoAccount') + ' <strong>' + t('authCreateHere') + '</strong>';
+    // Benefit items
+    const benefits = document.querySelectorAll('.benefit-item span:not(.benefit-icon)');
+    if (benefits[0]) benefits[0].textContent = t('authBenefitSync');
+    if (benefits[1]) benefits[1].textContent = t('authBenefitShop');
+    if (benefits[2]) benefits[2].textContent = t('authBenefitReturn');
+    // Onboarding
+    const obTitle = document.querySelector('.onboarding-title');
+    if (obTitle) obTitle.textContent = t('onboardingTitle');
+    const obSub = document.querySelector('.onboarding-subtitle');
+    if (obSub) obSub.textContent = t('onboardingSub');
+    const obSteps = document.querySelectorAll('.onboarding-step-text');
+    if (obSteps[0]) { obSteps[0].querySelector('strong').textContent = t('onboardingStep1Title'); obSteps[0].querySelector('span').textContent = t('onboardingStep1Desc'); }
+    if (obSteps[1]) { obSteps[1].querySelector('strong').textContent = t('onboardingStep2Title'); obSteps[1].querySelector('span').textContent = t('onboardingStep2Desc'); }
+    if (obSteps[2]) { obSteps[2].querySelector('strong').textContent = t('onboardingStep3Title'); obSteps[2].querySelector('span').textContent = t('onboardingStep3Desc'); }
+    const obCta = document.querySelector('.onboarding-cta');
+    if (obCta) obCta.textContent = t('onboardingCta');
+    const obHint = document.querySelector('.onboarding-hint');
+    if (obHint) obHint.textContent = t('onboardingHint');
+    // Cook mode
+    const cmPrev = document.getElementById('cookModePrev');
+    if (cmPrev) cmPrev.textContent = t('cookModePrev');
+    const cmNext = document.getElementById('cookModeNext');
+    if (cmNext) cmNext.textContent = t('cookModeNext');
+    const cmTimer = document.getElementById('cookModeTimerBtn');
+    if (cmTimer) cmTimer.textContent = t('cookModeTimer');
+    // Re-render quick picks with translated labels
+    renderQuickPicks();
+    // Rotate hero subtitle and footer in correct language
+    const heroSubEl = document.querySelector('.hero-sub');
+    if (heroSubEl) heroSubEl.textContent = pick(heroSubtitles[currentLang] || heroSubtitles.sv);
+    const ftTagline = document.querySelector('.footer-tagline:not(.footer-irony)');
+    const ftIrony = document.querySelector('.footer-irony');
+    if (ftTagline) ftTagline.textContent = pick(footerTaglines[currentLang] || footerTaglines.sv);
+    if (ftIrony) ftIrony.textContent = pick(footerIronies[currentLang] || footerIronies.sv);
+
     document.documentElement.lang = currentLang;
   }
 
@@ -254,14 +663,29 @@
   let favorites     = loadStorage('fav_recipes', []);
   let searchHistory  = loadStorage('search_history', []);
   let shoppingList   = loadStorage('shopping_list', []);
+  let sessionConfettiFired = false;
   let ratings        = loadStorage('recipe_ratings', {});
 
-  const quickCategories = [
-    { label: '🥩 Sugen på kött', items: ['kyckling', 'köttfärs', 'bacon', 'fläsk', 'lamm'] },
-    { label: '🐟 Fisk & skaldjur', items: ['lax', 'räkor', 'torsk', 'tonfisk'] },
-    { label: '🥬 Grönsakslådan', items: ['tomat', 'paprika', 'spenat', 'broccoli', 'morötter', 'potatis'] },
-    { label: '🧀 Basics', items: ['pasta', 'ris', 'ägg', 'ost', 'grädde', 'lök', 'vitlök'] },
-  ];
+  // ─── Ingredient display names (i18n) ───
+  const ingTranslations = {
+    en: { kyckling:'chicken', köttfärs:'ground beef', bacon:'bacon', fläsk:'pork', lamm:'lamb', lax:'salmon', räkor:'shrimp', torsk:'cod', tonfisk:'tuna', tomat:'tomato', paprika:'bell pepper', spenat:'spinach', broccoli:'broccoli', morötter:'carrots', potatis:'potato', pasta:'pasta', ris:'rice', ägg:'eggs', ost:'cheese', grädde:'cream', lök:'onion', vitlök:'garlic', sötpotatis:'sweet potato', svamp:'mushroom', zucchini:'zucchini', aubergine:'eggplant', kokosmjölk:'coconut milk', soja:'soy sauce', ingefära:'ginger', lime:'lime', citron:'lemon', koriander:'cilantro', persilja:'parsley', linser:'lentils', kikärtor:'chickpeas', bönor:'beans', quinoa:'quinoa', bulgur:'bulgur', couscous:'couscous', mjölk:'milk', smör:'butter', olivolja:'olive oil', mjöl:'flour', socker:'sugar', honung:'honey', senap:'mustard', tofu:'tofu', halloumi:'halloumi', fetaost:'feta', cheddar:'cheddar', parmesan:'parmesan', mozzarella:'mozzarella', tortilla:'tortilla', fläskfilé:'pork tenderloin', ananas:'pineapple', avokado:'avocado', kajmak:'kajmak', pitabröd:'pita bread', chili:'chili', filodeg:'phyllo dough', yoghurt:'yogurt', nudlar:'noodles', kål:'cabbage', ströbröd:'breadcrumbs', gurka:'cucumber', sallad:'lettuce', jordnötter:'peanuts' },
+    es: { kyckling:'pollo', köttfärs:'carne molida', bacon:'tocino', fläsk:'cerdo', lamm:'cordero', lax:'salmón', räkor:'camarones', torsk:'bacalao', tonfisk:'atún', tomat:'tomate', paprika:'pimiento', spenat:'espinaca', broccoli:'brócoli', morötter:'zanahorias', potatis:'patata', pasta:'pasta', ris:'arroz', ägg:'huevos', ost:'queso', grädde:'nata', lök:'cebolla', vitlök:'ajo', kokosmjölk:'leche de coco', soja:'salsa de soja', ingefära:'jengibre', lime:'lima', citron:'limón', koriander:'cilantro', linser:'lentejas', kikärtor:'garbanzos', smör:'mantequilla', olivolja:'aceite de oliva', mjölk:'leche', socker:'azúcar', honung:'miel', tofu:'tofu', halloumi:'halloumi', tortilla:'tortilla', fläskfilé:'lomo de cerdo', ananas:'piña', avokado:'aguacate', kajmak:'kajmak', pitabröd:'pan pita', chili:'chile', filodeg:'masa filo', yoghurt:'yogur', nudlar:'fideos', kål:'repollo', ströbröd:'pan rallado', gurka:'pepino', sallad:'lechuga', jordnötter:'cacahuetes' },
+    bs: { kyckling:'piletina', köttfärs:'mljeveno meso', bacon:'slanina', fläsk:'svinjetina', lamm:'janjetina', lax:'losos', räkor:'škampi', torsk:'bakalar', tonfisk:'tuna', tomat:'paradajz', paprika:'paprika', spenat:'špinat', broccoli:'brokula', morötter:'mrkva', potatis:'krompir', pasta:'tjestenina', ris:'riža', ägg:'jaja', ost:'sir', grädde:'vrhnje', lök:'luk', vitlök:'bijeli luk', sötpotatis:'batat', svamp:'gljive', kokosmjölk:'kokosovo mlijeko', soja:'soja sos', ingefära:'đumbir', lime:'limeta', citron:'limun', koriander:'korijander', persilja:'peršin', linser:'leća', kikärtor:'slanutak', bönor:'grah', quinoa:'kvinoja', smör:'maslac', olivolja:'maslinovo ulje', mjölk:'mlijeko', socker:'šećer', honung:'med', tofu:'tofu', halloumi:'halloumi', fetaost:'feta sir', tortilla:'tortilla', fläskfilé:'svinjska fileta', ananas:'ananas', avokado:'avokado', kajmak:'kajmak', pitabröd:'pita', chili:'čili', filodeg:'filo tijesto', yoghurt:'jogurt', nudlar:'rezanci', kål:'kupus', ströbröd:'prezle', gurka:'krastavac', sallad:'salata', jordnötter:'kikiriki' },
+  };
+
+  function translateIng(svName) {
+    if (currentLang === 'sv') return svName;
+    return (ingTranslations[currentLang] || {})[svName] || svName;
+  }
+
+  function getQuickCategories() {
+    return [
+      { label: t('quickMeat'), items: ['kyckling', 'köttfärs', 'bacon', 'fläsk', 'lamm'] },
+      { label: t('quickFish'), items: ['lax', 'räkor', 'torsk', 'tonfisk'] },
+      { label: t('quickVeg'), items: ['tomat', 'paprika', 'spenat', 'broccoli', 'morötter', 'potatis'] },
+      { label: t('quickBasics'), items: ['pasta', 'ris', 'ägg', 'ost', 'grädde', 'lök', 'vitlök'] },
+    ];
+  }
 
   // ─── Autocomplete ingredients list ───
   const allIngredients = [
@@ -283,90 +707,115 @@
 
   const heroSubtitles = {
     sv: [
-      'Släng in vad du har. Armin fixar resten.',
+      'Släng in vad du har. Amko fixar resten.',
       'Du har grejer hemma. Du vet bara inte vad du ska göra med dem.',
       'Från "vi har ju ingenting" till middag på 30 min.',
       'Kylskåpskaos → Middagsmagi.',
-      'Armin dömer inte ditt kylskåp. (Nåja, lite.)',
-      'Svaret på frågan ingen orkar ställa.',
-      'Tre grejer. Noll ursäkter. En middag.',
-      'Studenter, föräldrar, alla — Armin fixar.',
+      'Amko dömer inte ditt kylskåp. (Nåja, lite.)',
       'Billigt, snabbt, gott. Välj alla tre.',
       'Din mamma hade godkänt det här. Typ.',
+      'CSN-middag med Michelin-vibbar.',
+      'Bättre än att stirra in i kylskåpet i 20 min.',
+      'Svaret på frågan du ställer varje dag kl 17.',
+      'Du öppnade kylskåpet tre gånger. Det hjälpte inte. Prova det här istället.',
+      'Den enda appen som förstår att du har "typ ingenting hemma".',
+      'Ja, du kan laga mat. Nej, du behöver inte vara bra på det.',
+      'Middag ska inte kräva en existentiell kris.',
+      'Häll inte ut pastan igen. Vi har bättre idéer.',
+      'Det värsta som kan hända är att det blir gott.',
+      'Ingen dömer dig för att äta middag kl 21. Vi hjälper dig ändå.',
+      'Dina ingredienser har potential. Du också, förmodligen.',
+      'För alla som står i köket och tänker "varför gjorde jag inte detta enklare".',
+      'Laga mat som om ingen tittar. För det gör ingen.',
     ],
     en: [
-      'Throw in what you have. Armin handles dinner.',
+      'Throw in what you have. Amko handles dinner.',
       'You have food at home. You just don\'t know what to do with it.',
       'From "we have nothing" to dinner in 30 min.',
       'Fridge chaos → Culinary genius.',
-      'Armin doesn\'t judge your fridge. (Okay, a little.)',
-      'The answer to the question no one wants to ask.',
+      'Amko doesn\'t judge your fridge. (Okay, a little.)',
       'Three ingredients. Zero excuses.',
+      'Uber Eats closed? We\'re open.',
+      'Student budget. Michelin vibes.',
+      'Better than staring into your fridge for 20 min.',
+      'Skip the ramen. You deserve better. (Sometimes.)',
+      'The dinner therapy nobody knew they needed.',
     ],
     es: [
-      'Pon lo que tengas. Armin se encarga de la cena.',
+      'Pon lo que tengas. Amko se encarga de la cena.',
       'Tienes comida en casa. Solo no sabes qué hacer con ella.',
       'De "no tenemos nada" a cena en 30 min.',
       'Caos en la nevera → Genialidad culinaria.',
-      'Armin no juzga tu nevera. (Bueno, un poco.)',
+      'Amko no juzga tu nevera. (Bueno, un poco.)',
+      'Mejor que mirar la nevera 20 minutos.',
+      'Presupuesto de estudiante. Vibras Michelin.',
+      'La terapia culinaria que nadie sabía que necesitaba.',
     ],
     bs: [
-      'Ubaci šta imaš. Armin rješava večeru.',
+      'Ubaci šta imaš. Amko rješava večeru.',
       'Imaš hranu kod kuće. Samo ne znaš šta da radiš s njom.',
       'Od "nemamo ništa" do večere za 30 min.',
       'Kaos u frižideru → Kulinarska genijalnost.',
-      'Armin ne osuđuje tvoj frižider. (Dobro, malo.)',
+      'Amko ne osuđuje tvoj frižider. (Dobro, malo.)',
+      'Bolje nego zuriti u frižider 20 minuta.',
+      'Studentski budžet. Michelin vibracije.',
+      'Kulinarska terapija koju niko nije znao da treba.',
     ],
   };
 
   const footerTaglines = {
-    sv: ['Lagad med kärlek, kaos och alldeles för mycket vitlök.', 'Inga kockar skadades. Några ägg, dock.', 'Kodad med kaffe. Testad med hunger.', 'Byggt av en kille som googlar "hur kokar man ris" ibland.', 'Made in Sweden. Drivs av panik och pasta.', 'Funkar bäst typ kl 17 när stressen slår till.', 'Testad av studenter. Godkänd av mammor.', 'Recept utan krusiduller. Middag utan drama.'],
-    en: ['Made with love, chaos, and way too much garlic.', 'No chefs were harmed. A few eggs, though.', 'Coded with coffee. Tested with hunger.', 'Built by someone who googles "how to boil rice" sometimes.', 'Works best at 4:55 PM when panic kicks in.'],
-    es: ['Hecho con amor, caos y demasiado ajo.', 'Ningún chef fue lastimado. Algunos huevos sí.', 'Programado con café. Probado con hambre.', 'Funciona mejor a las 16:55 cuando entra el pánico.'],
-    bs: ['Napravljeno s ljubavlju, haosom i previše bijelog luka.', 'Nijedan kuhar nije povrijeđen. Nekoliko jaja jeste.', 'Kodirano uz kafu. Testirano glađu.', 'Najbolje radi u 16:55 kad udari panika.'],
+    sv: ['Lagad med kärlek, kaos och alldeles för mycket vitlök.', 'Inga kockar skadades. Några ägg, dock.', 'Kodad med kaffe. Testad med hunger.', 'Byggt av någon som googlar "hur kokar man ris" ibland.', 'Made in Sweden. Drivs av panik och pasta.', 'Funkar bäst typ kl 17 när stressen slår till.', 'Testad av studenter. Godkänd av mammor. Ifrågasatt av mormödrar.', 'Vi ersätter inte din farmor. Men vi försöker.', 'Amko gör grovjobbet. Du tar åt dig äran.', 'Om det smakar konstigt så följde du inte receptet. Bara så du vet.', 'Gjord av en människa som äter frukost till middag ibland.', 'Inget nyhetsbrev. Ingen premium-version. Bara mat.', 'Du googlade "enkel middag". Vi tog det personligt.'],
+    en: ['Made with love, chaos, and way too much garlic.', 'No chefs were harmed. A few eggs, though.', 'Coded with coffee. Tested with hunger.', 'Built by someone who googles "how to boil rice" sometimes.', 'Works best at 4:55 PM when panic kicks in.', 'We don\'t replace your grandma. But we try.', 'Like Tinder for food. And you always match.', 'Amko does the heavy lifting. You take the credit.'],
+    es: ['Hecho con amor, caos y demasiado ajo.', 'Ningún chef fue lastimado. Algunos huevos sí.', 'Programado con café. Probado con hambre.', 'Funciona mejor a las 16:55 cuando entra el pánico.', 'No reemplazamos a tu abuela. Pero lo intentamos.', 'Como Tinder para comida. Y siempre haces match.'],
+    bs: ['Napravljeno s ljubavlju, haosom i previše bijelog luka.', 'Nijedan kuhar nije povrijeđen. Nekoliko jaja jeste.', 'Kodirano uz kafu. Testirano glađu.', 'Najbolje radi u 16:55 kad udari panika.', 'Ne zamjenjujemo tvoju nanu. Ali pokušavamo.', 'Kao Tinder za hranu. I uvijek se matchaš.'],
   };
 
   const footerIronies = {
-    sv: ['Ingen mat skadades. Utvecklaren däremot — den vet vi inte.', 'Om appen krånglar — skylla på vitlöken.', 'Vi tar noll ansvar för matlagningsambitioner kl 23.', 'Den här appen fixar inte disken. Men maten, det kan vi.', 'AI-recept. Mänsklig panik. Riktig hunger.', 'Likheter med riktiga kockar är helt och hållet en slump.', 'Ditt kylskåp dömer dig inte. Det gör vi inte heller.', 'Bättre än att googla "vad ska jag laga" för 45:e gången.'],
-    en: ['No food was harmed during development. The developer, however...', 'If the app crashes — blame the garlic.', 'Disclaimer: We take no responsibility for cooking ambitions at 11 PM.', 'This app doesn\'t replace a grandma. But it tries.', 'AI-generated recipes. Human panic. Real hunger.'],
-    es: ['Ningún alimento fue dañado. El desarrollador, sin embargo...', 'Si la app falla — culpa al ajo.', 'Esta app no reemplaza a una abuela. Pero lo intenta.', 'Recetas de IA. Pánico humano. Hambre real.'],
-    bs: ['Nijedna hrana nije oštećena. Programer, međutim...', 'Ako app padne — kriv je bijeli luk.', 'Ova aplikacija ne zamjenjuje nanu. Ali pokušava.', 'AI recepti. Ljudska panika. Prava glad.'],
+    sv: ['Ingen mat skadades. Utvecklaren däremot — den vet vi inte.', 'Om appen krånglar — skylla på vitlöken.', 'Vi tar noll ansvar för matlagningsambitioner kl 23.', 'Den här appen fixar inte disken. Men maten, det kan vi.', 'Ditt kylskåp dömer dig inte. Det gör vi inte heller.', 'Bättre än att googla "vad ska jag laga" för 45:e gången.', 'Disclaimer: Vi tar inget ansvar om du blir bra på att laga mat.', 'Fungerar bäst med låga förväntningar och hög hunger.', 'Ja, du kan frysa in rester. Nej, du kommer inte äta dem.', 'Det är okej att laga samma rätt tre gånger i veckan. Vi berättar inte.', 'Ingen AI ersätter känslan av att bränna vitlöken och börja om.', 'Innehåller spår av ambition och orealistiska portionsberäkningar.', 'Du kommer säga "nästa gång gör jag det från scratch". Du kommer inte göra det.'],
+    en: ['No food was harmed during development. The developer, however...', 'If the app crashes — blame the garlic.', 'Disclaimer: We take no responsibility for cooking ambitions at 11 PM.', 'This app doesn\'t replace a grandma. But it tries.', 'AI-generated recipes. Human panic. Real hunger.', 'Better than googling "what should I cook" for the 45th time.', 'Side effects: sudden cooking skills, boosted confidence, lower Uber Eats bill.', 'Works best with low expectations and high hunger.'],
+    es: ['Ningún alimento fue dañado. El desarrollador, sin embargo...', 'Si la app falla — culpa al ajo.', 'Esta app no reemplaza a una abuela. Pero lo intenta.', 'Recetas de IA. Pánico humano. Hambre real.', 'Efectos secundarios: habilidades culinarias repentinas, confianza elevada.', 'Funciona mejor con expectativas bajas y mucha hambre.'],
+    bs: ['Nijedna hrana nije oštećena. Programer, međutim...', 'Ako app padne — kriv je bijeli luk.', 'Ova aplikacija ne zamjenjuje nanu. Ali pokušava.', 'AI recepti. Ljudska panika. Prava glad.', 'Nuspojave: iznenadne kulinarske vještine, povećano samopouzdanje.', 'Najbolje radi uz niska očekivanja i veliku glad.'],
   };
 
   const loadingMessages = {
-    sv: ['Armin tänker på vad du ska käka...', 'Frågar AI-kocken om råd...', 'Mixar dina grejer i molnet...', 'Bläddrar receptböcker i ljusets hastighet...', 'Letar efter recept som funkar med det du har...', 'Räknar vitlöksklyftor (det räcker aldrig)...', 'Kollar vad man kan trolla fram...', 'Typ som att googla, fast smartare...', 'Hoppas du är hungrig...'],
-    en: ['Armin is thinking about what you should eat', 'Consulting the culinary oracle', 'Mixing ingredients in the cloud', 'Not googling — trusting the AI instead', 'Looking for recipes that don\'t require talent', 'Counting garlic cloves (never enough)'],
-    es: ['Armin está pensando qué deberías comer', 'Consultando el oráculo culinario', 'Mezclando ingredientes en la nube', 'Buscando recetas que no requieran talento'],
-    bs: ['Armin razmišlja šta da jedeš', 'Konsultuje kulinarski orakul', 'Miješa sastojke u oblaku', 'Traži recepte koji ne zahtijevaju talenat'],
+    sv: ['Amko tänker på vad du ska käka...', 'Mixar dina grejer i molnet...', 'Letar efter recept som funkar med det du har...', 'Räknar vitlöksklyftor (det räcker aldrig)...', 'Kollar vad man kan trolla fram...', 'Hoppas du är hungrig...', 'Konsulterar kökets högre makter...', 'Testar kombinationer som din farmor aldrig hade godkänt...', 'Gör det jobb du borde ha gjort kl 15...', 'Garanterar ingenting men gör sitt bästa...', 'Letar bland tusentals recept efter fyra du faktiskt orkar laga...'],
+    en: ['Amko is thinking about what you should eat', 'Consulting the culinary oracle', 'Mixing ingredients in the cloud', 'Not googling — trusting the AI instead', 'Looking for recipes that don\'t require talent', 'Counting garlic cloves (never enough)'],
+    es: ['Amko está pensando qué deberías comer', 'Consultando el oráculo culinario', 'Mezclando ingredientes en la nube', 'Buscando recetas que no requieran talento'],
+    bs: ['Amko razmišlja šta da jedeš', 'Konsultuje kulinarski orakul', 'Miješa sastojke u oblaku', 'Traži recepte koji ne zahtijevaju talenat'],
   };
 
   // ─── Toast messages (with variation) ───
   const toastVariations = {
-    favAdded: [
-      'Sparad! Den där är en keeper ❤️',
-      'In i favoriter-skåpet! 🏆',
-      'Noterat. Du har bra smak.',
-      'Sparad — Armin godkänner 👨‍🍳',
-    ],
-    favRemoved: [
-      'Borttagen. Vi pratar aldrig om det igen.',
-      'Bort med den. Ingen dömer.',
-      'Raderad. Som om det aldrig hände.',
-      'Favorit-dumpad. Inga hårda känslor.',
-    ],
+    favAdded: {
+      sv: ['Sparad! Den där är en keeper.', 'In bland favoriterna!', 'Noterat. Du har bra smak.', 'Sparad — bra val.', 'Den håller vi koll på åt dig.', 'Bra val. Den förtjänade det.', 'Sparad. Du kommer tacka dig själv senare.'],
+      en: ['Saved! That one\'s a keeper ❤️', 'Into the favorites vault! 🏆', 'Noted. You have great taste.', 'Saved — Amko approves 👨‍🍳', 'Nice pick. Amko would\'ve done the same.'],
+      es: ['¡Guardada! Esa es imperdible ❤️', '¡Al estante de favoritos! 🏆', 'Anotado. Buen gusto.', 'Guardada — Amko aprueba 👨‍🍳'],
+      bs: ['Sačuvano! Ta je za čuvanje ❤️', 'U ormar favorita! 🏆', 'Primljeno. Imaš dobar ukus.', 'Sačuvano — Amko odobrava 👨‍🍳'],
+    },
+    favRemoved: {
+      sv: ['Borttagen. Vi pratar aldrig om det igen.', 'Bort med den. Ingen dömer.', 'Raderad. Som om det aldrig hände.', 'Okej, den var kanske inte så bra ändå.', 'Borta. Ibland får man gå vidare.', 'Det är okej att ångra sig. Vi har alla varit där.'],
+      en: ['Gone. We don\'t talk about it.', 'Removed. No judgment.', 'Deleted. Like it never happened.', 'Unfavorited. No hard feelings.'],
+      es: ['Eliminada. No hablaremos de eso.', 'Quitada. Sin juicio.', 'Borrada. Como si nunca existió.'],
+      bs: ['Obrisano. Ne pričamo o tome.', 'Uklonjeno. Bez osude.', 'Izbrisano. Kao da se nije desilo.'],
+    },
   };
 
+  // Dynamic toast using translations
+  function getToast(key) {
+    return t('toast' + key.charAt(0).toUpperCase() + key.slice(1));
+  }
+
   const toastMessages = {
-    copied: 'Kopierat! Dela på hälsa.',
-    favAdded: () => pick(toastVariations.favAdded),
-    favRemoved: () => pick(toastVariations.favRemoved),
-    listSent: 'Inköpslistan flyger iväg till din mejl ✈️',
-    listAdded: 'Lagt till! Dags att handla snart.',
-    emptyList: 'Listan är tom — inget att skicka!',
-    loggedIn: 'Välkommen tillbaka!',
-    loggedOut: 'Du är nu utloggad',
-    magicSent: 'Kolla din mejl — vi har skickat en länk',
-    error: 'Något gick snett — försök igen om en stund'
+    copied: () => t('toastCopied'),
+    favAdded: () => pick(toastVariations.favAdded[currentLang] || toastVariations.favAdded.sv),
+    favRemoved: () => pick(toastVariations.favRemoved[currentLang] || toastVariations.favRemoved.sv),
+    listSent: () => t('toastListSent'),
+    listAdded: () => t('toastListAdded'),
+    emptyList: () => t('toastEmptyList'),
+    loggedIn: () => t('toastLoggedIn'),
+    loggedOut: () => t('toastLoggedOut'),
+    magicSent: () => t('toastMagicSent'),
+    error: () => t('toastError'),
   };
 
   // ─── DOM refs ───
@@ -411,7 +860,7 @@
     window.scrollTo({ top: 0, behavior: 'instant' });
     history.pushState({ view: name }, '', `#${name}`);
     if (name === 'favorites') renderFavView();
-    if (name === 'inspiration') { renderArminPicks(); renderWorldCuisines(); }
+    if (name === 'inspiration') { renderAmkoPicks(); renderWorldCuisines(); }
     if (name === 'shopping') renderShoppingView();
   }
   // Expose for inline onclick in HTML
@@ -443,7 +892,7 @@
     return d.innerHTML;
   }
 
-  function saveFavorites() { localStorage.setItem('fav_recipes', JSON.stringify(favorites)); }
+  function saveFavorites() { saveStorage('fav_recipes', favorites); }
   function isFav(name) { return favorites.some(f => f.name === name); }
 
   function showToast(msg) {
@@ -452,7 +901,8 @@
     copyToast.textContent = text;
     copyToast.classList.add('show');
     clearTimeout(copyToast._t);
-    copyToast._t = setTimeout(() => copyToast.classList.remove('show'), 2200);
+    const isError = msg === 'error' || String(text).includes('fel') || String(text).includes('wrong') || String(text).includes('error');
+    copyToast._t = setTimeout(() => copyToast.classList.remove('show'), isError ? 4000 : 2200);
   }
 
   function formatTimeAgo(isoString) {
@@ -537,6 +987,11 @@
     settingsToggle.classList.toggle('dark-active', isDark());
   }
 
+  function updateThemeColor() {
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.content = isDark() ? '#0E0C0A' : '#F7F4EF';
+  }
+
   function toggleDarkMode() {
     haptic();
     if (isDark()) {
@@ -547,10 +1002,12 @@
       localStorage.setItem('dark_mode', 'true');
     }
     updateDarkModeIcon();
+    updateThemeColor();
   }
 
   settingsToggle.addEventListener('click', toggleDarkMode);
   updateDarkModeIcon();
+  updateThemeColor();
 
   // ─── Onboarding ───
   function showOnboarding() {
@@ -689,11 +1146,11 @@
     const email = emailInput?.value?.trim();
     const password = passwordInput?.value;
     if (!email || !password) {
-      showToast('error');
+      showToast(t('toastAuthEmail'));
       return;
     }
     if (password.length < 6) {
-      showToast('error');
+      showToast(t('toastAuthShort'));
       return;
     }
 
@@ -720,7 +1177,12 @@
         closeAuthModal();
       }
     } catch (e) {
-      showToast('error');
+      const msg = e?.message || '';
+      if (msg.includes('Invalid login credentials')) showToast(t('toastAuthWrong'));
+      else if (msg.includes('already registered') || msg.includes('already exists')) showToast(t('toastAuthExists'));
+      else if (msg.includes('Email not confirmed')) showToast(t('toastAuthConfirm'));
+      else if (msg.includes('rate limit') || msg.includes('too many')) showToast(t('toastAuthRate'));
+      else showToast('error');
       console.error('Auth error:', e);
     }
     submitBtn.disabled = false;
@@ -844,27 +1306,37 @@
     if (!chip) return;
     haptic();
     const pref = chip.dataset.pref;
-    if (prefs.has(pref)) { prefs.delete(pref); chip.classList.remove('active'); }
-    else { prefs.add(pref); chip.classList.add('active'); }
+    if (prefs.has(pref)) { prefs.delete(pref); chip.classList.remove('active'); chip.setAttribute('aria-pressed', 'false'); }
+    else { prefs.add(pref); chip.classList.add('active'); chip.setAttribute('aria-pressed', 'true'); }
   });
+  // Init aria-pressed on pref chips
+  document.querySelectorAll('.pref-chip').forEach(c => c.setAttribute('aria-pressed', 'false'));
 
   // ─── Search Portions ───
-  document.getElementById('spMinus').addEventListener('click', () => {
-    if (searchPortions > 1) { searchPortions--; document.getElementById('spNum').textContent = searchPortions; haptic(); }
+  const spMinus = document.getElementById('spMinus');
+  const spPlus = document.getElementById('spPlus');
+  function updatePortionBtns() {
+    if (spMinus) spMinus.disabled = searchPortions <= 1;
+    if (spPlus) spPlus.disabled = searchPortions >= 20;
+    document.getElementById('spNum').textContent = searchPortions;
+  }
+  spMinus?.addEventListener('click', () => {
+    if (searchPortions > 1) { searchPortions--; updatePortionBtns(); haptic(); }
   });
-  document.getElementById('spPlus').addEventListener('click', () => {
-    if (searchPortions < 20) { searchPortions++; document.getElementById('spNum').textContent = searchPortions; haptic(); }
+  spPlus?.addEventListener('click', () => {
+    if (searchPortions < 20) { searchPortions++; updatePortionBtns(); haptic(); }
   });
+  updatePortionBtns();
 
   // ─── Quick picks ───
   function renderQuickPicks() {
-    quickPicks.innerHTML = quickCategories.map(cat => `
+    quickPicks.innerHTML = getQuickCategories().map(cat => `
       <div class="quick-category">
         <div class="quick-category-label">${cat.label}</div>
         <div class="quick-category-chips">
           ${cat.items.map(item => {
             const used = ingredients.includes(item) ? ' used' : '';
-            return `<button class="quick-chip${used}" data-ing="${esc(item)}">${esc(item)}</button>`;
+            return `<button class="quick-chip${used}" data-ing="${esc(item)}">${esc(translateIng(item))}</button>`;
           }).join('')}
         </div>
       </div>
@@ -896,9 +1368,20 @@
 
   function render() {
     tagsEl.innerHTML = ingredients.map((ing, i) =>
-      `<span class="tag">${esc(ing)}<button aria-label="Ta bort ${esc(ing)}" data-idx="${i}">×</button></span>`
+      `<span class="tag">${esc(translateIng(ing))}<button aria-label="Ta bort ${esc(translateIng(ing))}" data-idx="${i}">×</button></span>`
     ).join('');
+    // Add clear-all button when 3+ ingredients
+    const clearAllBtn = tagsEl.querySelector('.clear-all-ings');
+    if (ingredients.length >= 3 && !clearAllBtn) {
+      const btn = document.createElement('button');
+      btn.className = 'clear-all-ings';
+      btn.textContent = currentLang === 'en' ? 'Clear all' : currentLang === 'es' ? 'Borrar todo' : currentLang === 'bs' ? 'Obriši sve' : 'Rensa alla';
+      btn.addEventListener('click', () => { ingredients = []; render(); });
+      tagsEl.appendChild(btn);
+    }
     searchBtn.disabled = ingredients.length === 0;
+    const hint = document.getElementById('searchBtnHint');
+    if (hint) hint.style.display = ingredients.length === 0 ? '' : 'none';
     renderQuickPicks();
     updateFavBadge();
     updateListBadge();
@@ -941,8 +1424,28 @@
     if (ingSuggestions) { ingSuggestions.innerHTML = ''; ingSuggestions.hidden = true; }
   }
 
-  ingInput.addEventListener('input', () => showSuggestions(ingInput.value.trim()));
+  let suggestionIdx = -1;
+  ingInput.addEventListener('input', () => { suggestionIdx = -1; showSuggestions(ingInput.value.trim()); });
   ingInput.addEventListener('blur', () => setTimeout(clearSuggestions, 150));
+  ingInput.addEventListener('keydown', e => {
+    if (!ingSuggestions || ingSuggestions.hidden) return;
+    const items = ingSuggestions.querySelectorAll('.suggestion-item');
+    if (!items.length) return;
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      suggestionIdx = Math.min(suggestionIdx + 1, items.length - 1);
+      items.forEach((it, i) => { it.classList.toggle('active', i === suggestionIdx); it.setAttribute('aria-selected', i === suggestionIdx); });
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      suggestionIdx = Math.max(suggestionIdx - 1, 0);
+      items.forEach((it, i) => { it.classList.toggle('active', i === suggestionIdx); it.setAttribute('aria-selected', i === suggestionIdx); });
+    } else if (e.key === 'Enter' && suggestionIdx >= 0) {
+      e.preventDefault();
+      const val = items[suggestionIdx]?.dataset.val;
+      if (val && !ingredients.includes(val)) { ingredients.push(val); ingInput.value = ''; clearSuggestions(); render(); ingInput.focus(); }
+      suggestionIdx = -1;
+    }
+  });
 
   if (ingSuggestions) {
     ingSuggestions.addEventListener('click', e => {
@@ -985,7 +1488,7 @@
         </div>
         ${searchHistory.slice(0, 5).map(entry => `
           <div class="history-item" data-hid="${entry.id}">
-            <div class="history-ings">${entry.ingredients.map(esc).join(', ')}</div>
+            <div class="history-ings">${entry.ingredients.map(i => esc(translateIng(i))).join(', ')}</div>
             <div class="history-time">${formatTimeAgo(entry.timestamp)} ${iconArrow}</div>
           </div>
         `).join('')}
@@ -996,6 +1499,7 @@
       searchHistory = [];
       localStorage.removeItem('search_history');
       renderHistory();
+      showToast('Sökhistorik rensad');
     });
 
     historySection.querySelectorAll('.history-item').forEach(item => {
@@ -1026,21 +1530,47 @@
     updateListBadge();
   }
 
+  function parseQuantity(str) {
+    const m = str.match(/^(\d+(?:[.,]\d+)?)\s*(g|kg|dl|cl|ml|l|st|msk|tsk|krm)\b\s+(.+)$/i);
+    if (m) return { qty: parseFloat(m[1].replace(',', '.')), unit: m[2].toLowerCase(), ingredient: m[3].trim().toLowerCase() };
+    return null;
+  }
+
   function addToShoppingList(ingredientList, recipeName) {
     let added = 0;
+    let merged = 0;
     ingredientList.forEach(ing => {
       const name = ing.trim();
-      if (name && !shoppingList.some(item => item.name.toLowerCase() === name.toLowerCase())) {
+      if (!name) return;
+      const parsed = parseQuantity(name);
+      if (parsed) {
+        const existing = shoppingList.find(item => {
+          const ep = parseQuantity(item.name);
+          return ep && ep.unit === parsed.unit && ep.ingredient === parsed.ingredient;
+        });
+        if (existing) {
+          const ep = parseQuantity(existing.name);
+          const newQty = ep.qty + parsed.qty;
+          const fmtQty = newQty % 1 === 0 ? String(newQty) : newQty.toFixed(1);
+          existing.name = `${fmtQty} ${ep.unit} ${parsed.ingredient}`;
+          if (recipeName && existing.recipe && !existing.recipe.includes(recipeName)) {
+            existing.recipe += `, ${recipeName}`;
+          }
+          merged++;
+          return;
+        }
+      }
+      if (!shoppingList.some(item => item.name.toLowerCase() === name.toLowerCase())) {
         shoppingList.push({ id: Date.now() + Math.random(), name, checked: false, recipe: recipeName || '' });
         added++;
       }
     });
     saveShoppingList();
-    if (added > 0) {
+    if (added > 0 || merged > 0) {
       showToast('listAdded');
       haptic('medium');
     } else {
-      showToast('Ingredienserna finns redan i listan');
+      showToast(t('toastAlreadyInList'));
     }
   }
 
@@ -1097,7 +1627,9 @@
             shoppingList[idx].checked = cb.checked;
             saveShoppingList();
             haptic();
+            const scrollY = content.parentElement.scrollTop || window.scrollY;
             renderShoppingView();
+            requestAnimationFrame(() => { if (content.parentElement.scrollTop !== undefined) content.parentElement.scrollTop = scrollY; else window.scrollTo(0, scrollY); });
           }
         });
       });
@@ -1120,10 +1652,30 @@
     shoppingList = [];
     saveShoppingList();
     renderShoppingView();
-    showToast('Inköpslistan rensad');
+    showToast(t('toastListCleared'));
   });
 
   // Share shopping list
+  // Manual add to shopping list
+  const manualListInput = document.getElementById('manualListInput');
+  const manualListAddBtn = document.getElementById('manualListAddBtn');
+  function addManualListItem() {
+    const val = manualListInput?.value.trim();
+    if (!val) return;
+    val.split(',').forEach(part => {
+      const name = part.trim();
+      if (name && !shoppingList.some(item => item.name.toLowerCase() === name.toLowerCase())) {
+        shoppingList.push({ id: Date.now() + Math.random(), name, checked: false, recipe: t('listEmptyCta').replace(' →', '') });
+      }
+    });
+    manualListInput.value = '';
+    saveShoppingList();
+    renderShoppingView();
+    haptic();
+  }
+  manualListAddBtn?.addEventListener('click', addManualListItem);
+  manualListInput?.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); addManualListItem(); } });
+
   document.getElementById('sendList')?.addEventListener('click', () => shareShoppingList());
 
   function getListText() {
@@ -1157,7 +1709,7 @@
     try {
       await navigator.clipboard.writeText(text);
       showToast('copied');
-    } catch { showToast('Kunde inte dela'); }
+    } catch { showToast(t('toastCantShare')); }
   }
 
   // ─── Find Recipes ───
@@ -1181,10 +1733,16 @@
       lastMissingGlobally = cached.missing_globally || [];
       lastSuggestedSwaps = cached.suggested_swaps || [];
       renderRecipes();
-      showToast('Hämtat från cache');
+      showToast(t('toastFromCache'));
       setTimeout(() => recipeList.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
       return;
     }
+
+    // Update button to loading state
+    const originalBtnText = searchBtn.textContent;
+    searchBtn.disabled = true;
+    searchBtn.innerHTML = `<span class="search-btn-spinner"></span> Söker...`;
+    searchBtn.setAttribute('aria-busy', 'true');
 
     loadingEl.style.display = 'block';
     loadingEl.innerHTML = `
@@ -1202,7 +1760,6 @@
     `;
     recipeList.innerHTML = '';
     errBox.style.display = 'none';
-    searchBtn.disabled = true;
 
     const maxRetries = 2;
     let lastError = null;
@@ -1210,9 +1767,14 @@
     for (let attempt = 0; attempt <= maxRetries; attempt++) {
       try {
         if (attempt > 0) {
+          const delay = Math.min(1000 * Math.pow(2, attempt), 10000);
+          await new Promise(r => setTimeout(r, delay));
           loadingEl.querySelector('.loading-label').innerHTML =
             `Försöker igen (${attempt + 1}/${maxRetries + 1})<span class="loading-dots"></span>`;
         }
+
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 30000);
 
         const res = await fetch('/api/chat', {
           method: 'POST',
@@ -1230,18 +1792,20 @@
             prefs: [...prefs],
             conversationHistory,
             language: currentLang
-          })
+          }),
+          signal: controller.signal
         });
+        clearTimeout(timeoutId);
 
         if (!res.ok) {
-          if (res.status === 429) throw new Error('Lite för snabbt — vänta en stund och försök igen.');
-          if (res.status === 401 || res.status === 403) throw new Error('Något gick snett med autentiseringen.');
+          if (res.status === 429) throw new Error('rate_limit');
+          if (res.status === 401 || res.status === 403) throw new Error('Något gick snett — försök ladda om sidan.');
           if (res.status >= 500) throw new Error('server');
-          throw new Error('Något gick snett — kontrollera anslutningen och försök igen.');
+          throw new Error('Nätverksfel — kontrollera din anslutning och försök igen.');
         }
 
         const data = await res.json();
-        if (data.error) throw new Error(data.error.message || 'API-fel inträffade.');
+        if (data.error) throw new Error(data.error?.message || data.error || 'API-fel inträffade.');
 
         const text = (data.content || []).map(b => b.text || '').join('');
         let clean = text.replace(/```json|```/g, '').trim();
@@ -1255,20 +1819,33 @@
           parsed = JSON.parse(clean);
         } catch {
           let fixed = clean;
-          // Remove trailing incomplete strings (truncated mid-value)
+          // Remove trailing incomplete strings/keys (truncated mid-value)
           fixed = fixed.replace(/,\s*"[^"]*$/, '');
           fixed = fixed.replace(/,\s*$/, '');
-          // Count and close open brackets/braces
-          const openBraces = (fixed.match(/\{/g) || []).length;
-          const closeBraces = (fixed.match(/\}/g) || []).length;
-          const openBrackets = (fixed.match(/\[/g) || []).length;
-          const closeBrackets = (fixed.match(/\]/g) || []).length;
-          for (let b = 0; b < openBrackets - closeBrackets; b++) fixed += ']';
-          for (let b = 0; b < openBraces - closeBraces; b++) fixed += '}';
+          // Remove incomplete key-value pairs
+          fixed = fixed.replace(/,\s*"[^"]*"\s*:\s*("[^"]*)?$/, '');
 
-          try {
-            parsed = JSON.parse(fixed);
-          } catch {
+          // Smart bracket closing — iterate and try parsing
+          const closers = [']', '}'];
+          for (let attempts = 0; attempts < 10; attempts++) {
+            try {
+              parsed = JSON.parse(fixed);
+              break;
+            } catch (parseErr) {
+              // Analyze error to determine what's missing
+              const errMsg = parseErr.message || '';
+              if (errMsg.includes('Expected')) {
+                // Try closing the most likely bracket
+                const openBraces = (fixed.match(/\{/g) || []).length - (fixed.match(/\}/g) || []).length;
+                const openBrackets = (fixed.match(/\[/g) || []).length - (fixed.match(/\]/g) || []).length;
+                if (openBrackets > 0) fixed += ']';
+                else if (openBraces > 0) fixed += '}';
+                else break;
+              } else break;
+            }
+          }
+
+          if (!parsed) {
             throw new Error('parse_error');
           }
         }
@@ -1301,27 +1878,42 @@
       } catch (e) {
         lastError = e;
         console.error(`Recipe fetch attempt ${attempt + 1} error:`, e);
-        // Only retry on parse errors or server errors
-        if (e.message !== 'parse_error' && e.message !== 'server') break;
+        // Only retry on parse errors, server errors, or timeouts
+        if (e.message !== 'parse_error' && e.message !== 'server' && e.name !== 'AbortError') break;
         if (attempt >= maxRetries) break;
       }
     }
 
     if (lastError) {
-      const msg = lastError.message === 'parse_error'
-        ? 'AI:n gav ett ofullständigt svar — försök igen.'
-        : lastError.message === 'server'
-        ? 'Servern svarar inte just nu — försök igen om en stund.'
-        : lastError.message;
-      errBox.textContent = msg;
+      const errorMessages = {
+        parse_error: 'AI:n gav ett ofullständigt svar — försök igen.',
+        server: 'Servern svarar inte just nu — försök igen om en stund.',
+        rate_limit: 'Lite för många sökningar — vänta en minut och försök igen.',
+      };
+      const msg = lastError.name === 'AbortError'
+        ? 'Sökningen tog för lång tid — försök igen.'
+        : errorMessages[lastError.message] || lastError.message;
+      errBox.innerHTML = `${esc(msg)} <button class="retry-btn" id="retryBtn">Försök igen</button>`;
       errBox.style.display = 'block';
+      document.getElementById('retryBtn')?.addEventListener('click', () => { errBox.style.display = 'none'; findRecipes(); });
     }
 
     loadingEl.style.display = 'none';
     searchBtn.disabled = false;
+    searchBtn.textContent = originalBtnText;
+    searchBtn.removeAttribute('aria-busy');
   }
 
   searchBtn.addEventListener('click', () => { haptic('medium'); findRecipes(); });
+
+  // ─── SW Update Notification ───
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.addEventListener('message', event => {
+      if (event.data && event.data.type === 'SW_UPDATED') {
+        showToast('Ny version tillgänglig — ladda om för uppdatering');
+      }
+    });
+  }
 
   // ─── Search Mode Tabs (Ingredients vs Free-text) ───
   let searchMode = 'ingredients';
@@ -1336,14 +1928,16 @@
       if (!tab) return;
       haptic();
       searchMode = tab.dataset.mode;
-      searchModeTabs.querySelectorAll('.search-mode-tab').forEach(t => t.classList.toggle('active', t === tab));
+      searchModeTabs.querySelectorAll('.search-mode-tab').forEach(t => { t.classList.toggle('active', t === tab); t.setAttribute('aria-selected', t === tab); });
       if (ingredientMode) ingredientMode.hidden = searchMode !== 'ingredients';
       if (freetextMode) freetextMode.hidden = searchMode !== 'freetext';
-      // Enable search button based on mode
+      // Focus the newly visible input
       if (searchMode === 'freetext') {
         searchBtn.disabled = !freetextInput?.value.trim();
+        setTimeout(() => freetextInput?.focus(), 100);
       } else {
         searchBtn.disabled = ingredients.length === 0;
+        setTimeout(() => ingInput?.focus(), 100);
       }
     });
   }
@@ -1369,6 +1963,8 @@
   // ─── Render Recipes ───
   function renderRecipes() {
     if (!recipes.length) { recipeList.innerHTML = ''; return; }
+
+    const sorted = sortRecipesList(recipes, recipeSort);
 
     let headerHTML = '';
 
@@ -1408,11 +2004,17 @@
     recipeList.innerHTML = `
       <div class="recipes-container">
       <div class="recipes-header">
-        <div class="recipes-title">🍽️ Armin hittade ${recipes.length} recept åt dig</div>
+        <div class="recipes-title">🍽️ Amko hittade ${recipes.length} recept åt dig</div>
         <div class="recipes-subtitle">Tryck på ett recept för att se allt</div>
       </div>
+      <div class="recipe-sort-bar">
+        <span class="recipe-sort-label">Sortera:</span>
+        <button class="recipe-sort-btn${recipeSort === 'difficulty' ? ' active' : ''}" data-sort="difficulty">Svårighet</button>
+        <button class="recipe-sort-btn${recipeSort === 'time' ? ' active' : ''}" data-sort="time">Tid</button>
+        <button class="recipe-sort-btn${recipeSort === 'name' ? ' active' : ''}" data-sort="name">Namn</button>
+      </div>
       ${headerHTML}
-    ` + recipes.map((r, i) => {
+    ` + sorted.map((r, i) => {
       const rating = ratings[r.name] || 0;
       const tag = r.tag || '';
       return `
@@ -1438,6 +2040,14 @@
   }
 
   recipeList.addEventListener('click', e => {
+    // Sort buttons
+    const sortBtn = e.target.closest('.recipe-sort-btn');
+    if (sortBtn) {
+      recipeSort = sortBtn.dataset.sort;
+      haptic();
+      renderRecipes();
+      return;
+    }
     const favBtn = e.target.closest('.fav-btn');
     if (favBtn) {
       e.stopPropagation();
@@ -1460,7 +2070,7 @@
       saveFavoriteToCloud(recipe);
       showToast('favAdded');
       haptic('medium');
-      fireConfetti();
+      if (!sessionConfettiFired) { fireConfetti(); sessionConfettiFired = true; }
     }
     saveFavorites();
     updateFavBadge();
@@ -1484,7 +2094,7 @@
     if (favFilterEl && favorites.length) {
       const tags = [...new Set(favorites.map(f => f.difficulty).filter(Boolean))];
       favFilterEl.innerHTML = `
-        <button class="fav-filter-chip${favFilter === 'all' ? ' active' : ''}" data-filter="all">Alla (${favorites.length})</button>
+        <button class="fav-filter-chip${favFilter === 'all' ? ' active' : ''}" data-filter="all">${t('filterAll')} (${favorites.length})</button>
         ${tags.map(tag => {
           const count = favorites.filter(f => f.difficulty === tag).length;
           return `<button class="fav-filter-chip${favFilter === tag ? ' active' : ''}" data-filter="${esc(tag)}">${esc(tag)} (${count})</button>`;
@@ -1524,7 +2134,12 @@
         saveFavorites(); renderFavView(); renderRecipes(); return;
       }
       const card = e.target.closest('.fav-card');
-      if (card) { recipes = [...favorites]; openRecipe(Number(card.dataset.favOpen)); }
+      if (card) {
+        const savedRecipes = recipes;
+        recipes = [...favorites];
+        openRecipe(Number(card.dataset.favOpen));
+        recipes = savedRecipes;
+      }
     });
   }
 
@@ -1574,8 +2189,21 @@
     return 0;
   }
 
+  let recipeSort = 'difficulty'; // 'difficulty' | 'time' | 'name'
+
+  function parseTime(timeStr) {
+    const m = (timeStr || '').match(/(\d+)/);
+    return m ? parseInt(m[1]) : 999;
+  }
+
   function sortRecipesByDifficulty(recipeList) {
-    return recipeList.sort((a, b) => difficultyOrder(a.difficulty) - difficultyOrder(b.difficulty));
+    return [...recipeList].sort((a, b) => difficultyOrder(a.difficulty) - difficultyOrder(b.difficulty));
+  }
+
+  function sortRecipesList(list, by) {
+    if (by === 'time') return [...list].sort((a, b) => parseTime(a.time) - parseTime(b.time));
+    if (by === 'name') return [...list].sort((a, b) => (a.name || '').localeCompare(b.name || '', 'sv'));
+    return sortRecipesByDifficulty(list);
   }
 
   function openRecipe(idx) {
@@ -1655,6 +2283,10 @@
       ${r.difficulty_reason ? `<div class="difficulty-reason">${esc(r.difficulty_reason)}</div>` : ''}
       <div class="recipe-desc">${esc(r.description)}</div>
 
+      <button class="cook-mode-start-btn" id="startCookMode">
+        👨‍🍳 Starta kokläge
+      </button>
+
       ${missingHTML}
 
       <div class="portions-row">
@@ -1666,7 +2298,7 @@
         </div>
       </div>
 
-      <div class="section-lbl">Ingredienser</div>
+      <div class="section-lbl">Ingredienser <button class="copy-ings-btn" id="copyIngsBtn" title="Kopiera ingredienslista">📋</button></div>
       <div id="modalIngredients">
         ${(r.ingredients || []).map(ing => `<div class="ing-item"><span class="dot"></span>${esc(ing)}</div>`).join('')}
       </div>
@@ -1690,15 +2322,11 @@
         ${iconShop} Lägg till i inköpslistan
       </button>
 
-      <button class="cook-mode-start-btn" id="startCookMode">
-        🍳 Starta kokläge
-      </button>
-
       ${r.leftovers_tip ? `<div class="leftovers-banner">♻️ ${esc(r.leftovers_tip)}</div>` : ''}
 
       ${r.drink_pairing ? `
       <div class="drink-pairing">
-        <div class="drink-pairing-title">🍷 Armins dryckestips</div>
+        <div class="drink-pairing-title">🍷 Amkos dryckestips</div>
         <div class="drink-pairing-items">
           ${r.drink_pairing.wine ? `<div class="drink-pairing-item"><span class="drink-pairing-icon">🍷</span> ${esc(r.drink_pairing.wine)}</div>` : ''}
           ${r.drink_pairing.beer ? `<div class="drink-pairing-item"><span class="drink-pairing-icon">🍺</span> ${esc(r.drink_pairing.beer)}</div>` : ''}
@@ -1709,9 +2337,9 @@
 
       <div class="rating-row">
         <span class="rating-label">Betygsätt receptet</span>
-        <div class="stars" id="stars">
+        <div class="stars" id="stars" role="group" aria-label="Betygsätt recept, ${currentRating} av 5 stjärnor">
           ${[1,2,3,4,5].map(n => `
-            <button class="star-btn${n <= currentRating ? ' active' : ''}" data-star="${n}" aria-label="${n} stjärnor">★</button>
+            <button class="star-btn${n <= currentRating ? ' active' : ''}" data-star="${n}" role="radio" aria-checked="${n <= currentRating}" aria-label="${n} av 5 stjärnor" title="Klicka för att betygsätta ${n} stjärnor">★</button>
           `).join('')}
         </div>
       </div>
@@ -1732,7 +2360,7 @@
     document.getElementById('copyBtn').addEventListener('click', async () => {
       const text = recipeToText(r);
       try { await navigator.clipboard.writeText(text); showToast('copied'); }
-      catch { showToast('Kunde inte kopiera'); }
+      catch { showToast(t('toastCantCopy')); }
     });
 
     // Share
@@ -1744,11 +2372,18 @@
         if (e.name === 'AbortError') return;
       }
       try { await navigator.clipboard.writeText(text); showToast('copied'); }
-      catch { showToast('Dela ej tillgängligt'); }
+      catch { showToast(t('toastShareNA')); }
     });
 
     // Print
     document.getElementById('printBtn').addEventListener('click', () => window.print());
+
+    // Copy ingredients list
+    document.getElementById('copyIngsBtn')?.addEventListener('click', async () => {
+      const text = (r.ingredients || []).map(ing => scaleIngredient(ing, originalServings, portions)).join('\n');
+      try { await navigator.clipboard.writeText(text); showToast('copied'); }
+      catch { showToast(t('toastCantCopy')); }
+    });
 
     // Add to shopping list
     document.getElementById('addToShopBtn').addEventListener('click', () => {
@@ -1796,7 +2431,7 @@
 
   function recipeToText(r) {
     const ingText  = (r.ingredients || []).map(x => `  - ${x}`).join('\n');
-    const stepText = (r.steps || []).map((s, i) => `  ${i + 1}. ${s}`).join('\n');
+    const stepText = (r.steps || []).map((s, i) => `  ${i + 1}. ${typeof s === 'string' ? s : (s.instruction || '')}`).join('\n');
     return `${r.name}\n${r.time} | ${r.difficulty} | ${r.servings || 4} portioner\n\n${r.description}\n\nIngredienser:\n${ingText}\n\nGör så här:\n${stepText}`;
   }
 
@@ -1873,7 +2508,7 @@
       renderCookModeStep();
     } else {
       closeCookMode();
-      showToast('Smaklig måltid! 🍽️');
+      showToast(t('toastBonAppetit'));
     }
   });
 
@@ -1942,124 +2577,153 @@
     }
   }
 
-  // ─── Armin rekommenderar ───
+  // ─── Amko rekommenderar (i18n-aware) ───
+  const arminPicksI18n = {
+    badges: {
+      weekPick: { sv: '🔥 Veckans val', en: '🔥 Pick of the week', es: '🔥 Elección semanal', bs: '🔥 Izbor sedmice' },
+      fastest: { sv: '⚡ Snabbast i stan', en: '⚡ Fastest in town', es: '⚡ El más rápido', bs: '⚡ Najbrži u gradu' },
+      classic: { sv: '🥇 Klassiker', en: '🥇 Classic', es: '🥇 Clásico', bs: '🥇 Klasik' },
+      spicy: { sv: '🌶️ För de modiga', en: '🌶️ For the brave', es: '🌶️ Para valientes', bs: '🌶️ Za hrabre' },
+      green: { sv: '🌿 Grön favorit', en: '🌿 Green favorite', es: '🌿 Favorito verde', bs: '🌿 Zeleni favorit' },
+      italian: { sv: '🍝 Italiensk dröm', en: '🍝 Italian dream', es: '🍝 Sueño italiano', bs: '🍝 Italijanski san' },
+      friday: { sv: '🌮 Fredagsfavorit', en: '🌮 Friday favorite', es: '🌮 Favorito del viernes', bs: '🌮 Petak favorit' },
+      healthy: { sv: '🥗 Hälsosamt (typ)', en: '🥗 Healthy (ish)', es: '🥗 Saludable (más o menos)', bs: '🥗 Zdravo (nekako)' },
+      asian: { sv: '🍜 Asiatisk tröst', en: '🍜 Asian comfort', es: '🍜 Consuelo asiático', bs: '🍜 Azijska utjeha' },
+      balkan: { sv: '🔥 Balkanskt arv', en: '🔥 Balkan heritage', es: '🔥 Herencia balcánica', bs: '🔥 Balkanski ponos' },
+      comfort: { sv: '🧈 Comfort food', en: '🧈 Comfort food', es: '🧈 Comfort food', bs: '🧈 Comfort food' },
+      weekend: { sv: '🥘 Helgprojekt', en: '🥘 Weekend project', es: '🥘 Proyecto de fin de semana', bs: '🥘 Vikend projekat' },
+      impress: { sv: '🍣 Imponera-level', en: '🍣 Impress level', es: '🍣 Nivel impresionante', bs: '🍣 Nivo za impresionirati' },
+      vegan: { sv: '🌿 Helt veganskt', en: '🌿 Fully vegan', es: '🌿 100% vegano', bs: '🌿 Potpuno vegansko' },
+      quick15: { sv: '⏰ 15-minutare', en: '⏰ 15-minuter', es: '⏰ 15 minutos', bs: '⏰ 15 minuta' },
+      greek: { sv: '🇬🇷 Medelhavsdröm', en: '🇬🇷 Mediterranean dream', es: '🇬🇷 Sueño mediterráneo', bs: '🇬🇷 Mediteranski san' },
+      handmade: { sv: '🥟 Handgjort', en: '🥟 Handmade', es: '🥟 Hecho a mano', bs: '🥟 Ručni rad' },
+      mexican: { sv: '🌶️ Mexikansk klassiker', en: '🌶️ Mexican classic', es: '🌶️ Clásico mexicano', bs: '🌶️ Meksički klasik' },
+      winter: { sv: '🍲 Vintervärme', en: '🍲 Winter warmer', es: '🍲 Calor invernal', bs: '🍲 Zimska toplina' },
+      steak: { sv: '🥩 Steakhouse hemma', en: '🥩 Steakhouse at home', es: '🥩 Steakhouse en casa', bs: '🥩 Steakhouse kod kuće' },
+    },
+  };
+
+  function getBadge(key) {
+    return (arminPicksI18n.badges[key] || {})[currentLang] || arminPicksI18n.badges[key]?.sv || '';
+  }
+
   const arminPicks = [
     {
-      badge: '🔥 Veckans val',
+      badgeKey: 'weekPick',
       name: 'Ćevapi med kajmak',
-      desc: 'Armins barndomsrätt. Om du inte har provat kajmak så har du inte levt. Sorry, jag gör inte reglerna.',
+      desc: 'Amkos barndomsrätt. Har du inte testat kajmak har du missat något. Jag kan inte förklara det, du måste bara prova.',
       ings: ['köttfärs', 'lök', 'vitlök', 'kajmak', 'pitabröd'],
     },
     {
-      badge: '⚡ Snabbast i stan',
+      badgeKey: 'fastest',
       name: 'Pasta aglio e olio',
-      desc: 'Tre ingredienser, tio minuter, noll ursäkter. Den ultimata "jag-orkade-inte-handla"-middagen.',
+      desc: 'Tre ingredienser, tio minuter. Den där middagen du lagar när du egentligen inte orkar laga mat.',
       ings: ['pasta', 'vitlök', 'olivolja', 'chili', 'persilja'],
     },
     {
-      badge: '🥇 Klassiker',
+      badgeKey: 'classic',
       name: 'Köttbullar med gräddsås',
-      desc: 'Sveriges nationalrätt. Fast bättre än IKEAs, för den här har kärlek i receptet. Och vitlök.',
+      desc: 'Sveriges nationalrätt, fast hemlagad. Spoiler: hemligheten är att inte snåla på grädden.',
       ings: ['köttfärs', 'lök', 'grädde', 'potatis', 'lingon'],
     },
     {
-      badge: '🌶️ För de modiga',
+      badgeKey: 'spicy',
       name: 'Kimchi jjigae',
-      desc: 'Koreansk comfort food som biter tillbaka. Perfekt för dagar när du vill att maten ska ha mer personlighet än du.',
+      desc: 'Koreansk comfort food som värmer inifrån. Perfekt för dagar när du behöver att maten tar hand om dig.',
       ings: ['kimchi', 'tofu', 'lök', 'vitlök', 'ris'],
     },
     {
-      badge: '🌿 Grön favorit',
+      badgeKey: 'green',
       name: 'Falafel med tabbouleh',
-      desc: 'Vegetariskt men ingen klagar. Inte ens köttätarna. Testat och verifierat av Armin själv.',
+      desc: 'Vegetariskt utan att det känns som ett straff. Till och med köttälskare brukar hålla tyst om den här.',
       ings: ['kikärtor', 'lök', 'vitlök', 'koriander', 'pitabröd'],
     },
     {
-      badge: '🍝 Italiensk dröm',
+      badgeKey: 'italian',
       name: 'Risotto ai funghi',
-      desc: 'Långsamt, meditativt, och totalt värt armträningen. Rör. Rör. Rör lite till.',
+      desc: 'Tar sin tid, men det är typ terapi. Du står där och rör, och plötsligt är allt lugnt.',
       ings: ['ris', 'svamp', 'lök', 'vitlök', 'parmesan'],
     },
     {
-      badge: '🌮 Fredagsfavorit',
+      badgeKey: 'friday',
       name: 'Tacos al pastor',
-      desc: 'Fredagsmys utan halvfabrikat. Ja, det kräver lite mer — men din familj förtjänar det.',
+      desc: 'Fredagsmys utan halvfabrikat. Lite mer jobb, men den där känslan när alla tar en till — den är värd det.',
       ings: ['tortilla', 'fläskfilé', 'ananas', 'lök', 'koriander'],
     },
     {
-      badge: '🥗 Hälsosamt (typ)',
+      badgeKey: 'healthy',
       name: 'Buddha bowl',
-      desc: 'Ser hälsosamt ut på Instagram. Smakar faktiskt bra på riktigt. Win-win.',
+      desc: 'Ser hälsosamt ut och smakar faktiskt bra. Du behöver inte posta den på Instagram, men du kommer vilja.',
       ings: ['quinoa', 'avokado', 'kikärtor', 'spenat', 'tomat'],
     },
     {
-      badge: '🍜 Asiatisk tröst',
+      badgeKey: 'asian',
       name: 'Tonkotsu ramen',
-      desc: 'Japansk penicillin. Botar allt utom dålig smak i musik.',
+      desc: 'Japansk penicillin. Funkar mot förkylning, dåliga dagar och existentiell trötthet.',
       ings: ['nudlar', 'ägg', 'soja', 'vitlök', 'ingefära'],
     },
     {
-      badge: '🔥 Balkanskt arv',
+      badgeKey: 'balkan',
       name: 'Burek',
-      desc: 'Om du inte har ätit burek med yoghurt har du missat livets mening. Ingen diskussion.',
+      desc: 'Burek med yoghurt är inte en måltid, det är en upplevelse. Går inte att förklara, bara att äta.',
       ings: ['filodeg', 'köttfärs', 'lök', 'ägg', 'yoghurt'],
     },
     {
-      badge: '🧈 Comfort food',
+      badgeKey: 'comfort',
       name: 'Mac & cheese',
-      desc: 'Vuxna äter också barnmat. Vi bara kallar det comfort food för att det ska låta fint.',
+      desc: 'Vuxna äter också barnmat, vi kallar det bara comfort food. Ingen frågar varför, alla förstår.',
       ings: ['pasta', 'cheddar', 'mjölk', 'smör', 'ströbröd'],
     },
     {
-      badge: '🥘 Helgprojekt',
+      badgeKey: 'weekend',
       name: 'Tagine med kyckling',
       desc: 'Marocko i en gryta. Sätter du på den kl 14 är du en hjälte till middag.',
       ings: ['kyckling', 'morötter', 'lök', 'citron', 'oliver'],
     },
     {
-      badge: '🍣 Imponera-level',
+      badgeKey: 'impress',
       name: 'Sushi bowls',
       desc: 'All smak från sushi men utan origami-kunskaperna. Du behöver inte kunna rulla.',
       ings: ['ris', 'lax', 'avokado', 'gurka', 'soja'],
     },
     {
-      badge: '🌿 Helt veganskt',
+      badgeKey: 'vegan',
       name: 'Dal tadka',
       desc: 'Indisk linssoppa som bevisar att kött är överkurs. Linser + kryddor = magi.',
       ings: ['linser', 'tomat', 'lök', 'vitlök', 'ingefära'],
     },
     {
-      badge: '⏰ 15-minutare',
+      badgeKey: 'quick15',
       name: 'Quesadillas',
       desc: 'När du har 15 minuter och noll ambition. Ost fixar allt.',
       ings: ['tortilla', 'ost', 'kyckling', 'paprika', 'gräddfil'],
     },
     {
-      badge: '🇬🇷 Medelhavsdröm',
+      badgeKey: 'greek',
       name: 'Grekisk sallad med halloumi',
       desc: 'Grilla halloumin. Släng på tomat och gurka. Känn dig som en gudinna.',
       ings: ['halloumi', 'tomat', 'gurka', 'lök', 'olivolja'],
     },
     {
-      badge: '🥟 Handgjort',
+      badgeKey: 'handmade',
       name: 'Gyoza',
       desc: 'Terapi i köket. Varje veckning är ett steg mot inre frid. Eller bara god mat.',
       ings: ['köttfärs', 'kål', 'vitlök', 'ingefära', 'soja'],
     },
     {
-      badge: '🌶️ Mexikansk klassiker',
+      badgeKey: 'mexican',
       name: 'Enchiladas',
       desc: 'Tortilla + fyllning + sås + ost = problemlösning på hög nivå.',
       ings: ['tortilla', 'kyckling', 'ost', 'tomat', 'grädde'],
     },
     {
-      badge: '🍲 Vintervärme',
+      badgeKey: 'winter',
       name: 'Tom kha gai',
       desc: 'Thailändsk kokossoppa som gör vintern uthärdlig. Tack, Thailand.',
       ings: ['kyckling', 'kokosmjölk', 'galangal', 'lime', 'citrongräs'],
     },
     {
-      badge: '🥩 Steakhouse hemma',
+      badgeKey: 'steak',
       name: 'Grillad entrecôte',
       desc: 'Stek. Smör. Vitlök. Rosmarin. Mer behövs inte. Sluta övertänka.',
       ings: ['entrecôte', 'smör', 'vitlök', 'rosmarin', 'potatis'],
@@ -2076,16 +2740,16 @@
     return picks;
   }
 
-  function renderArminPicks() {
+  function renderAmkoPicks() {
     const container = document.getElementById('arminPicks');
     if (!container) return;
     container.innerHTML = getWeeklyPicks(arminPicks).map(p => `
-      <div class="armin-pick-card" data-ings='${JSON.stringify(p.ings)}'>
-        <span class="armin-pick-badge">${p.badge}</span>
+      <div class="armin-pick-card" data-ings="${esc(JSON.stringify(p.ings))}">
+        <span class="armin-pick-badge">${getBadge(p.badgeKey)}</span>
         <div class="armin-pick-name">${esc(p.name)}</div>
         <div class="armin-pick-desc">${esc(p.desc)}</div>
         <div class="armin-pick-ings">
-          ${p.ings.map(i => `<span class="armin-pick-ing">${esc(i)}</span>`).join('')}
+          ${p.ings.map(i => `<span class="armin-pick-ing">${esc(translateIng(i))}</span>`).join('')}
         </div>
       </div>
     `).join('');
@@ -2095,13 +2759,25 @@
     const card = e.target.closest('.armin-pick-card');
     if (!card) return;
     haptic();
-    const ings = JSON.parse(card.dataset.ings);
+    let ings;
+    try { ings = JSON.parse(card.dataset.ings); } catch { return; }
     ingredients = [];
     ings.forEach(ing => { if (!ingredients.includes(ing)) ingredients.push(ing); });
     switchView('search');
     render();
     ingInput.focus();
   });
+
+  // ─── Country name translations ───
+  const countryTranslations = {
+    en: { 'Sverige':'Sweden', 'Italien':'Italy', 'Bosnien & Hercegovina':'Bosnia & Herzegovina', 'Serbien':'Serbia', 'Grekland':'Greece', 'Turkiet':'Turkey', 'Libanon':'Lebanon', 'Thailand':'Thailand', 'Japan':'Japan', 'Korea':'Korea', 'Kina':'China', 'Indien':'India', 'Mexiko':'Mexico', 'Frankrike':'France', 'Spanien':'Spain', 'Marocko':'Morocco', 'USA':'USA', 'Vietnam':'Vietnam', 'Peru':'Peru' },
+    es: { 'Sverige':'Suecia', 'Italien':'Italia', 'Bosnien & Hercegovina':'Bosnia y Herzegovina', 'Serbien':'Serbia', 'Grekland':'Grecia', 'Turkiet':'Turquía', 'Libanon':'Líbano', 'Thailand':'Tailandia', 'Japan':'Japón', 'Korea':'Corea', 'Kina':'China', 'Indien':'India', 'Mexiko':'México', 'Frankrike':'Francia', 'Spanien':'España', 'Marocko':'Marruecos', 'USA':'EE.UU.', 'Vietnam':'Vietnam', 'Peru':'Perú' },
+    bs: { 'Sverige':'Švedska', 'Italien':'Italija', 'Bosnien & Hercegovina':'Bosna i Hercegovina', 'Serbien':'Srbija', 'Grekland':'Grčka', 'Turkiet':'Turska', 'Libanon':'Liban', 'Thailand':'Tajland', 'Japan':'Japan', 'Korea':'Koreja', 'Kina':'Kina', 'Indien':'Indija', 'Mexiko':'Meksiko', 'Frankrike':'Francuska', 'Spanien':'Španija', 'Marocko':'Maroko', 'USA':'SAD', 'Vietnam':'Vijetnam', 'Peru':'Peru' },
+  };
+  function translateCountry(svName) {
+    if (currentLang === 'sv') return svName;
+    return (countryTranslations[currentLang] || {})[svName] || svName;
+  }
 
   // ─── World Cuisine Catalog — with Balkans split ───
   const worldCuisines = [
@@ -2228,9 +2904,9 @@
 
     if (filterTabs) {
       filterTabs.innerHTML = `
-        <button class="filter-tab${catalogFilter === 'all' ? ' active' : ''}" data-filter="all">Alla</button>
+        <button class="filter-tab${catalogFilter === 'all' ? ' active' : ''}" data-filter="all">${t('filterAll')}</button>
         ${worldCuisines.map(c => `
-          <button class="filter-tab${catalogFilter === c.country ? ' active' : ''}" data-filter="${esc(c.country)}">${c.flag} ${esc(c.country)}</button>
+          <button class="filter-tab${catalogFilter === c.country ? ' active' : ''}" data-filter="${esc(c.country)}">${c.flag} ${esc(translateCountry(c.country))}</button>
         `).join('')}
       `;
     }
@@ -2239,11 +2915,11 @@
       <div class="world-card">
         <div class="world-card-top">
           <span class="world-flag">${c.flag}</span>
-          <span class="world-country">${esc(c.country)}</span>
+          <span class="world-country">${esc(translateCountry(c.country))}</span>
         </div>
         <div class="world-dishes">
           ${c.dishes.map(d => `
-            <button class="dish-btn" data-ings='${JSON.stringify(d.ings)}'>${esc(d.name)}</button>
+            <button class="dish-btn" data-ings="${esc(JSON.stringify(d.ings))}">${esc(d.name)}</button>
           `).join('')}
         </div>
       </div>
@@ -2263,7 +2939,8 @@
     const dish = e.target.closest('.dish-btn');
     if (!dish) return;
     haptic();
-    const ings = JSON.parse(dish.dataset.ings);
+    let ings;
+    try { ings = JSON.parse(dish.dataset.ings); } catch { return; }
     ingredients = [];
     ings.forEach(ing => { if (!ingredients.includes(ing)) ingredients.push(ing); });
     switchView('search');
@@ -2285,9 +2962,11 @@
 
   // ─── Image compression for fridge photos ───
   function compressImage(base64Full, maxWidth = 800, quality = 0.7) {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       const img = new Image();
+      const timeout = setTimeout(() => reject(new Error('Bildladdning tog för lång tid')), 15000);
       img.onload = () => {
+        clearTimeout(timeout);
         const canvas = document.createElement('canvas');
         let w = img.width, h = img.height;
         if (w > maxWidth) { h = Math.round(h * maxWidth / w); w = maxWidth; }
@@ -2296,6 +2975,7 @@
         const compressed = canvas.toDataURL('image/jpeg', quality);
         resolve(compressed.split(',')[1]);
       };
+      img.onerror = () => { clearTimeout(timeout); reject(new Error('Kunde inte ladda bilden')); };
       img.src = base64Full;
     });
   }
@@ -2308,6 +2988,7 @@
       const file = fridgeInput.files[0];
       if (!file) return;
 
+      if (fridgeImg.src) URL.revokeObjectURL(fridgeImg.src);
       const url = URL.createObjectURL(file);
       fridgeImg.src = url;
       fridgePreview.style.display = 'block';
@@ -2320,11 +3001,16 @@
         const mediaType = 'image/jpeg';
 
         try {
+          const imgController = new AbortController();
+          const imgTimeout = setTimeout(() => imgController.abort(), 30000);
+
           const res = await fetch('/api/recognize-ingredients', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ image: base64, mediaType })
+            body: JSON.stringify({ image: base64, mediaType }),
+            signal: imgController.signal
           });
+          clearTimeout(imgTimeout);
 
           if (!res.ok) throw new Error('Kunde inte analysera bilden');
 
@@ -2349,10 +3035,13 @@
               setTimeout(() => findRecipes(), 600);
             }
           } else {
-            showToast('Hittade inga ingredienser');
+            showToast(t('toastNoIngs'));
           }
         } catch (e) {
-          showToast(e.message || 'Något gick fel');
+          const errorMsg = e.name === 'AbortError'
+            ? 'Bildanalysen tog för lång tid — försök igen'
+            : (e.message || 'Något gick fel');
+          showToast(errorMsg);
           console.error('Fridge scan error:', e);
         }
 
@@ -2363,6 +3052,7 @@
 
     if (fridgeRemove) {
       fridgeRemove.addEventListener('click', () => {
+        if (fridgeImg.src) URL.revokeObjectURL(fridgeImg.src);
         fridgePreview.style.display = 'none';
         fridgeInput.value = '';
         fridgeBtn.parentElement.querySelector('.fridge-btn').style.display = 'flex';
