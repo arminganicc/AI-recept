@@ -669,6 +669,14 @@
   };
 
   const changelog = [
+    { version: '7.3', date: '2026-03-22', title: 'Säkerhet, tillgänglighet & nya funktioner', items: [
+      'Ingredienslista i kokläge — se vad du behöver medan du lagar',
+      'Auto-sök när du väljer inspiration från världens kök',
+      'Sök bland dina sparade favoriter',
+      '"Inget passade? Sök igen"-knapp i resultatvyn',
+      'Offline-meddelande istället för tyst fel',
+      'Bättre tillgänglighet: fokushantering, kontrast & skärmläsare',
+    ]},
     { version: '6.2', date: '2026-03-22', title: 'Fri-text-sökning & dryckestips', items: [
       'Skriv fritt vad du är sugen på — inte bara ingredienser!',
       'Dryckesrekommendationer till varje rätt (vin, öl, alkoholfritt)',

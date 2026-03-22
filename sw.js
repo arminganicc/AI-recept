@@ -1,4 +1,4 @@
-const CACHE_NAME = 'receptappen-v7.0';
+const CACHE_NAME = 'receptappen-v7.3';
 const STATIC_ASSETS = ['/', '/index.html', '/style.css', '/app.js', '/manifest.json', '/apple-touch-icon.png'];
 
 self.addEventListener('install', event => {
