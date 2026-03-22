@@ -1024,11 +1024,21 @@
       recipeCache.delete(oldest);
     }
     recipeCache.set(key, value);
-    // Persist to localStorage
+    // Persist to localStorage with quota handling
     try {
       const entries = [...recipeCache.entries()].slice(-CACHE_MAX);
       localStorage.setItem(CACHE_STORAGE_KEY, JSON.stringify(entries));
-    } catch {}
+    } catch (e) {
+      // If quota exceeded, halve the cache and retry
+      if (e instanceof DOMException && (e.code === 22 || e.name === 'QuotaExceededError')) {
+        try {
+          const halfEntries = [...recipeCache.entries()].slice(-Math.floor(CACHE_MAX / 2));
+          recipeCache.clear();
+          halfEntries.forEach(([k, v]) => recipeCache.set(k, v));
+          localStorage.setItem(CACHE_STORAGE_KEY, JSON.stringify(halfEntries));
+        } catch { /* give up silently */ }
+      }
+    }
   }
   let conversationHistory = [];
   let lastChefComment = '';
@@ -1036,13 +1046,40 @@
   let lastSuggestedSwaps = [];
 
   function loadStorage(key, fallback) {
-    try { return JSON.parse(localStorage.getItem(key) || 'null') ?? fallback; }
-    catch { return fallback; }
+    try {
+      const raw = localStorage.getItem(key);
+      if (raw === null) return fallback;
+      const parsed = JSON.parse(raw);
+      // Validate that the parsed type matches the fallback type
+      if (Array.isArray(fallback) && !Array.isArray(parsed)) return fallback;
+      if (typeof fallback === 'object' && fallback !== null && !Array.isArray(fallback) && (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed))) return fallback;
+      return parsed ?? fallback;
+    } catch {
+      // Corrupted data — remove it and return fallback
+      try { localStorage.removeItem(key); } catch {}
+      return fallback;
+    }
   }
 
   function saveStorage(key, value) {
-    try { localStorage.setItem(key, JSON.stringify(value)); }
-    catch (e) { console.warn('localStorage full:', e); }
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+    } catch (e) {
+      // Handle quota exceeded — try to free space by removing least important data
+      if (e instanceof DOMException && (e.code === 22 || e.code === 1014 || e.name === 'QuotaExceededError' || e.name === 'NS_ERROR_DOM_QUOTA_REACHED')) {
+        try {
+          // Try clearing recipe cache first (least important)
+          localStorage.removeItem(CACHE_STORAGE_KEY);
+          recipeCache.clear();
+          // Try again
+          localStorage.setItem(key, JSON.stringify(value));
+        } catch {
+          console.warn('localStorage full even after cleanup:', e);
+        }
+      } else {
+        console.warn('localStorage save error:', e);
+      }
+    }
   }
 
   let favorites     = loadStorage('fav_recipes', []);
@@ -1748,7 +1785,11 @@
     const val = ingInput.value.trim();
     if (!val) return;
     val.split(',').map(s => s.trim().toLowerCase()).filter(Boolean).forEach(p => {
-      if (!ingredients.includes(p)) ingredients.push(p);
+      // Input validation: max 50 chars per ingredient, max 30 ingredients, only text chars
+      const sanitized = p.replace(/[<>"'&]/g, '').slice(0, 50);
+      if (sanitized && !ingredients.includes(sanitized) && ingredients.length < 30) {
+        ingredients.push(sanitized);
+      }
     });
     ingInput.value = '';
     clearSuggestions();
@@ -1771,7 +1812,8 @@
       btn.addEventListener('click', () => { ingredients = []; render(); });
       tagsEl.appendChild(btn);
     }
-    searchBtn.disabled = ingredients.length === 0;
+    const offlineDisable = !navigator.onLine;
+    searchBtn.disabled = ingredients.length === 0 || offlineDisable;
     const hint = document.getElementById('searchBtnHint');
     if (hint) hint.style.display = ingredients.length === 0 ? '' : 'none';
     renderQuickPicks();
@@ -2010,32 +2052,41 @@
           `).join('')}
         </div>
       `).join('');
-
-      // Event listeners
-      content.querySelectorAll('.list-checkbox').forEach(cb => {
-        cb.addEventListener('change', () => {
-          const idx = Number(cb.dataset.idx);
-          if (shoppingList[idx]) {
-            shoppingList[idx].checked = cb.checked;
-            saveShoppingList();
-            haptic();
-            const scrollY = content.parentElement.scrollTop || window.scrollY;
-            renderShoppingView();
-            requestAnimationFrame(() => { if (content.parentElement.scrollTop !== undefined) content.parentElement.scrollTop = scrollY; else window.scrollTo(0, scrollY); });
-          }
-        });
-      });
-
-      content.querySelectorAll('.list-item-remove').forEach(btn => {
-        btn.addEventListener('click', e => {
-          e.preventDefault();
-          e.stopPropagation();
-          shoppingList.splice(Number(btn.dataset.rm), 1);
-          saveShoppingList();
-          renderShoppingView();
-        });
-      });
+      // Event delegation is set up once below via _shoppingDelegated
     }
+  }
+
+  // Shopping list event delegation (set up once, avoids memory leak from per-render listeners)
+  const shoppingListContent = document.getElementById('shoppingListContent');
+  if (shoppingListContent) {
+    shoppingListContent.addEventListener('change', e => {
+      const cb = e.target.closest('.list-checkbox');
+      if (!cb) return;
+      const idx = Number(cb.dataset.idx);
+      if (shoppingList[idx]) {
+        shoppingList[idx].checked = cb.checked;
+        saveShoppingList();
+        haptic();
+        const scrollY = shoppingListContent.parentElement?.scrollTop || window.scrollY;
+        renderShoppingView();
+        requestAnimationFrame(() => {
+          if (shoppingListContent.parentElement?.scrollTop !== undefined) shoppingListContent.parentElement.scrollTop = scrollY;
+          else window.scrollTo(0, scrollY);
+        });
+      }
+    });
+    shoppingListContent.addEventListener('click', e => {
+      const btn = e.target.closest('.list-item-remove');
+      if (!btn) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const idx = Number(btn.dataset.rm);
+      if (idx >= 0 && idx < shoppingList.length) {
+        shoppingList.splice(idx, 1);
+        saveShoppingList();
+        renderShoppingView();
+      }
+    });
   }
 
   // Clear list button
@@ -2055,9 +2106,9 @@
     const val = manualListInput?.value.trim();
     if (!val) return;
     val.split(',').forEach(part => {
-      const name = part.trim();
+      const name = part.trim().replace(/[<>"'&]/g, '').slice(0, 100);
       if (name && !shoppingList.some(item => item.name.toLowerCase() === name.toLowerCase())) {
-        shoppingList.push({ id: Date.now() + Math.random(), name, checked: false, recipe: t('listEmptyCta').replace(' →', '') });
+        shoppingList.push({ id: Date.now() + Math.random(), name, checked: false, recipe: t('otherItems') });
       }
     });
     manualListInput.value = '';
@@ -2280,6 +2331,11 @@
       } catch (e) {
         lastError = e;
         console.error(`Recipe fetch attempt ${attempt + 1} error:`, e);
+        // Detect network errors (TypeError from fetch when offline)
+        if (e instanceof TypeError && !navigator.onLine) {
+          lastError = new Error('network');
+          break;
+        }
         // Only retry on parse errors, server errors, or timeouts
         if (e.message !== 'parse_error' && e.message !== 'server' && e.name !== 'AbortError') break;
         if (attempt >= maxRetries) break;
@@ -2291,6 +2347,7 @@
         parse_error: t('errorParseError'),
         server: t('errorServer'),
         rate_limit: t('errorRateLimit'),
+        network: t('errorNetwork'),
       };
       const msg = lastError.name === 'AbortError'
         ? t('errorTimeout')
@@ -2301,7 +2358,12 @@
     }
 
     loadingEl.style.display = 'none';
-    searchBtn.disabled = false;
+    // Restore button state — respect current mode and offline status
+    if (searchMode === 'freetext') {
+      searchBtn.disabled = !freetextInput?.value.trim() || !navigator.onLine;
+    } else {
+      searchBtn.disabled = ingredients.length === 0 || !navigator.onLine;
+    }
     searchBtn.textContent = originalBtnText;
     searchBtn.removeAttribute('aria-busy');
     isFetching = false;
@@ -2620,10 +2682,17 @@
       }
       const card = e.target.closest('.fav-card');
       if (card) {
-        const savedRecipes = recipes;
-        recipes = [...favorites];
-        openRecipe(Number(card.dataset.favOpen));
-        recipes = savedRecipes;
+        const favIdx = Number(card.dataset.favOpen);
+        const favRecipe = favorites[favIdx];
+        if (favRecipe) {
+          const savedRecipes = recipes;
+          try {
+            recipes = [...favorites];
+            openRecipe(favIdx);
+          } finally {
+            recipes = savedRecipes;
+          }
+        }
       }
     });
   }
@@ -2920,11 +2989,17 @@
   let previouslyFocused = null;
   function trapFocus(container) {
     previouslyFocused = document.activeElement;
-    const focusable = container.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
-    if (!focusable.length) return;
-    focusable[0].focus();
+    // Query focusable elements dynamically each time Tab is pressed
+    // to handle dynamic content changes inside the modal
+    function getFocusable() {
+      return container.querySelectorAll('button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])');
+    }
+    const initial = getFocusable();
+    if (initial.length) initial[0].focus();
     container._trapHandler = (e) => {
       if (e.key !== 'Tab') return;
+      const focusable = getFocusable();
+      if (!focusable.length) return;
       const first = focusable[0];
       const last = focusable[focusable.length - 1];
       if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
@@ -2934,7 +3009,10 @@
   }
   function releaseFocus(container) {
     if (container._trapHandler) { container.removeEventListener('keydown', container._trapHandler); delete container._trapHandler; }
-    if (previouslyFocused) { previouslyFocused.focus(); previouslyFocused = null; }
+    if (previouslyFocused && previouslyFocused.focus) {
+      try { previouslyFocused.focus(); } catch {}
+      previouslyFocused = null;
+    }
   }
 
   function recipeToText(r) {
@@ -2980,10 +3058,12 @@
   function renderCookModeStep() {
     if (!cookModeRecipe) return;
     const steps = cookModeRecipe.steps || [];
+    if (!steps.length) return;
     const body = document.getElementById('cookModeBody');
     const indicator = document.getElementById('cookModeStepIndicator');
     const prevBtn = document.getElementById('cookModePrev');
     const nextBtn = document.getElementById('cookModeNext');
+    if (!body || !indicator || !prevBtn || !nextBtn) return;
 
     indicator.textContent = t('cookModeStepOf').replace('{current}', cookModeStep + 1).replace('{total}', steps.length);
 
@@ -3072,7 +3152,14 @@
     if (overlayEl) overlayEl.hidden = true;
     document.body.style.overflow = '';
     cookModeRecipe = null;
+    cookModeStep = 0;
+    cookModeSeconds = 0;
     if (cookModeTimer) { clearInterval(cookModeTimer); cookModeTimer = null; }
+    // Reset timer display for next use
+    const display = document.getElementById('cookModeTimerDisplay');
+    if (display) { display.hidden = true; display.textContent = '00:00'; }
+    const timerBtn = document.getElementById('cookModeTimerBtn');
+    if (timerBtn) timerBtn.textContent = t('cookModeStartTimer');
     releaseWakeLock();
   }
 
@@ -3515,26 +3602,51 @@
   }
 
   // ─── Fridge Photo to Recipe ───
+  let isFridgeScanning = false;
+  let lastObjectURL = null;
+
   if (fridgeBtn && fridgeInput) {
     fridgeBtn.addEventListener('click', () => fridgeInput.click());
 
     fridgeInput.addEventListener('change', async () => {
       const file = fridgeInput.files[0];
-      if (!file) return;
+      if (!file || isFridgeScanning) return;
 
-      if (fridgeImg.src) URL.revokeObjectURL(fridgeImg.src);
+      // Validate file type and size (max 10MB)
+      if (!file.type.startsWith('image/')) {
+        showToast(t('fridgeAnalysisFail'));
+        return;
+      }
+      if (file.size > 10 * 1024 * 1024) {
+        showToast(t('fridgeAnalysisFail'));
+        return;
+      }
+
+      isFridgeScanning = true;
+
+      // Properly revoke previous object URL
+      if (lastObjectURL) {
+        URL.revokeObjectURL(lastObjectURL);
+        lastObjectURL = null;
+      }
       const url = URL.createObjectURL(file);
+      lastObjectURL = url;
       fridgeImg.src = url;
       fridgePreview.style.display = 'block';
       fridgeScanning.style.display = 'flex';
       fridgeBtn.parentElement.querySelector('.fridge-btn').style.display = 'none';
 
       const reader = new FileReader();
+      reader.onerror = () => {
+        showToast(t('fridgeImageLoadFail'));
+        fridgeScanning.style.display = 'none';
+        isFridgeScanning = false;
+      };
       reader.onload = async () => {
-        const base64 = await compressImage(reader.result);
-        const mediaType = 'image/jpeg';
-
         try {
+          const base64 = await compressImage(reader.result);
+          const mediaType = 'image/jpeg';
+
           const imgController = new AbortController();
           const imgTimeout = setTimeout(() => imgController.abort(), 30000);
 
@@ -3559,8 +3671,8 @@
           if (Array.isArray(found) && found.length > 0) {
             ingredients = [];
             for (let k = 0; k < found.length; k++) {
-              const ing = found[k].trim().toLowerCase();
-              if (ing && !ingredients.includes(ing)) ingredients.push(ing);
+              const raw = String(found[k] || '').trim().toLowerCase().replace(/[<>"'&]/g, '').slice(0, 50);
+              if (raw && !ingredients.includes(raw) && ingredients.length < 30) ingredients.push(raw);
             }
             render();
             showToast(t('fridgeFound').replace('{count}', ingredients.length));
@@ -3580,13 +3692,18 @@
         }
 
         fridgeScanning.style.display = 'none';
+        isFridgeScanning = false;
       };
       reader.readAsDataURL(file);
     });
 
     if (fridgeRemove) {
       fridgeRemove.addEventListener('click', () => {
-        if (fridgeImg.src) URL.revokeObjectURL(fridgeImg.src);
+        if (lastObjectURL) {
+          URL.revokeObjectURL(lastObjectURL);
+          lastObjectURL = null;
+        }
+        fridgeImg.src = '';
         fridgePreview.style.display = 'none';
         fridgeInput.value = '';
         fridgeBtn.parentElement.querySelector('.fridge-btn').style.display = 'flex';
@@ -3647,6 +3764,20 @@
       navigator.serviceWorker.register('/sw.js').catch(() => {});
     });
   }
+
+  // ─── Online/Offline detection ───
+  window.addEventListener('offline', () => {
+    showToast(t('offlineMessage'));
+    searchBtn.disabled = true;
+  });
+  window.addEventListener('online', () => {
+    // Re-enable search when back online
+    if (searchMode === 'freetext') {
+      searchBtn.disabled = !freetextInput?.value.trim();
+    } else {
+      searchBtn.disabled = ingredients.length === 0;
+    }
+  });
 
   // ─── Holiday Recipes Banner ───
   const holidays = [

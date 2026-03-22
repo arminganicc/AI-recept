@@ -1,4 +1,4 @@
-const CACHE_NAME = 'receptappen-v7.3';
+const CACHE_NAME = 'receptappen-v7.4';
 const STATIC_ASSETS = ['/', '/index.html', '/style.css', '/app.js', '/manifest.json', '/apple-touch-icon.png'];
 
 self.addEventListener('install', event => {
@@ -49,8 +49,11 @@ self.addEventListener('fetch', event => {
       caches.match(event.request).then(cached => {
         if (cached) return cached;
         return fetch(event.request).then(response => {
-          const clone = response.clone();
-          caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+          // Only cache successful responses
+          if (response && response.status === 200) {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone)).catch(() => {});
+          }
           return response;
         }).catch(() => cached);
       })
@@ -62,8 +65,11 @@ self.addEventListener('fetch', event => {
   event.respondWith(
     fetch(event.request)
       .then(response => {
-        const clone = response.clone();
-        caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+        // Only cache valid responses (not errors, redirects to other origins, opaque)
+        if (response && response.status === 200 && response.type === 'basic') {
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone)).catch(() => {});
+        }
         return response;
       })
       .catch(() => caches.match(event.request))
