@@ -67,7 +67,7 @@
       statRecipes: 'recept skapade', statUsers: 'matlagare', statRating: 'snittbetyg',
       vegetariskt: 'Vegetariskt', veganskt: 'Veganskt', glutenfritt: 'Glutenfritt',
       snabbt: 'Under 30 min', laktosfritt: 'Laktosfritt', nötfritt: 'Nötfritt',
-      barnvänligt: 'Barnvänligt', budgetvänligt: 'Budgetvänligt',
+      barnvänligt: 'Barnvänligt', budgetvänligt: 'Budgetvänligt', nybörjarvänligt: 'Nybörjarvänligt',
       ingredients: 'Ingredienser', steps: 'Gör så här',
       arminTitle: 'Amko rekommenderar', worldKitchens: 'Världens kök',
       surpriseMe: '🎲 Överraska mig', inspiration: 'Inspiration',
@@ -277,7 +277,7 @@
       statRecipes: 'recipes created', statUsers: 'home cooks', statRating: 'avg rating',
       vegetariskt: 'Vegetarian', veganskt: 'Vegan', glutenfritt: 'Gluten-free',
       snabbt: 'Under 30 min', laktosfritt: 'Lactose-free', nötfritt: 'Nut-free',
-      barnvänligt: 'Kid-friendly', budgetvänligt: 'Budget-friendly',
+      barnvänligt: 'Kid-friendly', budgetvänligt: 'Budget-friendly', nybörjarvänligt: 'Beginner-friendly',
       ingredients: 'Ingredients', steps: 'Instructions',
       arminTitle: 'Amko recommends', worldKitchens: 'World cuisines',
       surpriseMe: '🎲 Surprise me', inspiration: 'Inspiration',
@@ -463,7 +463,7 @@
       statRecipes: 'recetas creadas', statUsers: 'cocineros', statRating: 'puntuación',
       vegetariskt: 'Vegetariano', veganskt: 'Vegano', glutenfritt: 'Sin gluten',
       snabbt: 'Menos de 30 min', laktosfritt: 'Sin lactosa', nötfritt: 'Sin frutos secos',
-      barnvänligt: 'Para niños', budgetvänligt: 'Económico',
+      barnvänligt: 'Para niños', budgetvänligt: 'Económico', nybörjarvänligt: 'Para principiantes',
       ingredients: 'Ingredientes', steps: 'Preparación',
       arminTitle: 'Amko recomienda', worldKitchens: 'Cocinas del mundo',
       surpriseMe: '🎲 Sorpréndeme', inspiration: 'Inspiración',
@@ -644,7 +644,7 @@
       statRecipes: 'kreiranih recepata', statUsers: 'kuhara', statRating: 'prosječna ocjena',
       vegetariskt: 'Vegetarijansko', veganskt: 'Vegansko', glutenfritt: 'Bez glutena',
       snabbt: 'Ispod 30 min', laktosfritt: 'Bez laktoze', nötfritt: 'Bez orašastih',
-      barnvänligt: 'Za djecu', budgetvänligt: 'Povoljno',
+      barnvänligt: 'Za djecu', budgetvänligt: 'Povoljno', nybörjarvänligt: 'Za početnike',
       ingredients: 'Sastojci', steps: 'Priprema',
       arminTitle: 'Amko preporučuje', worldKitchens: 'Kuhinje svijeta',
       surpriseMe: '🎲 Iznenadi me', inspiration: 'Inspiracija',
@@ -1906,17 +1906,25 @@
 
   // ─── Quick picks ───
   function renderQuickPicks() {
-    quickPicks.innerHTML = getQuickCategories().map(cat => `
-      <div class="quick-category">
-        <div class="quick-category-label">${cat.label}</div>
-        <div class="quick-category-chips">
-          ${cat.items.map(item => {
-            const used = ingredients.includes(item) ? ' used' : '';
-            return `<button class="quick-chip${used}" data-ing="${esc(item)}">${esc(translateIng(item))}</button>`;
-          }).join('')}
+    // Only do full re-render if not yet populated
+    if (!quickPicks.children.length) {
+      quickPicks.innerHTML = getQuickCategories().map(cat => `
+        <div class="quick-category">
+          <div class="quick-category-label">${cat.label}</div>
+          <div class="quick-category-chips">
+            ${cat.items.map(item => {
+              const used = ingredients.includes(item) ? ' used' : '';
+              return `<button class="quick-chip${used}" data-ing="${esc(item)}">${esc(translateIng(item))}</button>`;
+            }).join('')}
+          </div>
         </div>
-      </div>
-    `).join('');
+      `).join('');
+    } else {
+      // Fast update: just toggle used class (avoids DOM re-render + scroll jump)
+      quickPicks.querySelectorAll('.quick-chip').forEach(chip => {
+        chip.classList.toggle('used', ingredients.includes(chip.dataset.ing));
+      });
+    }
   }
 
   quickPicks.addEventListener('click', e => {
@@ -1945,7 +1953,7 @@
     ingInput.value = '';
     clearSuggestions();
     render();
-    ingInput.focus();
+    ingInput.focus({ preventScroll: true });
     if (hasDuplicate && !addedAny) { showToast(t('duplicateIngredient')); }
 
     // Easter egg: pizza as only ingredient
