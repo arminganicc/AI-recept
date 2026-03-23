@@ -2176,8 +2176,12 @@
       });
     }
 
-    // Suggest something new based on what they DON'T search for
-    const unusedProteins = ['tofu', 'räkor', 'lamm', 'lax', 'halloumi'].filter(p => !ingCounts[p]);
+    // Suggest something new based on what they DON'T search for — respect dietary prefs
+    const veganProteins = ['tofu', 'linser', 'kikärtor', 'bönor', 'quinoa'];
+    const vegetarianProteins = ['tofu', 'halloumi', 'ägg', 'linser', 'kikärtor'];
+    const allProteins = ['tofu', 'räkor', 'lamm', 'lax', 'halloumi', 'linser', 'kikärtor'];
+    const proteinPool = prefs.has('veganskt') ? veganProteins : prefs.has('vegetariskt') ? vegetarianProteins : allProteins;
+    const unusedProteins = proteinPool.filter(p => !ingCounts[p]);
     if (unusedProteins.length) {
       const tryProtein = unusedProteins[Math.floor(Math.random() * unusedProteins.length)];
       suggestions.push({

@@ -121,9 +121,17 @@ export default async function handler(req, res) {
     : '';
 
   let prefBoost = '';
-  if (safePrefs.includes('budgetvänligt')) prefBoost += ' Budget: billiga basvaror, ange ca-pris i description.';
-  if (safePrefs.includes('barnvänligt')) prefBoost += ' Barn: milda smaker, inga starka kryddor.';
-  if (safePrefs.includes('nybörjarvänligt')) prefBoost += ' Nybörjare: BARA lätta recept (difficulty: Lätt), max 5 ingredienser, förklara matlagningstermer i tips-fältet (t.ex. "tärna = skära i små kuber").';
+  // Strict dietary restrictions — MUST be obeyed
+  const strictDietary = [];
+  if (safePrefs.includes('veganskt')) strictDietary.push('VEGANSKT: Absolut INGA animaliska produkter (inget kött, fisk, mejeri, ägg, honung, ost, grädde, smör). Använd BARA växtbaserade ingredienser.');
+  if (safePrefs.includes('vegetariskt')) strictDietary.push('VEGETARISKT: Inget kött eller fisk. Mejeri och ägg OK.');
+  if (safePrefs.includes('glutenfritt')) strictDietary.push('GLUTENFRITT: Inget vete, råg, korn eller vanlig pasta/bröd. Använd glutenfria alternativ.');
+  if (safePrefs.includes('laktosfritt')) strictDietary.push('LAKTOSFRITT: Ingen mjölk, grädde, smör eller mjölkbaserad ost. Använd laktosfria alternativ.');
+  if (safePrefs.includes('nötfritt')) strictDietary.push('NÖTFRITT: Inga nötter av något slag.');
+  if (strictDietary.length) prefBoost += '\nSTRIKTA KOSTRESTRIKTIONER (MÅSTE följas, bryt ALDRIG mot dessa):\n' + strictDietary.join('\n');
+  if (safePrefs.includes('budgetvänligt')) prefBoost += '\nBudget: billiga basvaror, ange ca-pris i description.';
+  if (safePrefs.includes('barnvänligt')) prefBoost += '\nBarn: milda smaker, inga starka kryddor.';
+  if (safePrefs.includes('nybörjarvänligt')) prefBoost += '\nNybörjare: BARA lätta recept (difficulty: Lätt), max 5 ingredienser, förklara matlagningstermer i tips-fältet (t.ex. "tärna = skära i små kuber").';
 
   const variationMap = {
     3: 'Variation: 1)Snabbaste<20min 2)Klassiker 3)Comfort food.',
