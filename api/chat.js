@@ -174,7 +174,7 @@ VIKTIGT: Svara ENBART med giltig JSON. Inga kodblock, inga kommentarer.${langIns
       },
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001',
-        max_tokens: isMealPlan ? 4096 : safeRecipeCount >= 8 ? 4096 : 3000,
+        max_tokens: 4096,
         system: [{ type: 'text', text: activeSystemPrompt, cache_control: { type: 'ephemeral' } }],
         messages: [{ role: 'user', content: userPrompt }],
       }),
