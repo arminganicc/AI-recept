@@ -56,7 +56,8 @@
       yourIngredients: 'Dina råvaror', scanFood: 'Fota dina råvaror',
       orManual: 'eller skriv manuellt', inputHint: 'Skriv en råvara och tryck på +-knappen. Du kan skriva flera med komma emellan. Minst 2–3 ger bäst resultat.',
       whatDoYouHave: 'Vad har du hemma?', howPicky: 'Hur kräsen är du?',
-      portions: 'Portioner', showRecipes: 'Visa recept',
+      portions: 'Portioner', recipeCount: 'Antal recept', rcQuick: 'snabbt', rcStandard: 'standard', rcDiscover: 'upptäck',
+      showRecipes: 'Visa recept',
       savedRecipes: 'Sparade recept', noSavedRecipes: 'Din receptsamling väntar',
       noSavedDesc: 'Hitta ett recept du gillar och tryck på hjärtat. Nästa gång slipper du fundera — dina favoriter finns här, redo att lagas.',
       findRecipes: 'Hitta ditt första favoritrecept →', shoppingList: 'Inköpslista',
@@ -68,6 +69,16 @@
       ingredients: 'Ingredienser', steps: 'Gör så här',
       arminTitle: 'Amko rekommenderar', worldKitchens: 'Världens kök',
       surpriseMe: '🎲 Överraska mig', inspiration: 'Inspiration',
+      // Veckomeny
+      mealPlanTitle: 'Veckans meny', mealPlanSub: 'Planera hela veckan med ett klick. AI:n skapar en meny som återanvänder ingredienser och minskar svinn.',
+      mealPlanGenerate: 'Skapa veckomeny', mealPlanGenerating: 'Skapar din meny...',
+      mealPlanShoppingTitle: 'Samlad inköpslista', mealPlanAddAll: 'Lägg allt i inköpslistan',
+      mealPlanAddedToShop: 'Hela veckans ingredienser tillagda!', mealPlanTimeout: 'Veckomenyn tog för lång tid. Försök igen.',
+      mealPlanError: 'Något gick fel. Försök igen.',
+      // Personliga rekommendationer
+      personalRecsTitle: 'Förslag för dig', personalRecTry: 'Prova med', personalRecBased: 'Baserat på dina sökningar',
+      personalRecNew: 'Testa något nytt', personalRecNewReason: 'Du har inte provat detta än',
+      personalRecFavAgain: 'Laga igen', personalRecFavReason: 'En av dina favoriter',
       // Sökläge
       modeIngredients: '🥕 Ingredienser', modeFreetext: '💬 Berätta fritt',
       freetextLabel: 'Berätta vad du är sugen på',
@@ -253,7 +264,8 @@
       yourIngredients: 'Your ingredients', scanFood: 'Snap your ingredients',
       orManual: 'or type manually', inputHint: 'Enter to add. Comma separates.',
       whatDoYouHave: 'What do you have at home?', howPicky: 'How picky are you?',
-      portions: 'Servings', showRecipes: 'Show recipes',
+      portions: 'Servings', recipeCount: 'Number of recipes', rcQuick: 'quick', rcStandard: 'standard', rcDiscover: 'discover',
+      showRecipes: 'Show recipes',
       savedRecipes: 'Saved recipes', noSavedRecipes: 'Your recipe collection awaits',
       noSavedDesc: 'Find a recipe you love and tap the heart. Next time, no more guessing — your favorites will be right here.',
       findRecipes: 'Find your first favorite →', shoppingList: 'Shopping list',
@@ -265,6 +277,14 @@
       ingredients: 'Ingredients', steps: 'Instructions',
       arminTitle: 'Amko recommends', worldKitchens: 'World cuisines',
       surpriseMe: '🎲 Surprise me', inspiration: 'Inspiration',
+      mealPlanTitle: 'Weekly menu', mealPlanSub: 'Plan the whole week in one click. The AI creates a menu that reuses ingredients to reduce waste.',
+      mealPlanGenerate: 'Create weekly menu', mealPlanGenerating: 'Creating your menu...',
+      mealPlanShoppingTitle: 'Combined shopping list', mealPlanAddAll: 'Add all to shopping list',
+      mealPlanAddedToShop: 'All weekly ingredients added!', mealPlanTimeout: 'Weekly menu took too long. Try again.',
+      mealPlanError: 'Something went wrong. Try again.',
+      personalRecsTitle: 'Suggestions for you', personalRecTry: 'Try with', personalRecBased: 'Based on your searches',
+      personalRecNew: 'Try something new', personalRecNewReason: "You haven't tried this yet",
+      personalRecFavAgain: 'Cook again', personalRecFavReason: 'One of your favorites',
       modeIngredients: '🥕 Ingredients', modeFreetext: '💬 Tell me freely',
       freetextLabel: 'Tell me what you\'re craving',
       freetextHint: 'Write freely — Amko gets it.',
@@ -428,7 +448,8 @@
       yourIngredients: 'Tus ingredientes', scanFood: 'Fotografía tus ingredientes',
       orManual: 'o escribe manualmente', inputHint: 'Enter para añadir. Coma separa.',
       whatDoYouHave: '¿Qué tienes en casa?', howPicky: '¿Qué tan exigente eres?',
-      portions: 'Porciones', showRecipes: 'Mostrar recetas',
+      portions: 'Porciones', recipeCount: 'Cantidad de recetas', rcQuick: 'rápido', rcStandard: 'estándar', rcDiscover: 'descubrir',
+      showRecipes: 'Mostrar recetas',
       savedRecipes: 'Recetas guardadas', noSavedRecipes: 'Tu colección de recetas te espera',
       noSavedDesc: 'Encuentra una receta que te guste y toca el corazón. La próxima vez, tus favoritas estarán aquí.',
       findRecipes: 'Encuentra tu primera favorita →', shoppingList: 'Lista de compras',
@@ -440,6 +461,14 @@
       ingredients: 'Ingredientes', steps: 'Preparación',
       arminTitle: 'Amko recomienda', worldKitchens: 'Cocinas del mundo',
       surpriseMe: '🎲 Sorpréndeme', inspiration: 'Inspiración',
+      mealPlanTitle: 'Menú semanal', mealPlanSub: 'Planifica toda la semana con un clic.',
+      mealPlanGenerate: 'Crear menú semanal', mealPlanGenerating: 'Creando tu menú...',
+      mealPlanShoppingTitle: 'Lista de compras combinada', mealPlanAddAll: 'Agregar todo a la lista',
+      mealPlanAddedToShop: '¡Ingredientes de la semana agregados!', mealPlanTimeout: 'El menú tomó demasiado tiempo.',
+      mealPlanError: 'Algo salió mal. Intenta de nuevo.',
+      personalRecsTitle: 'Sugerencias para ti', personalRecTry: 'Prueba con', personalRecBased: 'Basado en tus búsquedas',
+      personalRecNew: 'Prueba algo nuevo', personalRecNewReason: 'Aún no has probado esto',
+      personalRecFavAgain: 'Cocina de nuevo', personalRecFavReason: 'Una de tus favoritas',
       modeIngredients: '🥕 Ingredientes', modeFreetext: '💬 Cuéntame',
       freetextLabel: 'Cuéntame qué se te antoja',
       freetextHint: 'Escribe libremente — Amko entiende.',
@@ -598,7 +627,8 @@
       yourIngredients: 'Tvoji sastojci', scanFood: 'Slikaj svoje namirnice',
       orManual: 'ili piši ručno', inputHint: 'Enter za dodavanje. Zarez odvaja.',
       whatDoYouHave: 'Šta imaš kod kuće?', howPicky: 'Koliko si izbirljiv/a?',
-      portions: 'Porcije', showRecipes: 'Prikaži recepte',
+      portions: 'Porcije', recipeCount: 'Broj recepata', rcQuick: 'brzo', rcStandard: 'standard', rcDiscover: 'otkrij',
+      showRecipes: 'Prikaži recepte',
       savedRecipes: 'Sačuvani recepti', noSavedRecipes: 'Tvoja kolekcija recepata čeka',
       noSavedDesc: 'Pronađi recept koji ti se sviđa i pritisni srce. Sljedeći put, tvoji favoriti su ovdje.',
       findRecipes: 'Pronađi prvi favorit →', shoppingList: 'Lista za kupovinu',
@@ -610,6 +640,14 @@
       ingredients: 'Sastojci', steps: 'Priprema',
       arminTitle: 'Amko preporučuje', worldKitchens: 'Kuhinje svijeta',
       surpriseMe: '🎲 Iznenadi me', inspiration: 'Inspiracija',
+      mealPlanTitle: 'Sedmični meni', mealPlanSub: 'Planiraj cijelu sedmicu jednim klikom.',
+      mealPlanGenerate: 'Napravi sedmični meni', mealPlanGenerating: 'Pravim tvoj meni...',
+      mealPlanShoppingTitle: 'Zbirna lista za kupovinu', mealPlanAddAll: 'Dodaj sve na listu',
+      mealPlanAddedToShop: 'Svi sastojci za sedmicu dodani!', mealPlanTimeout: 'Meni je predugo trajao.',
+      mealPlanError: 'Nešto je pošlo po krivu. Pokušaj ponovo.',
+      personalRecsTitle: 'Prijedlozi za tebe', personalRecTry: 'Probaj sa', personalRecBased: 'Na osnovu tvojih pretraga',
+      personalRecNew: 'Probaj nešto novo', personalRecNewReason: 'Još nisi probao/la ovo',
+      personalRecFavAgain: 'Kuhaj ponovo', personalRecFavReason: 'Jedan od tvojih favorita',
       modeIngredients: '🥕 Sastojci', modeFreetext: '💬 Reci slobodno',
       freetextLabel: 'Reci šta želiš jesti',
       freetextHint: 'Piši slobodno — Amko razumije.',
@@ -1035,6 +1073,7 @@
   let portions = (() => { try { return parseInt(localStorage.getItem('saved_portions')) || 4; } catch { return 4; } })();
   let searchPortions = portions;
   let prefs = (() => { try { const s = JSON.parse(localStorage.getItem('saved_prefs') || '[]'); return new Set(s); } catch { return new Set(); } })();
+  let recipeCount = (() => { try { return parseInt(localStorage.getItem('saved_recipe_count')) || 5; } catch { return 5; } })();
   const CACHE_MAX = 20;
   const CACHE_STORAGE_KEY = 'recipe_cache';
   // Restore cache from localStorage
@@ -1830,6 +1869,25 @@
   });
   updatePortionBtns();
 
+  // ─── Recipe count chips ───
+  const recipeCountChips = document.getElementById('recipeCountChips');
+  if (recipeCountChips) {
+    // Init active state from saved value
+    recipeCountChips.querySelectorAll('.recipe-count-chip').forEach(chip => {
+      const count = Number(chip.dataset.count);
+      chip.classList.toggle('active', count === recipeCount);
+    });
+    recipeCountChips.addEventListener('click', e => {
+      const chip = e.target.closest('.recipe-count-chip');
+      if (!chip) return;
+      haptic();
+      recipeCount = Number(chip.dataset.count);
+      recipeCountChips.querySelectorAll('.recipe-count-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      try { localStorage.setItem('saved_recipe_count', recipeCount); } catch {}
+    });
+  }
+
   // ─── Quick picks ───
   function renderQuickPicks() {
     quickPicks.innerHTML = getQuickCategories().map(cat => `
@@ -2053,6 +2111,109 @@
       });
     });
   }
+
+  // ─── Personal Recommendations ───
+  function renderPersonalRecs() {
+    const recsEl = document.getElementById('personalRecs');
+    if (!recsEl) return;
+
+    // Need at least some history or favorites to make recommendations
+    if (!searchHistory.length && !favorites.length) { recsEl.hidden = true; return; }
+
+    // Analyze what user likes
+    const ingCounts = {};
+    searchHistory.forEach(entry => {
+      (entry.ingredients || []).forEach(ing => {
+        ingCounts[ing] = (ingCounts[ing] || 0) + 1;
+      });
+    });
+
+    // Top ingredients the user searches for
+    const topIngs = Object.entries(ingCounts).sort((a, b) => b[1] - a[1]).slice(0, 5).map(e => e[0]);
+
+    // Get cuisine preferences from favorites
+    const favTags = {};
+    favorites.forEach(f => {
+      if (f.tag) favTags[f.tag] = (favTags[f.tag] || 0) + 1;
+    });
+
+    // Build suggestions
+    const suggestions = [];
+    const cuisineEmoji = { 'kyckling': '🍗', 'köttfärs': '🥩', 'lax': '🐟', 'pasta': '🍝', 'ris': '🍚', 'tofu': '🌱', 'räkor': '🦐', 'potatis': '🥔' };
+
+    if (topIngs.length >= 2) {
+      const combo = topIngs.slice(0, 3);
+      suggestions.push({
+        emoji: cuisineEmoji[combo[0]] || '🍽️',
+        name: `${t('personalRecTry')} ${combo.map(i => translateIng(i)).join(' + ')}`,
+        reason: t('personalRecBased'),
+        ings: combo
+      });
+    }
+
+    // Suggest something new based on what they DON'T search for
+    const unusedProteins = ['tofu', 'räkor', 'lamm', 'lax', 'halloumi'].filter(p => !ingCounts[p]);
+    if (unusedProteins.length) {
+      const tryProtein = unusedProteins[Math.floor(Math.random() * unusedProteins.length)];
+      suggestions.push({
+        emoji: cuisineEmoji[tryProtein] || '✨',
+        name: `${t('personalRecNew')}: ${translateIng(tryProtein)}`,
+        reason: t('personalRecNewReason'),
+        ings: [tryProtein]
+      });
+    }
+
+    // Favorite-based suggestion
+    if (favorites.length >= 2) {
+      const randomFav = favorites[Math.floor(Math.random() * favorites.length)];
+      suggestions.push({
+        emoji: '❤️',
+        name: `${t('personalRecFavAgain')}: ${randomFav.name}`,
+        reason: t('personalRecFavReason'),
+        favIdx: favorites.indexOf(randomFav)
+      });
+    }
+
+    if (!suggestions.length) { recsEl.hidden = true; return; }
+
+    recsEl.hidden = false;
+    recsEl.innerHTML = `
+      <div class="personal-recs-title">✨ ${t('personalRecsTitle')}</div>
+      <div class="personal-recs-grid">
+        ${suggestions.slice(0, 3).map((s, i) => `
+          <div class="personal-rec-card" data-rec-idx="${i}">
+            <div class="personal-rec-emoji">${s.emoji}</div>
+            <div class="personal-rec-info">
+              <div class="personal-rec-name">${esc(s.name)}</div>
+              <div class="personal-rec-reason">${esc(s.reason)}</div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+
+    recsEl.querySelectorAll('.personal-rec-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const idx = Number(card.dataset.recIdx);
+        const s = suggestions[idx];
+        if (!s) return;
+        haptic();
+        if (s.favIdx !== undefined) {
+          // Open favorite recipe
+          const savedRecipes = recipes;
+          try { recipes = [...favorites]; openRecipe(s.favIdx); } finally { recipes = savedRecipes; }
+        } else if (s.ings) {
+          // Set ingredients and search
+          ingredients = [...s.ings];
+          render();
+          findRecipes();
+        }
+      });
+    });
+  }
+
+  // Render personal recs on page load
+  renderPersonalRecs();
 
   // ─── Shopping List ───
   function saveShoppingList() {
@@ -2364,12 +2525,14 @@
             query: freetextInput.value.trim(),
             portions: searchPortions,
             prefs: [...prefs],
+            recipeCount,
             conversationHistory,
             language: currentLang
           } : {
             ingredients: [...ingredients],
             portions: searchPortions,
             prefs: [...prefs],
+            recipeCount,
             conversationHistory,
             language: currentLang
           }),
@@ -2743,6 +2906,18 @@
   if (resultsBody) resultsBody.addEventListener('keydown', handleRecipeListKeydown);
 
   // ─── Favorites ───
+  function autoCategory(recipe) {
+    const name = (recipe.name || '').toLowerCase();
+    const desc = (recipe.description || '').toLowerCase();
+    const tag = (recipe.tag || '').toLowerCase();
+    const time = parseInt(recipe.time) || 60;
+    const combined = name + ' ' + desc + ' ' + tag;
+    if (/dessert|kaka|glass|choklad|paj|tårta|brownie|mousse|pannkak|crêpe|kladdkaka/.test(combined)) return 'dessert';
+    if (/soppa|sallad|förrätt|bruschetta|starter|antipast|mezze/.test(combined)) return 'förrätt';
+    if (time <= 25 || /snabb|quick|under 20|under 30/.test(combined)) return 'snabbt';
+    return 'huvudrätt';
+  }
+
   function toggleFavorite(recipe) {
     const idx = favorites.findIndex(f => f.name === recipe.name);
     if (idx > -1) {
@@ -2750,7 +2925,9 @@
       removeFavoriteFromCloud(recipe.name);
       showToast('favRemoved');
     } else {
-      favorites.push(recipe);
+      // Auto-categorize
+      const cat = autoCategory(recipe);
+      favorites.push({ ...recipe, category: cat });
       saveFavoriteToCloud(recipe);
       showToast('favAdded');
       haptic('medium');
@@ -2786,21 +2963,25 @@
     favsEmpty.style.display = 'none';
     if (favSearchWrapper) favSearchWrapper.style.display = favorites.length >= 3 ? '' : 'none';
 
-    // Render filter chips
+    // Render category filter chips
     if (favFilterEl && favorites.length) {
-      const tags = [...new Set(favorites.map(f => f.difficulty).filter(Boolean))];
+      const categoryLabels = { 'huvudrätt': '🍽️ Huvudrätt', 'förrätt': '🥗 Förrätt', 'dessert': '🍰 Dessert', 'snabbt': '⚡ Snabbt' };
+      // Auto-categorize old favorites that lack a category
+      favorites.forEach(f => { if (!f.category) f.category = autoCategory(f); });
+      const cats = [...new Set(favorites.map(f => f.category).filter(Boolean))];
       favFilterEl.innerHTML = `
         <button class="fav-filter-chip${favFilter === 'all' ? ' active' : ''}" data-filter="all">${t('filterAll')} (${favorites.length})</button>
-        ${tags.map(tag => {
-          const count = favorites.filter(f => f.difficulty === tag).length;
-          return `<button class="fav-filter-chip${favFilter === tag ? ' active' : ''}" data-filter="${esc(tag)}">${esc(tag)} (${count})</button>`;
+        ${cats.map(cat => {
+          const count = favorites.filter(f => f.category === cat).length;
+          const label = categoryLabels[cat] || cat;
+          return `<button class="fav-filter-chip${favFilter === cat ? ' active' : ''}" data-filter="${esc(cat)}">${label} (${count})</button>`;
         }).join('')}
       `;
     } else if (favFilterEl) {
       favFilterEl.innerHTML = '';
     }
 
-    let filteredFavs = favFilter === 'all' ? favorites : favorites.filter(f => f.difficulty === favFilter);
+    let filteredFavs = favFilter === 'all' ? favorites : favorites.filter(f => f.category === favFilter);
     if (favSearchQuery) filteredFavs = filteredFavs.filter(f => f.name.toLowerCase().includes(favSearchQuery));
     favGrid.innerHTML = filteredFavs.map((f, i) => {
       const realIdx = favorites.indexOf(f);
@@ -2808,7 +2989,7 @@
       <div class="fav-card" data-fav-open="${realIdx}">
         <div class="fav-card-info">
           <div class="fav-card-name">${esc(f.name)}</div>
-          <div class="fav-card-meta">${esc(f.time || '')} · ${esc(f.difficulty || '')}</div>
+          <div class="fav-card-meta">${esc(f.time || '')} · ${esc(f.difficulty || '')}${f.category ? ` · ${esc(f.category)}` : ''}</div>
         </div>
         <div class="fav-card-actions">
           <button class="fav-action-btn delete" data-fav-rm="${realIdx}" aria-label="${t('removeItem')}">
@@ -3804,6 +3985,133 @@
     showToast(`${c.flag} ${d.name}`);
     findRecipes();
   });
+
+  // ─── Meal Plan ───
+  let mealPlanDays = 5;
+  const mealPlanDayChips = document.querySelectorAll('.meal-plan-day-chip');
+  mealPlanDayChips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      haptic();
+      mealPlanDays = Number(chip.dataset.days);
+      mealPlanDayChips.forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+    });
+  });
+
+  let mealPlanGenerating = false;
+  document.getElementById('generateMealPlan')?.addEventListener('click', async () => {
+    if (mealPlanGenerating) return;
+    mealPlanGenerating = true;
+    const btn = document.getElementById('generateMealPlan');
+    const resultEl = document.getElementById('mealPlanResult');
+    btn.disabled = true;
+    btn.innerHTML = `<span class="search-btn-spinner"></span> ${t('mealPlanGenerating')}`;
+    resultEl.hidden = false;
+    resultEl.innerHTML = `<div class="skeleton-list">${[1,2,3].map(() => `<div class="skeleton-card"><div class="skel skel-title"></div><div class="skel skel-line w80"></div></div>`).join('')}</div>`;
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 35000);
+
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          mode: 'mealplan',
+          days: mealPlanDays,
+          portions: searchPortions,
+          prefs: [...prefs],
+          language: currentLang
+        }),
+        signal: controller.signal
+      });
+      clearTimeout(timeoutId);
+      if (!res.ok) throw new Error('API error');
+      const data = await res.json();
+      const text = data.content?.[0]?.text || '';
+      const cleanText = text.replace(/```json\s*/g, '').replace(/```\s*/g, '').trim();
+      const plan = JSON.parse(cleanText);
+      renderMealPlan(plan, resultEl);
+    } catch (err) {
+      if (err.name === 'AbortError') {
+        resultEl.innerHTML = `<p style="color:var(--accent-red);text-align:center">${t('mealPlanTimeout')}</p>`;
+      } else {
+        resultEl.innerHTML = `<p style="color:var(--accent-red);text-align:center">${t('mealPlanError')}</p>`;
+      }
+    } finally {
+      clearTimeout(timeoutId);
+      mealPlanGenerating = false;
+      btn.disabled = false;
+      btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg> <span>${t('mealPlanGenerate')}</span>`;
+    }
+  });
+
+  function renderMealPlan(plan, container) {
+    const dayNames = { sv: ['Måndag','Tisdag','Onsdag','Torsdag','Fredag','Lördag','Söndag'], en: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'], es: ['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'], bs: ['Ponedjeljak','Utorak','Srijeda','Četvrtak','Petak','Subota','Nedjelja'] };
+    const names = dayNames[currentLang] || dayNames.sv;
+    const days = plan.days || plan.menu || [];
+    const allIngs = [];
+
+    let html = days.map((day, i) => {
+      const recipe = day.recipe || day;
+      if (recipe.ingredients) recipe.ingredients.forEach(ing => allIngs.push(ing));
+      return `
+        <div class="meal-plan-day">
+          <div class="meal-plan-day-label">📌 ${names[i % 7]}</div>
+          <div class="meal-plan-recipe-card" data-mp-idx="${i}">
+            <div class="meal-plan-recipe-name">${esc(recipe.name || '')}</div>
+            <div class="meal-plan-recipe-meta">${esc(recipe.time || '')} · ${esc(recipe.difficulty || '')} · ${recipe.servings || searchPortions} ${t('portions').toLowerCase()}</div>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    // Dedup shopping list
+    const uniqueIngs = [...new Set(allIngs.map(i => i.toLowerCase()))].map(i => allIngs.find(a => a.toLowerCase() === i));
+
+    if (uniqueIngs.length) {
+      html += `
+        <div class="meal-plan-shopping">
+          <div class="meal-plan-shopping-title">🛒 ${t('mealPlanShoppingTitle')}</div>
+          <div class="meal-plan-shopping-items">${uniqueIngs.map(i => `<span class="meal-plan-shopping-item">${esc(i)}</span>`).join('')}</div>
+          <button class="meal-plan-add-all-btn" id="mpAddAllToShop">📥 ${t('mealPlanAddAll')}</button>
+        </div>
+      `;
+    }
+
+    container.innerHTML = html;
+
+    // Store plan for recipe opening
+    container._mealPlan = days;
+
+    // Add all ingredients to shopping list
+    document.getElementById('mpAddAllToShop')?.addEventListener('click', () => {
+      days.forEach(day => {
+        const recipe = day.recipe || day;
+        if (recipe.ingredients) addToShoppingList(recipe.ingredients, recipe.name);
+      });
+      showToast(t('mealPlanAddedToShop'));
+      haptic('medium');
+    });
+
+    // Click on meal plan recipe card to open it
+    container.querySelectorAll('.meal-plan-recipe-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const idx = Number(card.dataset.mpIdx);
+        const day = days[idx];
+        const recipe = day?.recipe || day;
+        if (recipe) {
+          const savedRecipes = recipes;
+          try {
+            recipes = days.map(d => d.recipe || d);
+            openRecipe(idx);
+          } finally {
+            recipes = savedRecipes;
+          }
+        }
+      });
+    });
+  }
 
   // ─── Image compression for fridge photos ───
   function compressImage(base64Full, maxWidth = 800, quality = 0.7) {

@@ -1054,6 +1054,37 @@ body {
 .search-portions-ctrl button:hover { border-color: var(--text-primary); }
 .search-portions-num { font-weight: 600; font-size: 15px; color: var(--text-primary); min-width: 20px; text-align: center; }
 
+/* ── Recipe count chips ── */
+.recipe-count-row { margin-top: 12px; }
+.recipe-count-chips { display: flex; gap: 8px; }
+.recipe-count-chip {
+  padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border-strong);
+  background: var(--bg-surface); color: var(--text-secondary); font-size: 13px;
+  font-weight: 500; cursor: pointer; transition: all 0.15s ease; font-family: var(--font);
+}
+.recipe-count-chip:hover { border-color: var(--accent); color: var(--accent); }
+.recipe-count-chip.active {
+  background: var(--accent); color: white; border-color: var(--accent);
+}
+
+/* ── Personal recommendations ── */
+.personal-recs { margin-top: 24px; }
+.personal-recs-title {
+  font-size: 15px; font-weight: 700; color: var(--text-primary); margin-bottom: 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+.personal-recs-grid { display: flex; flex-direction: column; gap: 8px; }
+.personal-rec-card {
+  display: flex; align-items: center; gap: 12px; padding: 12px 16px;
+  border-radius: 12px; background: var(--bg-surface); border: 1px solid var(--border);
+  cursor: pointer; transition: border-color 0.15s;
+}
+.personal-rec-card:hover { border-color: var(--accent); }
+.personal-rec-emoji { font-size: 24px; flex-shrink: 0; }
+.personal-rec-info { flex: 1; min-width: 0; }
+.personal-rec-name { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+.personal-rec-reason { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+
 /* ── CTA ── */
 .search-btn {
   width: 100%; background: linear-gradient(135deg, var(--accent), var(--accent-hover)); color: white; border: none;
@@ -2319,6 +2350,58 @@ body {
 }
 
 /* ═══ ARMIN REKOMMENDERAR ═══ */
+/* ── Meal plan section ── */
+.meal-plan-section {
+  margin-bottom: 32px; padding: 20px; border-radius: 16px;
+  background: linear-gradient(135deg, var(--accent-surface) 0%, var(--bg-surface) 100%);
+  border: 1px solid var(--border);
+}
+.meal-plan-header { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 16px; }
+.meal-plan-emoji { font-size: 32px; line-height: 1; flex-shrink: 0; }
+.meal-plan-title { font-size: 18px; font-weight: 700; color: var(--text-primary); margin: 0; }
+.meal-plan-sub { font-size: 13px; color: var(--text-secondary); margin: 4px 0 0; line-height: 1.4; }
+.meal-plan-controls { display: flex; flex-direction: column; gap: 12px; }
+.meal-plan-days { display: flex; gap: 8px; }
+.meal-plan-day-chip {
+  flex: 1; padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border-strong);
+  background: var(--bg-surface); color: var(--text-secondary); font-size: 13px;
+  font-weight: 500; cursor: pointer; transition: all 0.15s ease; font-family: var(--font);
+  text-align: center;
+}
+.meal-plan-day-chip:hover { border-color: var(--accent); color: var(--accent); }
+.meal-plan-day-chip.active { background: var(--accent); color: white; border-color: var(--accent); }
+.meal-plan-btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 12px; border-radius: 12px; border: none; font-family: var(--font);
+  background: linear-gradient(135deg, var(--accent), var(--accent-hover)); color: white;
+  font-size: 15px; font-weight: 600; cursor: pointer; transition: opacity 0.15s;
+}
+.meal-plan-btn:hover { opacity: 0.9; }
+.meal-plan-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+.meal-plan-result { margin-top: 16px; }
+.meal-plan-day { margin-bottom: 16px; }
+.meal-plan-day-label {
+  font-size: 14px; font-weight: 700; color: var(--accent); margin-bottom: 8px;
+  display: flex; align-items: center; gap: 6px;
+}
+.meal-plan-recipe-card {
+  padding: 12px 16px; border-radius: 12px; background: var(--bg-surface);
+  border: 1px solid var(--border); cursor: pointer; transition: border-color 0.15s;
+}
+.meal-plan-recipe-card:hover { border-color: var(--accent); }
+.meal-plan-recipe-name { font-size: 15px; font-weight: 600; color: var(--text-primary); }
+.meal-plan-recipe-meta { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
+.meal-plan-shopping { margin-top: 16px; padding: 16px; border-radius: 12px; background: var(--accent-green-surface); border: 1px solid rgba(45,139,78,0.15); }
+.meal-plan-shopping-title { font-size: 15px; font-weight: 700; color: var(--accent-green); margin-bottom: 8px; }
+.meal-plan-shopping-items { display: flex; flex-wrap: wrap; gap: 6px; }
+.meal-plan-shopping-item { font-size: 13px; color: var(--text-primary); padding: 4px 10px; background: var(--bg-surface); border-radius: 8px; border: 1px solid var(--border); }
+.meal-plan-add-all-btn {
+  margin-top: 12px; width: 100%; padding: 10px; border-radius: 10px; border: none;
+  background: var(--accent-green); color: white; font-size: 14px; font-weight: 600;
+  cursor: pointer; font-family: var(--font); transition: opacity 0.15s;
+}
+.meal-plan-add-all-btn:hover { opacity: 0.9; }
+
 .armin-section {
   margin-bottom: 32px;
 }

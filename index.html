@@ -267,12 +267,22 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
         </div>
       </div>
 
+      <div class="search-portions recipe-count-row">
+        <span class="search-portions-label" data-i18n="recipeCount">Antal recept</span>
+        <div class="recipe-count-chips" id="recipeCountChips">
+          <button class="recipe-count-chip" data-count="3">3 snabbt</button>
+          <button class="recipe-count-chip active" data-count="5">5 standard</button>
+          <button class="recipe-count-chip" data-count="8">8 upptäck</button>
+        </div>
+      </div>
+
       <button class="search-btn" id="searchBtn" disabled data-i18n="showRecipes">Visa recept</button>
       <p class="search-btn-hint" id="searchBtnHint" aria-live="polite">Lägg till minst en ingrediens för att söka</p>
       <div class="error" id="errBox" role="alert" aria-live="assertive" style="display:none"></div>
     </section>
 
     <div id="historySection"></div>
+    <div id="personalRecs" class="personal-recs" hidden></div>
     <div id="loadingEl" style="display:none"></div>
     <div id="recipeList" aria-live="polite"></div>
   </main>
@@ -285,6 +295,29 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
     <p class="view-sub">Vet inte vad du vill laga? Bläddra bland Amkos favoriter och världens kök. Tryck, och receptet genereras direkt.</p>
   </div>
   <div class="view-content">
+
+    <!-- Veckomeny-planerare -->
+    <div class="meal-plan-section">
+      <div class="meal-plan-header">
+        <span class="meal-plan-emoji">📅</span>
+        <div>
+          <h3 class="meal-plan-title" data-i18n="mealPlanTitle">Veckans meny</h3>
+          <p class="meal-plan-sub" data-i18n="mealPlanSub">Planera hela veckan med ett klick. AI:n skapar en meny som återanvänder ingredienser och minskar svinn.</p>
+        </div>
+      </div>
+      <div class="meal-plan-controls">
+        <div class="meal-plan-days">
+          <button class="meal-plan-day-chip" data-days="3">3 dagar</button>
+          <button class="meal-plan-day-chip active" data-days="5">5 dagar</button>
+          <button class="meal-plan-day-chip" data-days="7">7 dagar</button>
+        </div>
+        <button class="meal-plan-btn" id="generateMealPlan">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+          <span data-i18n="mealPlanGenerate">Skapa veckomeny</span>
+        </button>
+      </div>
+      <div id="mealPlanResult" class="meal-plan-result" hidden></div>
+    </div>
 
     <!-- Amko rekommenderar -->
     <div class="armin-section">
