@@ -176,6 +176,8 @@
       sortDifficulty: 'Svårighet',
       sortTime: 'Tid',
       sortName: 'Namn',
+      sortCost: 'Pris',
+      costPerPortion: 'portion',
       ingredientCount: 'ingredienser',
       seeRecipe: 'Visa recept →',
       // Recipe modal
@@ -371,6 +373,8 @@
       sortDifficulty: 'Difficulty',
       sortTime: 'Time',
       sortName: 'Name',
+      sortCost: 'Price',
+      costPerPortion: 'serving',
       ingredientCount: 'ingredients',
       seeRecipe: 'See recipe →',
       copyIngList: 'Copy ingredient list',
@@ -555,6 +559,8 @@
       sortDifficulty: 'Dificultad',
       sortTime: 'Tiempo',
       sortName: 'Nombre',
+      sortCost: 'Precio',
+      costPerPortion: 'porción',
       ingredientCount: 'ingredientes',
       seeRecipe: 'Ver receta →',
       copyIngList: 'Copiar lista de ingredientes',
@@ -731,7 +737,7 @@
       favRecipeCount: 'recepata sačuvano',
       filterAll: 'Svi',
       recipesFound: 'Amko je pronašao {count} recepata za tebe', recipesHint: 'Pritisni recept da vidiš sve',
-      sortLabel: 'Sortiraj:', sortDifficulty: 'Težina', sortTime: 'Vrijeme', sortName: 'Naziv',
+      sortLabel: 'Sortiraj:', sortDifficulty: 'Težina', sortTime: 'Vrijeme', sortName: 'Naziv', sortCost: 'Cijena', costPerPortion: 'porcija',
       ingredientCount: 'sastojaka', seeRecipe: 'Pogledaj recept →',
       copyIngList: 'Kopiraj listu sastojaka', rateRecipe: 'Ocijeni recept',
       missingLabel: 'Nedostaje:', missingSomething: 'Nedostaje ti nešto?',
@@ -1121,6 +1127,33 @@
       }
     }
   }
+  // Recipe image cache
+  const imageCache = new Map();
+  async function fetchRecipeImage(recipeName) {
+    if (!recipeName) return null;
+    const key = recipeName.toLowerCase();
+    if (imageCache.has(key)) return imageCache.get(key);
+    try {
+      const resp = await fetch(`/api/recipe-image?q=${encodeURIComponent(recipeName)}`);
+      if (!resp.ok) return null;
+      const data = await resp.json();
+      imageCache.set(key, data);
+      return data;
+    } catch { return null; }
+  }
+  function loadRecipeImages() {
+    document.querySelectorAll('.recipe-card-img[data-recipe-name]').forEach(container => {
+      const name = container.dataset.recipeName;
+      if (!name || container.dataset.loaded) return;
+      container.dataset.loaded = '1';
+      fetchRecipeImage(name).then(img => {
+        if (img?.url) {
+          container.innerHTML = `<img src="${img.url}" alt="${esc(img.alt || name)}" loading="lazy"><span class="img-credit">📷 ${esc(img.photographer)}</span>`;
+        }
+      });
+    });
+  }
+
   let conversationHistory = [];
   let lastChefComment = '';
   let lastMissingGlobally = [];
@@ -2542,7 +2575,7 @@
         }
 
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 30000);
+        const timeoutId = setTimeout(() => controller.abort(), 50000);
         // Link to fetchController so user can cancel
         fetchController.signal.addEventListener('abort', () => controller.abort());
 
@@ -2847,6 +2880,7 @@
         <button class="recipe-sort-btn${recipeSort === 'difficulty' ? ' active' : ''}" data-sort="difficulty">${t('sortDifficulty')}</button>
         <button class="recipe-sort-btn${recipeSort === 'time' ? ' active' : ''}" data-sort="time">${t('sortTime')}</button>
         <button class="recipe-sort-btn${recipeSort === 'name' ? ' active' : ''}" data-sort="name">${t('sortName')}</button>
+        <button class="recipe-sort-btn${recipeSort === 'cost' ? ' active' : ''}" data-sort="cost">${t('sortCost')}</button>
       </div>
       ${headerHTML}
     ` + sorted.map((r, i) => {
@@ -2854,6 +2888,9 @@
       const tag = r.tag || '';
       return `
         <div class="recipe-card" data-idx="${i}" role="button" tabindex="0" aria-label="${esc(r.name)} — ${esc(r.difficulty)}, ${esc(r.time)}">
+          <div class="recipe-card-img" data-recipe-name="${esc(r.name)}">
+            <div class="recipe-card-img-placeholder">🍽️</div>
+          </div>
           ${tag ? `<span class="recipe-tag ${tagClass(tag)}">${esc(tag)}</span>` : ''}
           <div class="recipe-top">
             <div class="recipe-name">${esc(r.name)}</div>
@@ -2863,6 +2900,7 @@
             <span class="badge">${iconClock} ${esc(r.time)}</span>
             <span class="badge ${difficultyClass(r.difficulty)}">${esc(r.difficulty)}</span>
             <span class="badge">${(r.ingredients || []).length} ${t('ingredientCount')}</span>
+            ${r.estimated_cost_sek ? `<span class="badge cost-badge cost-${(r.cost_level || '').toLowerCase()}">${r.estimated_cost_sek} kr</span>` : ''}
             ${r.nutrition_per_serving?.highlight ? `<span class="badge nutrition-hl">${esc(r.nutrition_per_serving.highlight)}</span>` : ''}
             ${rating > 0 ? `<span class="badge rated">${'★'.repeat(rating)}</span>` : ''}
           </div>
@@ -2889,6 +2927,8 @@
     } else {
       recipeList.innerHTML = resultsHTML;
     }
+    // Lazy-load recipe images
+    loadRecipeImages();
   }
 
   // Click handler for results (works for both overlay and inline)
@@ -3122,6 +3162,7 @@
   function sortRecipesList(list, by) {
     if (by === 'time') return [...list].sort((a, b) => parseTime(a.time) - parseTime(b.time));
     if (by === 'name') return [...list].sort((a, b) => (a.name || '').localeCompare(b.name || '', 'sv'));
+    if (by === 'cost') return [...list].sort((a, b) => (a.estimated_cost_sek || 999) - (b.estimated_cost_sek || 999));
     return sortRecipesByDifficulty(list);
   }
 
@@ -3156,6 +3197,15 @@
       </div>
     ` : '';
 
+    // Cost info
+    const costHTML = r.estimated_cost_sek ? `
+      <div class="cost-info">
+        <span class="cost-amount">~${r.estimated_cost_sek} kr</span>
+        <span class="cost-level cost-${(r.cost_level || '').toLowerCase()}">${esc(r.cost_level || '')}</span>
+        ${r.servings ? `<span class="cost-per-portion">~${Math.round(r.estimated_cost_sek / r.servings)} kr/${t('costPerPortion')}</span>` : ''}
+      </div>
+    ` : '';
+
     // Substitutions
     const subsHTML = (r.substitutions && r.substitutions.length) ? `
       <details class="substitutions-section" open>
@@ -3175,6 +3225,7 @@
     ` : '';
 
     modal.innerHTML = `
+      <div class="modal-hero-img" id="modalHeroImg"></div>
       <div class="modal-top">
         <div class="modal-title">${esc(r.name)}</div>
         <div class="modal-actions">
@@ -3223,6 +3274,7 @@
       </div>
 
       ${nutritionHTML}
+      ${costHTML}
       ${subsHTML}
 
       <div class="section-lbl">${t('steps')}</div>
@@ -3263,6 +3315,17 @@
         </div>
       </div>
     `;
+
+    // Load hero image
+    const heroContainer = document.getElementById('modalHeroImg');
+    if (heroContainer) {
+      fetchRecipeImage(r.name).then(img => {
+        if (img?.url) {
+          heroContainer.innerHTML = `<img src="${img.url}" alt="${esc(img.alt || r.name)}"><span class="img-credit">📷 ${esc(img.photographer)}</span>`;
+          heroContainer.classList.add('loaded');
+        }
+      });
+    }
 
     // Close
     document.getElementById('closeBtn').addEventListener('click', closeModal);
