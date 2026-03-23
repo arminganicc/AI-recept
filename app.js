@@ -216,6 +216,7 @@
       // Share
       shareTitle: 'Inköpslista',
       shareAppText: 'Kolla in Amkos AI-Recept — AI som fixar middagen åt dig!',
+      toastOAuthUnavailable: 'Inloggning med Google/Apple är inte tillgänglig just nu. Prova e-post istället.',
       // Misc
       timeAgoNow: 'Nyss',
       timeAgoMin: 'min',
@@ -391,6 +392,7 @@
       ratingScore: 'Rating: {score}/5 stars',
       shareTitle: 'Shopping list',
       shareAppText: 'Check out Amkos AI-Recept — AI that sorts out dinner for you!',
+      toastOAuthUnavailable: 'Google/Apple login is not available right now. Try email instead.',
       timeAgoNow: 'Just now',
       timeAgoMin: 'min',
       timeAgoHour: 'hr',
@@ -560,6 +562,7 @@
       ratingScore: 'Puntuación: {score}/5 estrellas',
       shareTitle: 'Lista de compras',
       shareAppText: '¡Mira Amkos AI-Recept — IA que resuelve la cena!',
+      toastOAuthUnavailable: 'Inicio con Google/Apple no disponible. Prueba con correo.',
       timeAgoNow: 'Ahora',
       timeAgoMin: 'min',
       timeAgoHour: 'h',
@@ -713,6 +716,7 @@
       ratingTopScore: '⭐ Odlično!', ratingScore: 'Ocjena: {score}/5 zvjezdica',
       shareTitle: 'Lista za kupovinu',
       shareAppText: 'Pogledaj Amkos AI-Recept — AI koji rješava večeru!',
+      toastOAuthUnavailable: 'Google/Apple prijava nije dostupna. Pokušaj s emailom.',
       timeAgoNow: 'Upravo', timeAgoMin: 'min', timeAgoHour: 'h', timeAgoDay: 'd',
       darkModeLight: 'Svijetli način', darkModeDark: 'Tamni način',
       recipeCountSingular: 'recept sačuvan', recipeCountPlural: 'recepata sačuvano',
@@ -1016,7 +1020,14 @@
       }
     } catch (e) { console.error('Supabase init error:', e); }
   }
-  initSupabase();
+  initSupabase().then(() => {
+    if (!supabaseClient) {
+      ['authGoogle', 'authApple'].forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) { btn.disabled = true; btn.style.opacity = '0.5'; btn.style.cursor = 'not-allowed'; }
+      });
+    }
+  });
 
   // ─── State ───
   let ingredients = [];
@@ -1677,7 +1688,7 @@
 
   // Google OAuth
   document.getElementById('authGoogle')?.addEventListener('click', async () => {
-    if (!supabaseClient) { showToast('error'); return; }
+    if (!supabaseClient) { showToast(t('toastOAuthUnavailable')); return; }
     try {
       const { error } = await supabaseClient.auth.signInWithOAuth({
         provider: 'google',
@@ -1692,7 +1703,7 @@
 
   // Apple OAuth
   document.getElementById('authApple')?.addEventListener('click', async () => {
-    if (!supabaseClient) { showToast('error'); return; }
+    if (!supabaseClient) { showToast(t('toastOAuthUnavailable')); return; }
     try {
       const { error } = await supabaseClient.auth.signInWithOAuth({
         provider: 'apple',
@@ -2266,6 +2277,7 @@
 
   let isFetching = false;
   let fetchController = null;
+  let inspirationSearch = false;
   async function findRecipes() {
     if (isFetching) return;
     const isFreetext = searchMode === 'freetext' && freetextInput?.value.trim();
@@ -2295,8 +2307,7 @@
     searchBtn.innerHTML = `<span class="search-btn-spinner"></span> ${t('searchingText')}`;
     searchBtn.setAttribute('aria-busy', 'true');
 
-    loadingEl.style.display = 'block';
-    loadingEl.innerHTML = `
+    const skeletonHTML = `
       <div class="skeleton-list">
         ${[1,2,3].map(() => `
           <div class="skeleton-card">
@@ -2310,7 +2321,16 @@
       <div class="loading-label">${pick(loadingMessages[currentLang] || loadingMessages.sv)}<span class="loading-dots"></span></div>
       <button class="cancel-search-btn" id="cancelSearchBtn">${t('cancelSearch')}</button>
     `;
-    recipeList.innerHTML = '';
+
+    if (inspirationSearch) {
+      // Show loading inside results overlay so user stays on Inspiration
+      if (resultsBody) resultsBody.innerHTML = skeletonHTML;
+      openResultsOverlay();
+    } else {
+      loadingEl.style.display = 'block';
+      loadingEl.innerHTML = skeletonHTML;
+      recipeList.innerHTML = '';
+    }
     errBox.style.display = 'none';
 
     fetchController = new AbortController();
@@ -2318,7 +2338,7 @@
       if (fetchController) fetchController.abort();
     });
 
-    const maxRetries = 2;
+    const maxRetries = 1;
     let lastError = null;
 
     for (let attempt = 0; attempt <= maxRetries; attempt++) {
@@ -2326,12 +2346,13 @@
         if (attempt > 0) {
           const delay = Math.min(1000 * Math.pow(2, attempt), 10000);
           await new Promise(r => setTimeout(r, delay));
-          loadingEl.querySelector('.loading-label').innerHTML =
+          const retryLabel = (inspirationSearch ? resultsBody : loadingEl)?.querySelector('.loading-label');
+          if (retryLabel) retryLabel.innerHTML =
             `${t('retryingText').replace('{attempt}', attempt + 1).replace('{total}', maxRetries + 1)}<span class="loading-dots"></span>`;
         }
 
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 60000);
+        const timeoutId = setTimeout(() => controller.abort(), 30000);
         // Link to fetchController so user can cancel
         fetchController.signal.addEventListener('abort', () => controller.abort());
 
@@ -2465,12 +2486,18 @@
       const msg = lastError.name === 'AbortError'
         ? t('errorTimeout')
         : errorMessages[lastError.message] || lastError.message;
-      errBox.innerHTML = `${esc(msg)} <button class="retry-btn" id="retryBtn">${t('retryBtn')}</button>`;
-      errBox.style.display = 'block';
-      document.getElementById('retryBtn')?.addEventListener('click', () => { errBox.style.display = 'none'; findRecipes(); });
+      if (inspirationSearch) {
+        closeResultsOverlay();
+        showToast(msg);
+      } else {
+        errBox.innerHTML = `${esc(msg)} <button class="retry-btn" id="retryBtn">${t('retryBtn')}</button>`;
+        errBox.style.display = 'block';
+        document.getElementById('retryBtn')?.addEventListener('click', () => { errBox.style.display = 'none'; findRecipes(); });
+      }
     }
 
-    loadingEl.style.display = 'none';
+    if (!inspirationSearch) loadingEl.style.display = 'none';
+    inspirationSearch = false;
     // Restore button state
     if (searchMode === 'freetext') {
       searchBtn.disabled = !freetextInput?.value.trim();
@@ -3584,9 +3611,8 @@
     try { ings = JSON.parse(card.dataset.ings); } catch { return; }
     ingredients = [];
     ings.forEach(ing => { if (!ingredients.includes(ing)) ingredients.push(ing); });
-    switchView('search');
-    render();
-    setTimeout(() => findRecipes(), 400);
+    inspirationSearch = true;
+    findRecipes();
   });
 
   // ─── Country name translations ───
@@ -3764,9 +3790,8 @@
     try { ings = JSON.parse(dish.dataset.ings); } catch { return; }
     ingredients = [];
     ings.forEach(ing => { if (!ingredients.includes(ing)) ingredients.push(ing); });
-    switchView('search');
-    render();
-    setTimeout(() => findRecipes(), 400);
+    inspirationSearch = true;
+    findRecipes();
   });
 
   document.getElementById('surpriseBtn')?.addEventListener('click', () => {
@@ -3775,10 +3800,9 @@
     const d = c.dishes[Math.floor(Math.random() * c.dishes.length)];
     ingredients = [];
     d.ings.forEach(ing => { if (!ingredients.includes(ing)) ingredients.push(ing); });
-    switchView('search');
-    render();
+    inspirationSearch = true;
     showToast(`${c.flag} ${d.name}`);
-    setTimeout(() => findRecipes(), 400);
+    findRecipes();
   });
 
   // ─── Image compression for fridge photos ───
