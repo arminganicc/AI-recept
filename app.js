@@ -4107,7 +4107,7 @@
     resultEl.innerHTML = `<div class="skeleton-list">${[1,2,3].map(() => `<div class="skeleton-card"><div class="skel skel-title"></div><div class="skel skel-line w80"></div></div>`).join('')}</div>`;
 
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 35000);
+    const timeoutId = setTimeout(() => controller.abort(), 58000);
 
     try {
       const res = await fetch('/api/chat', {
@@ -4286,7 +4286,7 @@
               res = await fetch('/api/recognize-ingredients', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ image: base64, mediaType }),
+                body: JSON.stringify({ image: base64, mediaType, language: currentLang }),
                 signal: imgController.signal
               });
               clearTimeout(imgTimeout);

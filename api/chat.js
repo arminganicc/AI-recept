@@ -173,8 +173,8 @@ VIKTIGT: Svara ENBART med giltig JSON. Inga kodblock, inga kommentarer.${langIns
         'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 4096,
+        model: 'claude-sonnet-4-6',
+        max_tokens: isMealPlan ? 4096 : safeRecipeCount >= 8 ? 4096 : 3000,
         system: [{ type: 'text', text: activeSystemPrompt, cache_control: { type: 'ephemeral' } }],
         messages: [{ role: 'user', content: userPrompt }],
       }),
