@@ -63,6 +63,8 @@
       findRecipes: 'Hitta ditt första favoritrecept →', shoppingList: 'Inköpslista',
       clear: 'Rensa', shareList: 'Dela lista 📤',
       navSearch: 'Sök', navInspiration: 'Inspiration', navFavorites: 'Favoriter', navList: 'Lista',
+      offlineMsg: 'Du är offline. Favoriter och lista fungerar fortfarande.',
+      statRecipes: 'recept skapade', statUsers: 'matlagare', statRating: 'snittbetyg',
       vegetariskt: 'Vegetariskt', veganskt: 'Veganskt', glutenfritt: 'Glutenfritt',
       snabbt: 'Under 30 min', laktosfritt: 'Laktosfritt', nötfritt: 'Nötfritt',
       barnvänligt: 'Barnvänligt', budgetvänligt: 'Budgetvänligt',
@@ -271,6 +273,8 @@
       findRecipes: 'Find your first favorite →', shoppingList: 'Shopping list',
       clear: 'Clear', shareList: 'Share list 📤',
       navSearch: 'Search', navInspiration: 'Inspiration', navFavorites: 'Favorites', navList: 'List',
+      offlineMsg: 'You are offline. Favorites and list still work.',
+      statRecipes: 'recipes created', statUsers: 'home cooks', statRating: 'avg rating',
       vegetariskt: 'Vegetarian', veganskt: 'Vegan', glutenfritt: 'Gluten-free',
       snabbt: 'Under 30 min', laktosfritt: 'Lactose-free', nötfritt: 'Nut-free',
       barnvänligt: 'Kid-friendly', budgetvänligt: 'Budget-friendly',
@@ -455,6 +459,8 @@
       findRecipes: 'Encuentra tu primera favorita →', shoppingList: 'Lista de compras',
       clear: 'Borrar', shareList: 'Compartir lista 📤',
       navSearch: 'Buscar', navInspiration: 'Inspiración', navFavorites: 'Favoritos', navList: 'Lista',
+      offlineMsg: 'Estás sin conexión. Favoritos y lista siguen funcionando.',
+      statRecipes: 'recetas creadas', statUsers: 'cocineros', statRating: 'puntuación',
       vegetariskt: 'Vegetariano', veganskt: 'Vegano', glutenfritt: 'Sin gluten',
       snabbt: 'Menos de 30 min', laktosfritt: 'Sin lactosa', nötfritt: 'Sin frutos secos',
       barnvänligt: 'Para niños', budgetvänligt: 'Económico',
@@ -634,6 +640,8 @@
       findRecipes: 'Pronađi prvi favorit →', shoppingList: 'Lista za kupovinu',
       clear: 'Obriši', shareList: 'Podijeli listu 📤',
       navSearch: 'Traži', navInspiration: 'Inspiracija', navFavorites: 'Favoriti', navList: 'Lista',
+      offlineMsg: 'Nisi na mreži. Favoriti i lista i dalje rade.',
+      statRecipes: 'kreiranih recepata', statUsers: 'kuhara', statRating: 'prosječna ocjena',
       vegetariskt: 'Vegetarijansko', veganskt: 'Vegansko', glutenfritt: 'Bez glutena',
       snabbt: 'Ispod 30 min', laktosfritt: 'Bez laktoze', nötfritt: 'Bez orašastih',
       barnvänligt: 'Za djecu', budgetvänligt: 'Povoljno',
@@ -1926,9 +1934,10 @@
     let addedAny = false;
     let hasDuplicate = false;
     val.split(',').map(s => s.trim().toLowerCase()).filter(Boolean).forEach(p => {
-      // Input validation: max 50 chars per ingredient, max 30 ingredients, only text chars
-      const sanitized = p.replace(/[<>"'&]/g, '').slice(0, 50);
-      if (sanitized && ingredients.length < 30) {
+      // Input validation: max 50 chars, max 30 ingredients, only food-related chars, reject suspicious patterns
+      const sanitized = p.replace(/[^a-zåäöéèüïñšžćčđ0-9\s\-.]/gi, '').replace(/\s+/g, ' ').trim().slice(0, 50);
+      const isSuspicious = /script|alert|onerror|onclick|eval|function|javascript|<|>/i.test(p);
+      if (sanitized && sanitized.length >= 2 && !isSuspicious && ingredients.length < 30) {
         if (ingredients.includes(sanitized)) { hasDuplicate = true; }
         else { ingredients.push(sanitized); addedAny = true; }
       }
@@ -2658,7 +2667,12 @@
         ? t('errorTimeout')
         : errorMessages[lastError.message] || lastError.message;
       if (inspirationSearch) {
-        closeResultsOverlay();
+        // Show error inside the overlay with retry button instead of closing silently
+        if (resultsBody) {
+          resultsBody.innerHTML = `<div style="text-align:center;padding:32px"><p style="color:var(--accent-red);margin-bottom:16px">${esc(msg)}</p><button class="retry-btn" onclick="this.closest('.results-overlay')?.querySelector('.results-close')?.click()">${t('retryBtn')}</button></div>`;
+        } else {
+          closeResultsOverlay();
+        }
         showToast(msg);
       } else {
         errBox.innerHTML = `${esc(msg)} <button class="retry-btn" id="retryBtn">${t('retryBtn')}</button>`;
@@ -4569,8 +4583,13 @@
       setOfflineBanner(!navigator.onLine);
     }
   }
-  window.addEventListener('online', () => setOfflineBanner(false));
-  window.addEventListener('offline', () => checkRealConnectivity());
+  let offlineCheckTimer = null;
+  window.addEventListener('online', () => { clearTimeout(offlineCheckTimer); setOfflineBanner(false); });
+  window.addEventListener('offline', () => {
+    // Debounce: wait 2s before checking — avoids flicker during API calls
+    clearTimeout(offlineCheckTimer);
+    offlineCheckTimer = setTimeout(checkRealConnectivity, 2000);
+  });
   // Delay initial check to let network stabilize after mobile wake/page load
   setTimeout(checkRealConnectivity, 1500);
 

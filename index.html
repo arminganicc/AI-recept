@@ -82,7 +82,7 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
 <!-- PWA: Offline indicator -->
 <div class="offline-banner" id="offlineBanner" hidden aria-live="polite">
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="23" y2="23"/><path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"/><path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"/><path d="M10.71 5.05A16 16 0 0 1 22.56 9"/><path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
-  <span>Du är offline. Favoriter och lista fungerar fortfarande.</span>
+  <span data-i18n="offlineMsg">Du är offline. Favoriter och lista fungerar fortfarande.</span>
 </div>
 
 <!-- PWA: Install app banner -->
@@ -126,17 +126,17 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
       <div class="social-proof" id="socialProof">
         <div class="social-proof-item">
           <span class="social-proof-num" id="proofRecipes">2 400+</span>
-          <span class="social-proof-label">recept skapade</span>
+          <span class="social-proof-label" data-i18n="statRecipes">recept skapade</span>
         </div>
         <div class="social-proof-divider"></div>
         <div class="social-proof-item">
           <span class="social-proof-num" id="proofUsers">600+</span>
-          <span class="social-proof-label">matlagare</span>
+          <span class="social-proof-label" data-i18n="statUsers">matlagare</span>
         </div>
         <div class="social-proof-divider"></div>
         <div class="social-proof-item">
           <span class="social-proof-num">4.8</span>
-          <span class="social-proof-label">snittbetyg</span>
+          <span class="social-proof-label" data-i18n="statRating">snittbetyg</span>
         </div>
       </div>
     </div>
