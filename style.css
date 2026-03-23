@@ -490,7 +490,7 @@ body {
 }
 .hero-toolbar-right {
   display: flex;
-  gap: 8px;
+  gap: 12px;
   align-items: center;
 }
 .hero-logo {
