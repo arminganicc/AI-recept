@@ -98,7 +98,7 @@
       authGoogle: 'Fortsätt med Google', authApple: 'Fortsätt med Apple',
       authOrEmail: 'eller med e-post', authLogin: 'Logga in',
       authNoAccount: 'Har inget konto?', authCreateHere: 'Skapa ett här',
-      authPrivacy: 'Vi lagrar bara din e-postadress. Ingen spam, inga nyhetsbrev, bara recept.',
+      authPrivacy: 'Vi lagrar bara din e-postadress. Ingen spam, inga nyhetsbrev, bara recept.', authComingSoon: 'Kommer snart',
       authBenefitSync: 'Favoriter synkas på alla enheter',
       authBenefitShop: 'Skicka inköpslistan till din mejl',
       authBenefitReturn: 'Kom tillbaka till dina recept var som helst',
@@ -300,7 +300,7 @@
       authGoogle: 'Continue with Google', authApple: 'Continue with Apple',
       authOrEmail: 'or with email', authLogin: 'Sign in',
       authNoAccount: 'No account?', authCreateHere: 'Create one here',
-      authPrivacy: 'We only store your email. No spam, no newsletters, just recipes.',
+      authPrivacy: 'We only store your email. No spam, no newsletters, just recipes.', authComingSoon: 'Coming soon',
       authBenefitSync: 'Favorites sync across all devices',
       authBenefitShop: 'Send shopping list to your email',
       authBenefitReturn: 'Access your recipes from anywhere',
@@ -484,7 +484,7 @@
       authGoogle: 'Continuar con Google', authApple: 'Continuar con Apple',
       authOrEmail: 'o con correo', authLogin: 'Iniciar sesión',
       authNoAccount: '¿Sin cuenta?', authCreateHere: 'Crea una aquí',
-      authPrivacy: 'Solo almacenamos tu correo. Sin spam, sin newsletters, solo recetas.',
+      authPrivacy: 'Solo almacenamos tu correo. Sin spam, sin newsletters, solo recetas.', authComingSoon: 'Próximamente',
       authBenefitSync: 'Favoritos sincronizados en todos los dispositivos',
       authBenefitShop: 'Envía la lista de compras a tu correo',
       authBenefitReturn: 'Accede a tus recetas desde cualquier lugar',
@@ -663,7 +663,7 @@
       authGoogle: 'Nastavi s Googleom', authApple: 'Nastavi s Appleom',
       authOrEmail: 'ili s emailom', authLogin: 'Prijavi se',
       authNoAccount: 'Nemaš račun?', authCreateHere: 'Kreiraj ovdje',
-      authPrivacy: 'Čuvamo samo tvoj email. Bez spama, bez newslettera, samo recepti.',
+      authPrivacy: 'Čuvamo samo tvoj email. Bez spama, bez newslettera, samo recepti.', authComingSoon: 'Dolazi uskoro',
       authBenefitSync: 'Favoriti sinhronizovani na svim uređajima',
       authBenefitShop: 'Pošalji listu za kupovinu na email',
       authBenefitReturn: 'Pristupi receptima s bilo kojeg mjesta',
@@ -1062,7 +1062,15 @@
     if (!supabaseClient) {
       ['authGoogle', 'authApple'].forEach(id => {
         const btn = document.getElementById(id);
-        if (btn) { btn.disabled = true; btn.style.opacity = '0.5'; btn.style.cursor = 'not-allowed'; }
+        if (btn) {
+          btn.disabled = true;
+          btn.style.opacity = '0.5';
+          btn.style.cursor = 'not-allowed';
+          const label = document.createElement('span');
+          label.className = 'auth-coming-soon';
+          label.textContent = t('authComingSoon');
+          btn.parentElement?.insertBefore(label, btn.nextSibling);
+        }
       });
     }
   });
@@ -4549,24 +4557,22 @@
     if (banner) banner.hidden = !offline;
   }
   async function checkRealConnectivity() {
-    if (navigator.onLine) {
-      setOfflineBanner(false);
-      return;
-    }
-    // navigator.onLine is false — verify with a real fetch (HEAD to own origin)
+    // Always do a real fetch — navigator.onLine is unreliable on mobile
     try {
       const ac = new AbortController();
-      const tid = setTimeout(() => ac.abort(), 3000);
+      const tid = setTimeout(() => ac.abort(), 4000);
       const resp = await fetch('/?_ping=' + Date.now(), { method: 'HEAD', cache: 'no-store', signal: ac.signal });
       clearTimeout(tid);
       setOfflineBanner(!resp.ok);
     } catch {
-      setOfflineBanner(true);
+      // Only show offline if navigator also agrees (avoids false positives from CORS/blocked)
+      setOfflineBanner(!navigator.onLine);
     }
   }
   window.addEventListener('online', () => setOfflineBanner(false));
   window.addEventListener('offline', () => checkRealConnectivity());
-  if (!navigator.onLine) checkRealConnectivity();
+  // Delay initial check to let network stabilize after mobile wake/page load
+  setTimeout(checkRealConnectivity, 1500);
 
   // ═══ Legal pages navigation ═══
   // Extend switchView to handle legal pages

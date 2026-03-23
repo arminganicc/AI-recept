@@ -1696,6 +1696,7 @@ body {
 .auth-btn:hover { background: var(--accent-hover); }
 .auth-btn:active { transform: scale(0.98); }
 .auth-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+.auth-coming-soon { font-size: 11px; color: var(--text-muted); text-align: center; display: block; margin-top: 4px; }
 .auth-btn-secondary {
   background: none;
   border: 1px solid var(--border-strong);
