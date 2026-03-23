@@ -54,7 +54,7 @@
     sv: {
       heroEyebrow: 'Kvällens eviga dilemma', heroTitle: 'Vad ska vi laga?',
       yourIngredients: 'Dina råvaror', scanFood: 'Fota dina råvaror',
-      orManual: 'eller skriv manuellt', inputHint: 'Enter lägger till. Komma separerar. Lägg till minst 2-3 ingredienser för bäst resultat.',
+      orManual: 'eller skriv manuellt', inputHint: 'Skriv en råvara och tryck på +-knappen. Du kan skriva flera med komma emellan. Minst 2–3 ger bäst resultat.',
       whatDoYouHave: 'Vad har du hemma?', howPicky: 'Hur kräsen är du?',
       portions: 'Portioner', showRecipes: 'Visa recept',
       savedRecipes: 'Sparade recept', noSavedRecipes: 'Din receptsamling väntar',
@@ -1012,9 +1012,9 @@
   // ─── State ───
   let ingredients = [];
   let recipes = [];
-  let portions = 4;
-  let searchPortions = 4;
-  let prefs = new Set();
+  let portions = (() => { try { return parseInt(localStorage.getItem('saved_portions')) || 4; } catch { return 4; } })();
+  let searchPortions = portions;
+  let prefs = (() => { try { const s = JSON.parse(localStorage.getItem('saved_prefs') || '[]'); return new Set(s); } catch { return new Set(); } })();
   const CACHE_MAX = 20;
   const CACHE_STORAGE_KEY = 'recipe_cache';
   // Restore cache from localStorage
@@ -1363,6 +1363,10 @@
     return `${days}${t('timeAgoDay')}`;
   }
 
+  // ─── Safe Focus (skip on touch devices to avoid keyboard popup) ───
+  const isTouchDevice = () => window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+  function safeFocus(el) { if (el && !isTouchDevice()) el.focus(); }
+
   // ─── Haptic Feedback ───
   function haptic(style = 'light') {
     if (navigator.vibrate) {
@@ -1421,6 +1425,26 @@
       else ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
     requestAnimationFrame(animate);
+  }
+
+  // ─── Scroll to top ───
+  const scrollTopBtn = document.getElementById('scrollTopBtn');
+  if (scrollTopBtn) {
+    let scrollTicking = false;
+    window.addEventListener('scroll', () => {
+      if (!scrollTicking) {
+        requestAnimationFrame(() => {
+          if (window.scrollY > 400) scrollTopBtn.classList.add('visible');
+          else scrollTopBtn.classList.remove('visible');
+          scrollTicking = false;
+        });
+        scrollTicking = true;
+      }
+    });
+    scrollTopBtn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      haptic();
+    });
   }
 
   // ─── Dark Mode ───
@@ -1759,9 +1783,14 @@
     const pref = chip.dataset.pref;
     if (prefs.has(pref)) { prefs.delete(pref); chip.classList.remove('active'); chip.setAttribute('aria-pressed', 'false'); }
     else { prefs.add(pref); chip.classList.add('active'); chip.setAttribute('aria-pressed', 'true'); }
+    try { localStorage.setItem('saved_prefs', JSON.stringify([...prefs])); } catch {}
   });
-  // Init aria-pressed on pref chips
-  document.querySelectorAll('.pref-chip').forEach(c => c.setAttribute('aria-pressed', 'false'));
+  // Init pref chips from saved state
+  document.querySelectorAll('.pref-chip').forEach(c => {
+    const p = c.dataset.pref;
+    if (prefs.has(p)) { c.classList.add('active'); c.setAttribute('aria-pressed', 'true'); }
+    else { c.setAttribute('aria-pressed', 'false'); }
+  });
 
   // ─── Search Portions ───
   const spMinus = document.getElementById('spMinus');
@@ -1772,10 +1801,10 @@
     document.getElementById('spNum').textContent = searchPortions;
   }
   spMinus?.addEventListener('click', () => {
-    if (searchPortions > 1) { searchPortions--; updatePortionBtns(); haptic(); }
+    if (searchPortions > 1) { searchPortions--; updatePortionBtns(); haptic(); try { localStorage.setItem('saved_portions', searchPortions); } catch {} }
   });
   spPlus?.addEventListener('click', () => {
-    if (searchPortions < 20) { searchPortions++; updatePortionBtns(); haptic(); }
+    if (searchPortions < 20) { searchPortions++; updatePortionBtns(); haptic(); try { localStorage.setItem('saved_portions', searchPortions); } catch {} }
   });
   updatePortionBtns();
 
@@ -2439,7 +2468,7 @@
       // Focus the newly visible input
       if (searchMode === 'freetext') {
         searchBtn.disabled = !freetextInput?.value.trim();
-        setTimeout(() => freetextInput?.focus(), 100);
+        setTimeout(() => safeFocus(freetextInput), 100);
       } else {
         searchBtn.disabled = ingredients.length === 0;
         setTimeout(() => ingInput?.focus(), 100);
@@ -2447,8 +2476,16 @@
     });
   }
   if (freetextInput) {
+    // Character counter
+    const ftCounter = document.createElement('div');
+    ftCounter.className = 'freetext-counter';
+    ftCounter.textContent = '0 / 500';
+    freetextInput.parentElement.appendChild(ftCounter);
     freetextInput.addEventListener('input', () => {
       if (searchMode === 'freetext') searchBtn.disabled = !freetextInput.value.trim();
+      const len = freetextInput.value.length;
+      ftCounter.textContent = `${len} / 500`;
+      ftCounter.classList.toggle('near-limit', len > 450);
     });
     freetextInput.addEventListener('keydown', e => {
       if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); if (freetextInput.value.trim()) findRecipes(); }
@@ -3939,7 +3976,7 @@
   // Handle initial hash
   const initView = location.hash.replace('#', '') || 'search';
   if (views[initView]) switchView(initView);
-  ingInput.focus();
+  safeFocus(ingInput);
 
   // Share app button
   document.getElementById('shareAppBtn')?.addEventListener('click', async () => {
