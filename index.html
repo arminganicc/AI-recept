@@ -229,8 +229,8 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
 
       <div class="input-row">
         <div class="ing-wrapper">
-          <input class="ing-input" id="ingInput" type="text" placeholder="kyckling, tomat, grädde..." autocomplete="off">
-          <div class="ing-suggestions" id="ingSuggestions" hidden></div>
+          <input class="ing-input" id="ingInput" type="text" placeholder="kyckling, tomat, grädde..." autocomplete="off" role="combobox" aria-autocomplete="list" aria-controls="ingSuggestions" aria-expanded="false">
+          <div class="ing-suggestions" id="ingSuggestions" role="listbox" hidden></div>
         </div>
         <button class="add-btn" id="addBtn" aria-label="Lägg till">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -255,6 +255,7 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
         <button class="pref-chip" data-pref="nötfritt" aria-pressed="false">Nötfritt</button>
         <button class="pref-chip" data-pref="barnvänligt" aria-pressed="false">Barnvänligt</button>
         <button class="pref-chip" data-pref="budgetvänligt" aria-pressed="false">Budgetvänligt</button>
+        <button class="pref-chip" data-pref="nybörjarvänligt" aria-pressed="false">Nybörjarvänligt</button>
       </div>
 
       <div class="search-portions">
@@ -335,7 +336,8 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
       <button class="empty-cta" id="emptyCtaBtn" data-i18n="findRecipes">Hitta ditt första favoritrecept &rarr;</button>
     </div>
     <div class="fav-search-wrapper" id="favSearchWrapper" style="display:none">
-      <input class="fav-search-input" id="favSearchInput" type="text" placeholder="Sök bland favoriter..." autocomplete="off">
+      <label for="favSearchInput" class="visually-hidden">Sök bland favoriter</label>
+      <input class="fav-search-input" id="favSearchInput" type="text" placeholder="Sök bland favoriter..." autocomplete="off" aria-label="Sök bland favoriter">
     </div>
     <div class="fav-filter-chips" id="favFilterChips"></div>
     <div id="favGrid" class="fav-grid"></div>
@@ -350,6 +352,7 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
       <p class="view-sub" id="listSubtitle"></p>
     </div>
     <div class="list-actions">
+      <button class="list-action-btn" id="exportList" title="Exportera som textfil">📥</button>
       <button class="list-action-btn" id="clearList" data-i18n="clear">Rensa</button>
       <button class="list-action-btn primary" id="sendList" data-i18n="shareList">Dela lista 📤</button>
     </div>
@@ -398,12 +401,12 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
   </div>
   <div class="legal-body">
     <section><h2>1. Inledning</h2><p>Denna integritetspolicy beskriver hur "Vad ska vi laga?" behandlar dina personuppgifter i enlighet med GDPR samt tillämplig svensk lagstiftning.</p></section>
-    <section><h2>2. Personuppgiftsansvarig</h2><div class="legal-info-box"><p><strong>Armin Ganic</strong></p><p>E-post: <a href="mailto:info@vadskavialaga.se">info@vadskavialaga.se</a></p></div></section>
+    <section><h2>2. Personuppgiftsansvarig</h2><div class="legal-info-box"><p><strong>Armin Ganic</strong></p><p>E-post: <em>(e-postadress kommer snart)</em></p></div></section>
     <section><h2>3. Vilka uppgifter vi samlar in</h2><p>Kontouppgifter (e-post), användarinnehåll (ingredienser, preferenser, favoriter), teknisk data (enhetstyp, webbläsare) samt prenumerationsstatus.</p></section>
     <section><h2>4. Hur vi använder dina uppgifter</h2><p>Vi genererar receptförslag, hanterar konto/prenumeration, sparar favoriter/inköpslistor, förbättrar tjänsten och kommunicerar viktiga uppdateringar.</p></section>
     <section><h2>5. Tredjepartstjänster</h2><p>Supabase (autentisering, EU), Anthropic Claude AI (receptgenerering, USA), Vercel (hosting, EU/USA), Google Fonts (typsnitt, USA). Vid USA-överföring säkerställs skydd via EU-kommissionens standardavtalsklausuler.</p></section>
-    <section><h2>6. Dina rättigheter enligt GDPR</h2><p>Du har rätt till tillgång, rättelse, radering, begränsning, dataportabilitet och invändning. Kontakta <a href="mailto:info@vadskavialaga.se">info@vadskavialaga.se</a>. Du kan även klaga till <a href="https://www.imy.se" target="_blank" rel="noopener">IMY</a>.</p></section>
-    <section><h2>7. Kontakt</h2><div class="legal-info-box"><p>E-post: <a href="mailto:info@vadskavialaga.se">info@vadskavialaga.se</a></p></div></section>
+    <section><h2>6. Dina rättigheter enligt GDPR</h2><p>Du har rätt till tillgång, rättelse, radering, begränsning, dataportabilitet och invändning. Kontakta <em>(e-postadress kommer snart)</em>. Du kan även klaga till <a href="https://www.imy.se" target="_blank" rel="noopener">IMY</a>.</p></section>
+    <section><h2>7. Kontakt</h2><div class="legal-info-box"><p>E-post: <em>(e-postadress kommer snart)</em></p></div></section>
   </div>
 </section>
 
@@ -422,7 +425,7 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
     <section><h2>2. Tjänstebeskrivning</h2><p>AI-driven recepttjänst med ingrediensigenkänning, favoriter, inköpslistor och kokläge.</p></section>
     <section><h2>3. Prenumeration</h2><p>Månadsplan: 49 kr/mån. Årsplan: 399 kr/år. Förnyas automatiskt. 14 dagars ångerrätt.</p></section>
     <section><h2>4. Ansvarsbegränsning</h2><p>AI-genererade recept är förslag. Kontrollera alltid ingredienser vid allergier. Tjänsten ersätter inte professionell kostrådgivning.</p></section>
-    <section><h2>5. Kontakt</h2><div class="legal-info-box"><p><strong>Armin Ganic</strong> — <a href="mailto:info@vadskavialaga.se">info@vadskavialaga.se</a></p></div></section>
+    <section><h2>5. Kontakt</h2><div class="legal-info-box"><p><strong>Armin Ganic</strong> — <em>(e-postadress kommer snart)</em></p></div></section>
   </div>
 </section>
 
@@ -440,7 +443,7 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
     <section><h2>1. Cookies och lokal lagring</h2><p>"Vad ska vi laga?" använder inga tredjepartsspårningscookies. Vi använder localStorage för inställningar och data lokalt.</p></section>
     <section><h2>2. Lagrade nycklar</h2><p>fav_recipes (favoriter), search_history (sökhistorik), shopping_list (inköpslista), recipe_ratings (betyg), dark_mode (tema).</p></section>
     <section><h2>3. Service Worker</h2><p>Appen använder en Service Worker för offlinefunktionalitet. Cachen innehåller inga personuppgifter.</p></section>
-    <section><h2>4. Kontakt</h2><div class="legal-info-box"><p>E-post: <a href="mailto:info@vadskavialaga.se">info@vadskavialaga.se</a></p></div></section>
+    <section><h2>4. Kontakt</h2><div class="legal-info-box"><p>E-post: <em>(e-postadress kommer snart)</em></p></div></section>
   </div>
 </section>
 
@@ -595,10 +598,17 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catc
     <button class="cook-mode-nav-btn" id="cookModePrev" aria-label="Föregående steg">← Föregående</button>
     <button class="cook-mode-nav-btn primary" id="cookModeNext" aria-label="Nästa steg">Nästa →</button>
   </div>
-  <div class="cook-mode-timer" id="cookModeTimer" hidden>
+  <div class="cook-mode-timer" id="cookModeTimer">
+    <div class="cook-mode-timer-controls">
+      <button class="cook-mode-timer-adj" id="timerMinus1" aria-label="Minus 1 minut">-1</button>
+      <button class="cook-mode-timer-adj" id="timerMinus5" aria-label="Minus 5 minuter">-5</button>
+      <div class="cook-mode-timer-display" id="cookModeTimerDisplay">00:00</div>
+      <button class="cook-mode-timer-adj" id="timerPlus5" aria-label="Plus 5 minuter">+5</button>
+      <button class="cook-mode-timer-adj" id="timerPlus1" aria-label="Plus 1 minut">+1</button>
+    </div>
     <button class="cook-mode-timer-btn" id="cookModeTimerBtn">⏱ Starta timer</button>
-    <div class="cook-mode-timer-display" id="cookModeTimerDisplay" hidden>00:00</div>
   </div>
+  <div class="cook-mode-swipe-hint" id="cookModeSwipeHint">← Svep f&ouml;r att byta steg →</div>
 </div>
 
 <!-- Confetti canvas -->

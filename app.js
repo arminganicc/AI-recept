@@ -125,6 +125,8 @@
       toastNoIngs: 'Hittade inga ingredienser — fotografera lite närmare?',
       toastBonAppetit: 'Smaklig måltid! Du har förtjänat det. 🍽️',
       toastFromCache: 'Amko mindes! Hämtat från senast.',
+      duplicateIngredient: 'Den ingrediensen har du redan lagt till!',
+      fridgeImageTooLarge: 'Bilden är för stor — max 10 MB. Försök med en mindre bild.',
       toastAuthEmail: 'Ange e-post och lösenord',
       toastAuthShort: 'Lösenordet måste vara minst 6 tecken',
       toastAuthWrong: 'Fel e-post eller lösenord',
@@ -206,6 +208,8 @@
       cookModeDone: '✓ Klar!',
       cookModeStartTimer: '⏱ Starta timer',
       cookModeStopTimer: '⏹ Stoppa timer',
+      timerDone: 'Tiden är ute! Dags att kolla grytan.',
+      cancelSearch: 'Avbryt sökning',
       // Rating
       ratingTopScore: '⭐ Toppen!',
       ratingScore: 'Betyg: {score}/5 stjärnor',
@@ -311,6 +315,8 @@
       toastNoIngs: 'No ingredients found',
       toastBonAppetit: 'Bon appétit! 🍽️',
       toastFromCache: 'Loaded from cache',
+      duplicateIngredient: 'That ingredient is already added!',
+      fridgeImageTooLarge: 'Image is too large — max 10 MB. Try a smaller image.',
       toastAuthEmail: 'Enter email and password',
       toastAuthShort: 'Password must be at least 6 characters',
       toastAuthWrong: 'Wrong email or password',
@@ -378,6 +384,9 @@
       cookModeDone: '✓ Done!',
       cookModeStartTimer: '⏱ Start timer',
       cookModeStopTimer: '⏹ Stop timer',
+      timerDone: 'Time is up! Check your food.',
+      duplicateIngredient: 'That ingredient is already added!',
+      cancelSearch: 'Cancel search',
       ratingTopScore: '⭐ Amazing!',
       ratingScore: 'Rating: {score}/5 stars',
       shareTitle: 'Shopping list',
@@ -1589,11 +1598,13 @@
     updateAuthUI();
     authOverlay?.classList.add('open');
     document.body.style.overflow = 'hidden';
+    if (authOverlay) trapFocus(authOverlay);
   }
 
   function closeAuthModal() {
     authOverlay?.classList.remove('open');
     document.body.style.overflow = '';
+    if (authOverlay) releaseFocus(authOverlay);
   }
 
   accountBtn?.addEventListener('click', openAuthModal);
@@ -1835,17 +1846,21 @@
   function addIng() {
     const val = ingInput.value.trim();
     if (!val) return;
+    let addedAny = false;
+    let hasDuplicate = false;
     val.split(',').map(s => s.trim().toLowerCase()).filter(Boolean).forEach(p => {
       // Input validation: max 50 chars per ingredient, max 30 ingredients, only text chars
       const sanitized = p.replace(/[<>"'&]/g, '').slice(0, 50);
-      if (sanitized && !ingredients.includes(sanitized) && ingredients.length < 30) {
-        ingredients.push(sanitized);
+      if (sanitized && ingredients.length < 30) {
+        if (ingredients.includes(sanitized)) { hasDuplicate = true; }
+        else { ingredients.push(sanitized); addedAny = true; }
       }
     });
     ingInput.value = '';
     clearSuggestions();
     render();
     ingInput.focus();
+    if (hasDuplicate && !addedAny) { showToast(t('duplicateIngredient')); }
 
     // Easter egg: pizza as only ingredient
     if (ingredients.length === 1 && ingredients[0] === 'pizza') {
@@ -1908,14 +1923,17 @@
 
     if (!matches.length) { clearSuggestions(); return; }
 
-    ingSuggestions.innerHTML = matches.map(m =>
-      `<button class="suggestion-item" data-val="${esc(m)}">${esc(m)}</button>`
+    ingSuggestions.innerHTML = matches.map((m, i) =>
+      `<button class="suggestion-item" role="option" id="ingSug${i}" data-val="${esc(m)}">${esc(m)}</button>`
     ).join('');
     ingSuggestions.hidden = false;
+    ingInput.setAttribute('aria-expanded', 'true');
   }
 
   function clearSuggestions() {
     if (ingSuggestions) { ingSuggestions.innerHTML = ''; ingSuggestions.hidden = true; }
+    ingInput.setAttribute('aria-expanded', 'false');
+    ingInput.removeAttribute('aria-activedescendant');
   }
 
   let suggestionIdx = -1;
@@ -1929,10 +1947,12 @@
       e.preventDefault();
       suggestionIdx = Math.min(suggestionIdx + 1, items.length - 1);
       items.forEach((it, i) => { it.classList.toggle('active', i === suggestionIdx); it.setAttribute('aria-selected', i === suggestionIdx); });
+      ingInput.setAttribute('aria-activedescendant', `ingSug${suggestionIdx}`);
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
       suggestionIdx = Math.max(suggestionIdx - 1, 0);
       items.forEach((it, i) => { it.classList.toggle('active', i === suggestionIdx); it.setAttribute('aria-selected', i === suggestionIdx); });
+      ingInput.setAttribute('aria-activedescendant', `ingSug${suggestionIdx}`);
     } else if (e.key === 'Enter' && suggestionIdx >= 0) {
       e.preventDefault();
       const val = items[suggestionIdx]?.dataset.val;
@@ -2186,6 +2206,21 @@
 
   document.getElementById('sendList')?.addEventListener('click', () => shareShoppingList());
 
+  // Export shopping list as text file
+  document.getElementById('exportList')?.addEventListener('click', () => {
+    const unchecked = shoppingList.filter(i => !i.checked);
+    if (!unchecked.length) { showToast('emptyList'); return; }
+    const text = getListText();
+    const blob = new Blob([text], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'inkopslista.txt';
+    a.click();
+    URL.revokeObjectURL(url);
+    haptic();
+  });
+
   function getListText() {
     const unchecked = shoppingList.filter(i => !i.checked);
     const byRecipe = {};
@@ -2230,6 +2265,7 @@
   }
 
   let isFetching = false;
+  let fetchController = null;
   async function findRecipes() {
     if (isFetching) return;
     const isFreetext = searchMode === 'freetext' && freetextInput?.value.trim();
@@ -2272,9 +2308,15 @@
         `).join('')}
       </div>
       <div class="loading-label">${pick(loadingMessages[currentLang] || loadingMessages.sv)}<span class="loading-dots"></span></div>
+      <button class="cancel-search-btn" id="cancelSearchBtn">${t('cancelSearch')}</button>
     `;
     recipeList.innerHTML = '';
     errBox.style.display = 'none';
+
+    fetchController = new AbortController();
+    document.getElementById('cancelSearchBtn')?.addEventListener('click', () => {
+      if (fetchController) fetchController.abort();
+    });
 
     const maxRetries = 2;
     let lastError = null;
@@ -2290,6 +2332,8 @@
 
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 60000);
+        // Link to fetchController so user can cancel
+        fetchController.signal.addEventListener('abort', () => controller.abort());
 
         const res = await fetch('/api/chat', {
           method: 'POST',
@@ -2511,6 +2555,7 @@
     if (resultsOverlay) {
       resultsOverlay.hidden = false;
       document.body.style.overflow = 'hidden';
+      trapFocus(resultsOverlay);
     }
   }
 
@@ -2518,6 +2563,7 @@
     if (resultsOverlay) {
       resultsOverlay.hidden = true;
       document.body.style.overflow = '';
+      releaseFocus(resultsOverlay);
     }
   }
 
@@ -2980,11 +3026,19 @@
     document.getElementById('closeBtn').addEventListener('click', closeModal);
 
     // Portions — now scales ingredients
-    document.getElementById('portMinus').addEventListener('click', () => {
-      if (portions > 1) { portions--; document.getElementById('portNum').textContent = portions; renderModalIngredients(); haptic(); }
+    const modalPortMinus = document.getElementById('portMinus');
+    const modalPortPlus = document.getElementById('portPlus');
+    function updateModalPortionBtns() {
+      document.getElementById('portNum').textContent = portions;
+      if (modalPortMinus) modalPortMinus.disabled = portions <= 1;
+      if (modalPortPlus) modalPortPlus.disabled = portions >= 20;
+    }
+    updateModalPortionBtns();
+    modalPortMinus.addEventListener('click', () => {
+      if (portions > 1) { portions--; updateModalPortionBtns(); renderModalIngredients(); haptic(); }
     });
-    document.getElementById('portPlus').addEventListener('click', () => {
-      if (portions < 20) { portions++; document.getElementById('portNum').textContent = portions; renderModalIngredients(); haptic(); }
+    modalPortPlus.addEventListener('click', () => {
+      if (portions < 20) { portions++; updateModalPortionBtns(); renderModalIngredients(); haptic(); }
     });
 
     // Copy
@@ -3016,9 +3070,10 @@
       catch { showToast(t('toastCantCopy')); }
     });
 
-    // Add to shopping list
+    // Add to shopping list (use scaled ingredients based on current portions)
     document.getElementById('addToShopBtn').addEventListener('click', () => {
-      addToShoppingList(r.ingredients || [], r.name);
+      const scaledIngs = (r.ingredients || []).map(ing => scaleIngredient(ing, originalServings, portions));
+      addToShoppingList(scaledIngs, r.name);
     });
 
     // Cook mode
@@ -3125,6 +3180,7 @@
     overlayEl.hidden = false;
     document.body.style.overflow = 'hidden';
     document.getElementById('cookModeTitle').textContent = recipe.name;
+    trapFocus(overlayEl);
 
     // Request Wake Lock
     requestWakeLock();
@@ -3202,39 +3258,98 @@
     }, { passive: true });
   }
 
-  // Timer
-  document.getElementById('cookModeTimerBtn')?.addEventListener('click', () => {
+  // Countdown timer with alarm
+  let countdownTarget = 5 * 60; // default 5 min in seconds
+  let countdownRunning = false;
+
+  function updateTimerDisplay() {
     const display = document.getElementById('cookModeTimerDisplay');
+    if (!display) return;
+    const secs = countdownRunning ? cookModeSeconds : countdownTarget;
+    const m = String(Math.floor(Math.abs(secs) / 60)).padStart(2, '0');
+    const s = String(Math.abs(secs) % 60).padStart(2, '0');
+    display.textContent = `${secs < 0 ? '-' : ''}${m}:${s}`;
+    display.classList.toggle('timer-done', secs <= 0 && countdownRunning);
+  }
+
+  function adjustTimer(delta) {
+    if (countdownRunning) return;
+    countdownTarget = Math.max(0, countdownTarget + delta);
+    updateTimerDisplay();
+  }
+
+  document.getElementById('timerMinus5')?.addEventListener('click', () => { adjustTimer(-300); haptic(); });
+  document.getElementById('timerMinus1')?.addEventListener('click', () => { adjustTimer(-60); haptic(); });
+  document.getElementById('timerPlus1')?.addEventListener('click', () => { adjustTimer(60); haptic(); });
+  document.getElementById('timerPlus5')?.addEventListener('click', () => { adjustTimer(300); haptic(); });
+
+  document.getElementById('cookModeTimerBtn')?.addEventListener('click', () => {
+    const timerBtn = document.getElementById('cookModeTimerBtn');
     if (cookModeTimer) {
       clearInterval(cookModeTimer);
       cookModeTimer = null;
+      countdownRunning = false;
       cookModeSeconds = 0;
-      if (display) { display.hidden = true; display.textContent = '00:00'; }
-      document.getElementById('cookModeTimerBtn').textContent = t('cookModeStartTimer');
+      countdownTarget = 5 * 60;
+      updateTimerDisplay();
+      if (timerBtn) timerBtn.textContent = t('cookModeStartTimer');
     } else {
-      cookModeSeconds = 0;
-      if (display) display.hidden = false;
-      document.getElementById('cookModeTimerBtn').textContent = t('cookModeStopTimer');
+      if (countdownTarget <= 0) return;
+      cookModeSeconds = countdownTarget;
+      countdownRunning = true;
+      if (timerBtn) timerBtn.textContent = t('cookModeStopTimer');
       cookModeTimer = setInterval(() => {
-        cookModeSeconds++;
-        const m = String(Math.floor(cookModeSeconds / 60)).padStart(2, '0');
-        const s = String(cookModeSeconds % 60).padStart(2, '0');
-        if (display) display.textContent = `${m}:${s}`;
+        cookModeSeconds--;
+        updateTimerDisplay();
+        if (cookModeSeconds <= 0) {
+          clearInterval(cookModeTimer);
+          cookModeTimer = null;
+          countdownRunning = false;
+          // Play alarm sound and vibrate
+          try {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            [0, 0.3, 0.6].forEach(delay => {
+              const osc = ctx.createOscillator();
+              const gain = ctx.createGain();
+              osc.connect(gain); gain.connect(ctx.destination);
+              osc.frequency.value = 880;
+              gain.gain.value = 0.3;
+              osc.start(ctx.currentTime + delay);
+              osc.stop(ctx.currentTime + delay + 0.2);
+            });
+          } catch {}
+          if (navigator.vibrate) navigator.vibrate([200, 100, 200, 100, 200]);
+          if (timerBtn) timerBtn.textContent = t('cookModeStartTimer');
+          showToast(t('timerDone'));
+        }
       }, 1000);
     }
   });
 
+  updateTimerDisplay();
+
+  // Swipe hint — show only first time
+  const swipeHint = document.getElementById('cookModeSwipeHint');
+  if (swipeHint && !localStorage.getItem('swipeHintSeen')) {
+    setTimeout(() => { if (swipeHint) swipeHint.classList.add('visible'); }, 800);
+    setTimeout(() => {
+      if (swipeHint) swipeHint.classList.remove('visible');
+      try { localStorage.setItem('swipeHintSeen', '1'); } catch {}
+    }, 4000);
+  }
+
   function closeCookMode() {
     const overlayEl = document.getElementById('cookModeOverlay');
-    if (overlayEl) overlayEl.hidden = true;
+    if (overlayEl) { overlayEl.hidden = true; releaseFocus(overlayEl); }
     document.body.style.overflow = '';
     cookModeRecipe = null;
     cookModeStep = 0;
     cookModeSeconds = 0;
     if (cookModeTimer) { clearInterval(cookModeTimer); cookModeTimer = null; }
-    // Reset timer display for next use
-    const display = document.getElementById('cookModeTimerDisplay');
-    if (display) { display.hidden = true; display.textContent = '00:00'; }
+    // Reset countdown timer for next use
+    countdownTarget = 5 * 60;
+    countdownRunning = false;
+    updateTimerDisplay();
     const timerBtn = document.getElementById('cookModeTimerBtn');
     if (timerBtn) timerBtn.textContent = t('cookModeStartTimer');
     releaseWakeLock();
@@ -3451,7 +3566,6 @@
     if (!container) return;
     container.innerHTML = getWeeklyPicks(arminPicks).map(p => `
       <div class="armin-pick-card" data-ings="${escAttr(JSON.stringify(p.ings))}">
-        <span class="armin-pick-emoji">${amkoCardEmojis[p.badgeKey] || '🍽️'}</span>
         <span class="armin-pick-badge">${getBadge(p.badgeKey)}</span>
         <div class="armin-pick-name">${esc(p.name)}</div>
         <div class="armin-pick-desc">${esc(p.i18nDesc?.[currentLang] || p.i18nDesc?.sv || p.desc)}</div>
@@ -3704,7 +3818,7 @@
         return;
       }
       if (file.size > 10 * 1024 * 1024) {
-        showToast(t('fridgeAnalysisFail'));
+        showToast(t('fridgeImageTooLarge'));
         return;
       }
 
@@ -3733,18 +3847,28 @@
           const base64 = await compressImage(reader.result);
           const mediaType = 'image/jpeg';
 
-          const imgController = new AbortController();
-          const imgTimeout = setTimeout(() => imgController.abort(), 30000);
-
-          const res = await fetch('/api/recognize-ingredients', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ image: base64, mediaType }),
-            signal: imgController.signal
-          });
-          clearTimeout(imgTimeout);
-
-          if (!res.ok) throw new Error(t('fridgeAnalysisFail'));
+          let res;
+          const maxImgRetries = 2;
+          for (let imgAttempt = 0; imgAttempt <= maxImgRetries; imgAttempt++) {
+            if (imgAttempt > 0) await new Promise(r => setTimeout(r, 1000 * Math.pow(2, imgAttempt)));
+            const imgController = new AbortController();
+            const imgTimeout = setTimeout(() => imgController.abort(), 30000);
+            try {
+              res = await fetch('/api/recognize-ingredients', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ image: base64, mediaType }),
+                signal: imgController.signal
+              });
+              clearTimeout(imgTimeout);
+              if (res.ok) break;
+              if (imgAttempt >= maxImgRetries) throw new Error(t('fridgeAnalysisFail'));
+            } catch (retryErr) {
+              clearTimeout(imgTimeout);
+              if (imgAttempt >= maxImgRetries) throw retryErr.name === 'AbortError' ? new Error(t('fridgeAnalysisFail')) : retryErr;
+            }
+          }
+          if (!res || !res.ok) throw new Error(t('fridgeAnalysisFail'));
 
           const data = await res.json();
           const text = (data.content || []).map(b => b.text || '').join('');
@@ -3879,10 +4003,10 @@
 
     banner.hidden = false;
     banner.innerHTML = `
-      <span class="holiday-emoji">${holiday.emoji}</span>
+      <span class="holiday-emoji">${esc(holiday.emoji)}</span>
       <div class="holiday-text">
-        <div class="holiday-title">${holiday.name} ${t('holidayApproaching')}</div>
-        <div class="holiday-desc">${holiday.desc}</div>
+        <div class="holiday-title">${esc(holiday.name)} ${t('holidayApproaching')}</div>
+        <div class="holiday-desc">${esc(holiday.desc)}</div>
       </div>
     `;
     banner.onclick = () => {
