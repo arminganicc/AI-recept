@@ -1,6 +1,6 @@
 {
-  "name": "Vad ska vi laga?",
-  "short_name": "Recepthjälpen",
+  "name": "Amkos AI-Recept",
+  "short_name": "AI-Recept",
   "description": "AI-driven recepthjälp baserad på dina ingredienser. Fota kylskåpet eller skriv in vad du har \u2014 f\u00e5 8 recept direkt.",
   "start_url": "/",
   "id": "/",

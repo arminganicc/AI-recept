@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-Swedish AI-powered recipe app ("Vad ska vi laga?"). Users input ingredients (text or fridge photo), get 4 recipe suggestions from Claude Haiku. Vanilla JS PWA deployed on Vercel.
+Swedish AI-powered recipe app ("Amkos AI-Recept"). Users input ingredients (text or fridge photo), get 4 recipe suggestions from Claude Haiku. Vanilla JS PWA deployed on Vercel.
 
 ## Development
 

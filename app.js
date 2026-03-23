@@ -52,7 +52,7 @@
 
   const translations = {
     sv: {
-      heroEyebrow: 'Kvällens eviga dilemma', heroTitle: 'Vad ska vi laga?',
+      heroEyebrow: 'Kvällens eviga dilemma', heroTitle: 'Amkos AI-Recept',
       yourIngredients: 'Dina råvaror', scanFood: 'Fota dina råvaror',
       orManual: 'eller skriv manuellt', inputHint: 'Skriv en råvara och tryck på +-knappen. Du kan skriva flera med komma emellan. Minst 2–3 ger bäst resultat.',
       whatDoYouHave: 'Vad har du hemma?', howPicky: 'Hur kräsen är du?',
@@ -215,7 +215,7 @@
       ratingScore: 'Betyg: {score}/5 stjärnor',
       // Share
       shareTitle: 'Inköpslista',
-      shareAppText: 'Kolla in den här receptappen — AI som fixar middagen åt dig!',
+      shareAppText: 'Kolla in Amkos AI-Recept — AI som fixar middagen åt dig!',
       // Misc
       timeAgoNow: 'Nyss',
       timeAgoMin: 'min',
@@ -248,7 +248,7 @@
       offlineMessage: 'Du verkar vara offline. Kolla dina sparade favoriter medan du väntar på nätet!',
     },
     en: {
-      heroEyebrow: "Tonight's eternal dilemma", heroTitle: 'What should we cook?',
+      heroEyebrow: "Tonight's eternal dilemma", heroTitle: "Amkos AI-Recept",
       yourIngredients: 'Your ingredients', scanFood: 'Snap your ingredients',
       orManual: 'or type manually', inputHint: 'Enter to add. Comma separates.',
       whatDoYouHave: 'What do you have at home?', howPicky: 'How picky are you?',
@@ -390,7 +390,7 @@
       ratingTopScore: '⭐ Amazing!',
       ratingScore: 'Rating: {score}/5 stars',
       shareTitle: 'Shopping list',
-      shareAppText: 'Check out this recipe app — AI that sorts out dinner for you!',
+      shareAppText: 'Check out Amkos AI-Recept — AI that sorts out dinner for you!',
       timeAgoNow: 'Just now',
       timeAgoMin: 'min',
       timeAgoHour: 'hr',
@@ -422,7 +422,7 @@
       offlineMessage: 'You seem to be offline. Check your saved favorites while you wait!',
     },
     es: {
-      heroEyebrow: 'El eterno dilema de la cena', heroTitle: '¿Qué cocinamos?',
+      heroEyebrow: 'El eterno dilema de la cena', heroTitle: 'Amkos AI-Recept',
       yourIngredients: 'Tus ingredientes', scanFood: 'Fotografía tus ingredientes',
       orManual: 'o escribe manualmente', inputHint: 'Enter para añadir. Coma separa.',
       whatDoYouHave: '¿Qué tienes en casa?', howPicky: '¿Qué tan exigente eres?',
@@ -559,7 +559,7 @@
       ratingTopScore: '⭐ ¡Excelente!',
       ratingScore: 'Puntuación: {score}/5 estrellas',
       shareTitle: 'Lista de compras',
-      shareAppText: '¡Mira esta app de recetas — IA que resuelve la cena!',
+      shareAppText: '¡Mira Amkos AI-Recept — IA que resuelve la cena!',
       timeAgoNow: 'Ahora',
       timeAgoMin: 'min',
       timeAgoHour: 'h',
@@ -591,7 +591,7 @@
       offlineMessage: 'Parece que estás sin conexión. ¡Revisa tus recetas guardadas mientras esperas!',
     },
     bs: {
-      heroEyebrow: 'Vječna dilema večere', heroTitle: 'Šta da kuhamo?',
+      heroEyebrow: 'Vječna dilema večere', heroTitle: 'Amkos AI-Recept',
       yourIngredients: 'Tvoji sastojci', scanFood: 'Slikaj svoje namirnice',
       orManual: 'ili piši ručno', inputHint: 'Enter za dodavanje. Zarez odvaja.',
       whatDoYouHave: 'Šta imaš kod kuće?', howPicky: 'Koliko si izbirljiv/a?',
@@ -712,7 +712,7 @@
       cookModeStartTimer: '⏱ Pokreni tajmer', cookModeStopTimer: '⏹ Zaustavi tajmer',
       ratingTopScore: '⭐ Odlično!', ratingScore: 'Ocjena: {score}/5 zvjezdica',
       shareTitle: 'Lista za kupovinu',
-      shareAppText: 'Pogledaj ovu aplikaciju za recepte — AI koji rješava večeru!',
+      shareAppText: 'Pogledaj Amkos AI-Recept — AI koji rješava večeru!',
       timeAgoNow: 'Upravo', timeAgoMin: 'min', timeAgoHour: 'h', timeAgoDay: 'd',
       darkModeLight: 'Svijetli način', darkModeDark: 'Tamni način',
       recipeCountSingular: 'recept sačuvan', recipeCountPlural: 'recepata sačuvano',

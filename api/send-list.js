@@ -77,21 +77,21 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         from: process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
         to: email,
-        subject: `Inköpslista: ${escapeHtml(recipeName || 'Vad ska vi laga?')}`,
+        subject: `Inköpslista: ${escapeHtml(recipeName || 'Amkos AI-Recept')}`,
         html: `
           <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:480px;margin:0 auto;padding:24px;">
             <h2 style="font-size:22px;color:#1A1208;margin-bottom:8px;font-weight:700;">
               ${escapeHtml(recipeName || 'Din inköpslista')}
             </h2>
             <p style="color:#6B5B4E;margin-bottom:20px;font-size:15px;">
-              Din inköpslista från Vad ska vi laga?
+              Din inköpslista från Amkos AI-Recept
             </p>
             <ul style="padding:0 0 0 20px;color:#1A1208;line-height:1.7;list-style:disc;">
               ${itemsHTML}
             </ul>
             <hr style="border:none;border-top:1px solid #E8DDD0;margin:24px 0;">
             <p style="font-size:12px;color:#A8957F;">
-              Skickat från Vad ska vi laga?
+              Skickat från Amkos AI-Recept
             </p>
           </div>
         `,

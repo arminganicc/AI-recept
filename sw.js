@@ -1,4 +1,4 @@
-const CACHE_NAME = 'receptappen-v8.0';
+const CACHE_NAME = 'amkos-v9.0';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -16,7 +16,7 @@ const OFFLINE_PAGE = `<!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Offline — Vad ska vi laga?</title>
+<title>Offline — Amkos AI-Recept</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Plus Jakarta Sans',-apple-system,system-ui,sans-serif;background:#F7F4EF;color:#1A1208;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px;text-align:center}
