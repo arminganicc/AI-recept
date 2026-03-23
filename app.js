@@ -1844,8 +1844,7 @@
       btn.addEventListener('click', () => { ingredients = []; render(); });
       tagsEl.appendChild(btn);
     }
-    const offlineDisable = !navigator.onLine;
-    searchBtn.disabled = ingredients.length === 0 || offlineDisable;
+    searchBtn.disabled = ingredients.length === 0;
     const hint = document.getElementById('searchBtnHint');
     if (hint) hint.style.display = ingredients.length === 0 ? '' : 'none';
     renderQuickPicks();
@@ -2208,11 +2207,8 @@
     if (!isFreetext && !ingredients.length) return;
     if (isFreetext && !freetextInput.value.trim()) return;
 
-    if (!navigator.onLine) {
-      errBox.style.display = 'block';
-      errBox.textContent = t('offlineMessage') || 'Inget internet? Amko kan inte hjälpa utan WiFi. Kolla dina sparade favoriter medan du väntar!';
-      return;
-    }
+    // Skip early offline block — let the fetch attempt proceed and handle network errors gracefully.
+    // navigator.onLine is unreliable on mobile (false positives after sleep/network switch).
 
     const cacheKey = isFreetext ? `freetext:${freetextInput.value.trim()}:${searchPortions}:${[...prefs].sort().join(',')}` : getCacheKey();
     if (recipeCache.has(cacheKey)) {
@@ -2264,7 +2260,7 @@
         }
 
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 30000);
+        const timeoutId = setTimeout(() => controller.abort(), 60000);
 
         const res = await fetch('/api/chat', {
           method: 'POST',
@@ -2402,11 +2398,11 @@
     }
 
     loadingEl.style.display = 'none';
-    // Restore button state — respect current mode and offline status
+    // Restore button state
     if (searchMode === 'freetext') {
-      searchBtn.disabled = !freetextInput?.value.trim() || !navigator.onLine;
+      searchBtn.disabled = !freetextInput?.value.trim();
     } else {
-      searchBtn.disabled = ingredients.length === 0 || !navigator.onLine;
+      searchBtn.disabled = ingredients.length === 0;
     }
     searchBtn.textContent = originalBtnText;
     searchBtn.removeAttribute('aria-busy');
@@ -3821,15 +3817,9 @@
   // ─── Online/Offline detection ───
   window.addEventListener('offline', () => {
     showToast(t('offlineMessage'));
-    searchBtn.disabled = true;
   });
   window.addEventListener('online', () => {
-    // Re-enable search when back online
-    if (searchMode === 'freetext') {
-      searchBtn.disabled = !freetextInput?.value.trim();
-    } else {
-      searchBtn.disabled = ingredients.length === 0;
-    }
+    showToast('Anslutningen är tillbaka!');
   });
 
   // ─── Holiday Recipes Banner ───
@@ -4060,19 +4050,30 @@
     });
   }
 
-  // ═══ PWA: Offline banner ═══
-  window.addEventListener('online', () => {
+  // ═══ PWA: Offline banner (with active network check to avoid false positives on mobile) ═══
+  function setOfflineBanner(offline) {
     const banner = document.getElementById('offlineBanner');
-    if (banner) banner.hidden = true;
-  });
-  window.addEventListener('offline', () => {
-    const banner = document.getElementById('offlineBanner');
-    if (banner) banner.hidden = false;
-  });
-  if (!navigator.onLine) {
-    const banner = document.getElementById('offlineBanner');
-    if (banner) banner.hidden = false;
+    if (banner) banner.hidden = !offline;
   }
+  async function checkRealConnectivity() {
+    if (navigator.onLine) {
+      setOfflineBanner(false);
+      return;
+    }
+    // navigator.onLine is false — verify with a real fetch (HEAD to own origin)
+    try {
+      const ac = new AbortController();
+      const tid = setTimeout(() => ac.abort(), 3000);
+      const resp = await fetch('/?_ping=' + Date.now(), { method: 'HEAD', cache: 'no-store', signal: ac.signal });
+      clearTimeout(tid);
+      setOfflineBanner(!resp.ok);
+    } catch {
+      setOfflineBanner(true);
+    }
+  }
+  window.addEventListener('online', () => setOfflineBanner(false));
+  window.addEventListener('offline', () => checkRealConnectivity());
+  if (!navigator.onLine) checkRealConnectivity();
 
   // ═══ Legal pages navigation ═══
   // Extend switchView to handle legal pages

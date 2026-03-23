@@ -136,7 +136,7 @@ VIKTIGT: Svara ENBART med giltig JSON. Inga kodblock, inga kommentarer utanför 
   }
 
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 30000);
+  const timeoutId = setTimeout(() => controller.abort(), 55000);
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -147,7 +147,7 @@ VIKTIGT: Svara ENBART med giltig JSON. Inga kodblock, inga kommentarer utanför 
       },
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001',
-        max_tokens: 8000,
+        max_tokens: 4096,
         system: [{ type: 'text', text: systemPrompt, cache_control: { type: 'ephemeral' } }],
         messages: [{ role: 'user', content: userPrompt }],
       }),
